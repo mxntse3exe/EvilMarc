@@ -32,12 +32,12 @@ def creacio_bd(host, user, password):
         print("La connexió amb la base de dades no s'ha pogut establir correctament. Si us plau, torna-ho a intentar.")
         exit()
 
-
+# Funció per obtenir el hash de l'arxiu
 def obtenir_hash(arxiu):
     with open (arxiu, 'rb') as f:
         return hashlib.sha256(f.read()).hexdigest()
 
-
+# Funció per verificar si el hash de l'arxiu es troba en la BD
 def hash_in_bd(host, user, password, hash_arxiu):
     mariadb_conn = mysql.connector.connect(
         host=host, 
@@ -57,7 +57,7 @@ def hash_in_bd(host, user, password, hash_arxiu):
     else:
         return False
 
-
+# Funció per pujar arxius
 def pujar_arxiu(arxiu, ruta_arxiu, url):
     tipo_mime, encoding = mimetypes.guess_type(ruta_arxiu)
 
@@ -74,7 +74,7 @@ def pujar_arxiu(arxiu, ruta_arxiu, url):
 
     return id_scan
 
-
+# Funció per obtenir URL per pujar arxius superiors a 32MB
 def obtenir_url_arxiu_gran():
     url = "https://www.virustotal.com/api/v3/files/upload_url"
 
@@ -88,6 +88,7 @@ def obtenir_url_arxiu_gran():
 
     return url_arxiu_gran
 
+# Funció per emmagatzemar els resultats de l'escaneig dins la BD
 def guardar_escaneig_bd(host, user, password, hash_arxiu, id_scan, virus):
     mariadb_conn = mysql.connector.connect(
         host=host, 
@@ -103,6 +104,7 @@ def guardar_escaneig_bd(host, user, password, hash_arxiu, id_scan, virus):
     mariadb_cursor.close()
     mariadb_conn.close()
 
+# Funció per obtenir l'escaneig de l'arxiu mitjançant l'API de Virus Total
 def obtenir_escaneig_arxiu(id_scan, host, user, password, hash_arxiu):
     url = f"https://www.virustotal.com/api/v3/files/{hash_arxiu}"
 
@@ -122,7 +124,7 @@ def obtenir_escaneig_arxiu(id_scan, host, user, password, hash_arxiu):
         guardar_escaneig_bd(host, user, password, hash_arxiu, id_scan, 0)
         return False
 
-
+# Funció per saber si l'arxiu esta infectat dins la BD
 def info_arxiu_bd(host, user, password, hash_arxiu):
     mariadb_conn = mysql.connector.connect(
         host=host, 
