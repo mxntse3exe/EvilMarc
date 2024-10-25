@@ -203,7 +203,7 @@ if os.path.exists(ruta_carpeta) and os.path.isdir(ruta_carpeta):
                 except:
                     print(f"L'arxiu {arxiu} ja existeix dins la carpeta {ruta_arxiu_final}.")
 
-
+               
             else:
                 print(f"L'arxiu {arxiu} no està infectat!")
                 ruta_arxiu_final = os.path.join(ruta_carpeta, "arxius_no_infectats")
