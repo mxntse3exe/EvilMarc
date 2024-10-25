@@ -4,6 +4,7 @@ import requests
 import mysql.connector
 import hashlib
 import mimetypes
+import time
 
 
 # Connexió i creació BD
@@ -135,15 +136,17 @@ def info_arxiu_bd(host, user, password, hash_arxiu):
 
     mariadb_cursor.execute("SELECT infected FROM fitxers WHERE file_hash = %s", (hash_arxiu,))
 
-    for (infected) in mariadb_cursor:
-        if infected == 0:
-            mariadb_cursor.close()
-            mariadb_conn.close()
-            return False
-        elif infected == 1:
-            mariadb_cursor.close()
-            mariadb_conn.close()
-            return True
+    result = mariadb_cursor.fetchone()
+    infected = result[0]
+
+    if infected == 0:
+        mariadb_cursor.close()
+        mariadb_conn.close()
+        return False
+    elif infected == 1:
+        mariadb_cursor.close()
+        mariadb_conn.close()
+        return True
 
 
 # Inici programa
@@ -181,11 +184,21 @@ if os.path.exists(ruta_carpeta) and os.path.isdir(ruta_carpeta):
                     else:
                         url = obtenir_url_arxiu_gran()
 
-                    try:
-                        id_scan = pujar_arxiu(arxiu, ruta_arxiu, url)
-                        arxiu_infectat = obtenir_escaneig_arxiu(id_scan, host, user, password, hash_arxiu)
-                    except:
-                        print(f"No s'ha pogut analitzar l'arxiu {arxiu} amb l'API de VirusTotal. Si us plau, torna-ho a intentar.")
+
+                    ####################
+                    escanejat = False
+                    while not escanejat:
+                        try:
+                            id_scan = pujar_arxiu(arxiu, ruta_arxiu, url)
+                            arxiu_infectat = obtenir_escaneig_arxiu(id_scan, host, user, password, hash_arxiu)
+                            escanejat = True
+                        except:
+                            print(f"L'arxiu {arxiu} s'està analitzant. Esperi un moment, si us plau.")
+                            time.sleep(1)
+                    ####################
+
+
+
 
                 else:
                     print(f"L'arxiu {arxiu} pesa massa! No podem escanejar arxius tan grans.")
