@@ -148,8 +148,18 @@ def info_arxiu_bd(host, user, password, hash_arxiu):
         mariadb_conn.close()
         return True
 
-
 # Inici programa
+print("") 
+print("▓█████ ██▒   █▓ ██▓ ██▓        ███▄ ▄███▓ ▄▄▄       ██▀███   ▄████▄  ")
+print("▓█   ▀▓██░   █▒▓██▒▓██▒       ▓██▒▀█▀ ██▒▒████▄    ▓██ ▒ ██▒▒██▀ ▀█  ")
+print("▒███   ▓██  █▒░▒██▒▒██░       ▓██    ▓██░▒██  ▀█▄  ▓██ ░▄█ ▒▒▓█    ▄ ")
+print("▒▓█  ▄  ▒██ █░░░██░▒██░       ▒██    ▒██ ░██▄▄▄▄██ ▒██▀▀█▄  ▒▓▓▄ ▄██▒")
+print("░▒████▒  ▒▀█░  ░██░░██████▒   ▒██▒   ░██▒ ▓█   ▓██▒░██▓ ▒██▒▒ ▓███▀ ░")
+print("░░ ▒░ ░  ░ ▐░  ░▓  ░ ▒░▓  ░   ░ ▒░   ░  ░ ▒▒   ▓▒█░░ ▒▓ ░▒▓░░ ░▒ ▒  ░")
+print(" ░ ░  ░  ░ ░░   ▒ ░░ ░ ▒  ░   ░  ░      ░  ▒   ▒▒ ░  ░▒ ░ ▒░  ░  ▒   ")
+print("   ░       ░░   ▒ ░  ░ ░      ░      ░     ░   ▒     ░░   ░ ░        ")
+print("   ░  ░     ░   ░      ░  ░          ░         ░  ░   ░     ░ ░      ")
+print("           ░                                                ░        ")
 
 host = input("Introdueixi el host de la base de dades: ")
 user = input("Introdueixi l'usuari de la base de dades: ")
