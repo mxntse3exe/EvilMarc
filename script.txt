@@ -69,3 +69,12 @@ RewriteRule ^([^\.]+)$ $1.html [NC,L]
 
 
 sudo service apache2 restart
+
+
+
+
+<Directory /var/www/>
+                Options Indexes FollowSymLinks
+                AllowOverride All
+                Require all granted
+</Directory>
