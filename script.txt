@@ -5,73 +5,50 @@ sudo service apache2 start
 
 
 sudo apt-get install mariadb-server
-
-
 sudo mysql_secure_installation
+
 
 (password root)
 - Establim password de root --> Stucom1234
 
-(Switch de unix)
+(unix socket)
 - Switch to unix_socket authentication --> No
 
-
-(Canvi de pass root?)
+(Canvi de password root)
 - Change the root password --> No
 
+(Eliminar usuaris anònims)
+Remove anonymous users --> Yes
 
-(Eliminar usuaris anonims)
-Reove anonymus users --> Yes
-
-
-(Connexio root forma remota)
+(Connexió root de forma remota)
 Disallow root login remotely --> Yes
 
-(Eliminar les test de database)
+(Eliminar les databases de prova)
 Remove test database and acces to it --> Yes
 
+(Refrescar les taules de privilegis)
+Reload privilege tables--> Yes 
 
-(Eliminar privilegis de taules)
-Reload privileges tables--> Yes 
 
 
 sudo mysql
-
 use mysql;
 
 ALTER USER 'root'@'localhost'IDENTIFIED BY 'Stucom1234';
-
 FLUSH PRIVILEGES;
 
 exit
-
 mysql -u root -p (Stucom1234)
 
 sudo apt-get install php
-
 sudo apt-get install php-mysql
-
 sudo service apache2 restart
 
 
-cd /var/www/html
-
-(Per eliminar el nom de les extension .php, .html)
-sudo nano .htaccess 
-
-enganxem:
+(Per eliminar el nom de les extensions .php, .HTML. Haurem de dir-li a l'apache que no ignori l'arxiu .htaccess)
 
 
-RewriteEngine On
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule ^([^\.]+)$ $1.php [NC,L]
-RewriteRule ^([^\.]+)$ $1.html [NC,L]
-
-
-sudo service apache2 restart
-
-
-(Haurem de dirli al sistema que no ignori el .httaccess, ho farem modificant el )
+sudo nano /etc/apache2/sites-enabled/000-default.conf
 
 <Directory /var/www/>
                 Options Indexes FollowSymLinks
@@ -79,3 +56,4 @@ sudo service apache2 restart
                 Require all granted
 </Directory>
 
+sudo service apache2 restart
