@@ -53,3 +53,19 @@ sudo apt-get install php-mysql
 
 sudo service apache2 restart
 
+
+cd /var/www/html
+
+(Per eliminar el nom de les extension .php, .html)
+sudo nano .htaccess 
+
+enganxem:
+
+
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^([^\.]+)$ $1.php [NC,L]
+RewriteRule ^([^\.]+)$ $1.html [NC,L]
+
+
+sudo service apache2 restart
