@@ -48,6 +48,8 @@ sudo service apache2 restart
 (Per eliminar el nom de les extensions .php, .HTML. Haurem de dir-li a l'apache que no ignori l'arxiu .htaccess)
 
 
+sudo a2enmod rewrite
+
 sudo nano /etc/apache2/sites-enabled/000-default.conf
 
 <Directory /var/www/>
