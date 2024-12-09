@@ -69,3 +69,7 @@ RewriteRule ^([^\.]+)$ $1.html [NC,L]
 
 
 sudo service apache2 restart
+
+
+
+(Haurem de dirli al sistema que no ignori el .httaccess, ho farem modificant el )
