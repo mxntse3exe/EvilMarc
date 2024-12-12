@@ -61,9 +61,16 @@
                                     <form method="post" action="contacte">
                                         <input class="form-control" type="text" name="correu" placeholder="correu electrònic">
                                         <input class="form-control" type="text" name="usuari" placeholder="nom d'usuari">
-                                        <input class="form-control" type="text" name="contrasenya" placeholder="contrasenya">
+
+
+                                        <div class="password-container">
+                                            <input class="form-control" type="password" name="contrasenya" placeholder="contrasenya" id="passwordField">
+                                            <span class="toggle-password" onclick="togglePasswordVisibility()">
+                                                <i class="unicon uil-eye" id="toggleIcon"></i>
+                                            </span>
+                                        </div>
                                         
-                                        <input class="form-control submit-btn" type="submit" value="Registrar" name="registrar">
+                                        <input class="form-control submit-btn" type="submit" value="Iniciar" name="iniciar">
                                     </form>
                                 </div>		
                             </div>
@@ -101,6 +108,22 @@
     <script src="js/owl.carousel.min.js"></script>
     <script src="js/smoothscroll.js"></script>
     <script src="js/custom.js"></script>
+
+    <script>
+        function togglePasswordVisibility() {
+            const passwordField = document.getElementById('passwordField');
+            const toggleIcon = document.getElementById('toggleIcon');
+            if (passwordField.type === "password") {
+                passwordField.type = "text";
+                toggleIcon.classList.remove('uil-eye');
+                toggleIcon.classList.add('uil-eye-slash');
+            } else {
+                passwordField.type = "password";
+                toggleIcon.classList.remove('uil-eye-slash');
+                toggleIcon.classList.add('uil-eye');
+            }
+        }
+    </script>
 
 </body>
 
