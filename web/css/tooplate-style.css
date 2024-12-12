@@ -516,3 +516,20 @@ b, strong {
   display: flex;
   margin-right: 15px;
 }
+
+
+.seccio_reg_log {
+  justify-content: center;
+  text-align: center;
+}
+
+.formulari_reg_log {
+
+  background-color: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0px 0px 10px rgb(219, 219, 219);
+  padding: 20px;
+  width: max-content;
+  display: flex;
+
+}
