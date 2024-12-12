@@ -357,6 +357,9 @@ b, strong {
   .text_funcionament {
     margin-left: 30px;
   }
+  .contact_contents {
+    flex-direction: column;
+  }
 
 }
 @media (max-width: 767px) {
@@ -387,6 +390,9 @@ b, strong {
   .funcionament_contents {
     flex-direction: column-reverse;
   }
+  .contact_contents {
+    flex-direction: column;
+  }
 
 }
 @media (max-width: 580px) {
@@ -415,6 +421,9 @@ b, strong {
   }
   .funcionament_contents {
     flex-direction: column-reverse;
+  }
+  .contact_contents {
+    flex-direction: column;
   }
 
 }
@@ -449,6 +458,9 @@ b, strong {
   }
   .funcionament_contents {
     flex-direction: column-reverse;
+  }
+  .contact_contents {
+    flex-direction: column;
   }
 
 }
@@ -502,4 +514,5 @@ b, strong {
   padding: 20px;
   width: max-content;
   display: flex;
+  margin-right: 15px;
 }
