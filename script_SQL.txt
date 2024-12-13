@@ -25,7 +25,7 @@ CREATE TABLE USUARIS (
     id_usu INT AUTO_INCREMENT PRIMARY KEY,
     usuari VARCHAR(50) NOT NULL,
     correu VARCHAR(100) NOT NULL,
-    contrasenya VARCHAR(30) NOT NULL,
+    contrasenya VARCHAR(64) NOT NULL,
     nom VARCHAR(50),
     cognoms VARCHAR(100),
     direccio VARCHAR(255),
