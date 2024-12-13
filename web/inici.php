@@ -2,10 +2,10 @@
 	session_start();
 
 	if (isset($_POST['iniciar'])) {
-		$servidor = "";
-		$usuario = "";
-		$password = "";
-		$db = "";
+		$servidor = "localhost";
+		$usuario = "web";
+		$password = "T5Dk!xq";
+		$db = "evilmarc";
 
 		$conexion = mysqli_connect($servidor,$usuario,$password,$db);
 
