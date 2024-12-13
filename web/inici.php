@@ -2,10 +2,10 @@
 	session_start();
 
 	if (isset($_POST['iniciar'])) {
-		$servidor = "";
-		$usuario = "";
-		$password = "";
-		$db = "";
+		$servidor = "localhost";
+		$usuario = "web";
+		$password = "T5Dk!xq";
+		$db = "evilmarc";
 
 		$conexion = mysqli_connect($servidor,$usuario,$password,$db);
 
@@ -28,8 +28,8 @@
 
 		if ($nfilas == 0) {
 			$_SESSION['valido'] = 0;
-			header("Location: inici");
 			echo "Credencials incorrectes. Torna a "."<a href='inici'>iniciar sessió</a>".".";
+			header("Location: inici");
 		}
 
 		else {
