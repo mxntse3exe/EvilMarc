@@ -327,11 +327,17 @@ b, strong {
   .text_funcionament {
     margin-left: 30px;
   }
+  .botons_panell {
+    width: 180px;
+  }
 }
 
 @media (max-width: 1270px) {
   .text_funcionament {
     margin-left: 30px;
+  }
+  .botons_panell {
+    width: 180px;
   }
 }
 
@@ -359,6 +365,9 @@ b, strong {
   }
   .contact_contents {
     flex-direction: column;
+  }
+  .botons_panell {
+    width: 180px;
   }
 
 }
@@ -393,6 +402,12 @@ b, strong {
   .contact_contents {
     flex-direction: column;
   }
+  .link_panell {
+    width: 100%;
+  }
+  .botons_panell {
+    width: 100%;
+  }
 
 }
 @media (max-width: 580px) {
@@ -424,6 +439,12 @@ b, strong {
   }
   .contact_contents {
     flex-direction: column;
+  }
+  .link_panell {
+    width: 100%;
+  }
+  .botons_panell {
+    width: 100%;
   }
 
 }
@@ -462,10 +483,16 @@ b, strong {
   .contact_contents {
     flex-direction: column;
   }
-
+  .link_panell {
+    width: 100%;
+  }
+  .botons_panell {
+    width: 100%;
+  }
 }
 
 
+/* INDEX.PHP secció pujar arxius */
 
 .seccio_index {
   margin-left: 15px;
@@ -488,6 +515,7 @@ b, strong {
 }
 
 
+/* INDEX.PHP secció funcionament */
 
 .funcionament_contents {
   display: flex;
@@ -500,6 +528,8 @@ b, strong {
   width: auto;
 }
 
+
+/* INDEX.PHP secció contacte */
 
 .contact_contents {
   width: 100%;
@@ -518,24 +548,20 @@ b, strong {
 }
 
 
+/* INICI.PHP i REGISTRAR.PHP */
+
 .seccio_reg_log {
   justify-content: center;
   text-align: center;
 }
-
 .formulari_reg_log {
-
   background-color: #ffffff;
   border-radius: 20px;
   box-shadow: 0px 0px 10px rgb(219, 219, 219);
   padding: 20px;
   width: max-content;
   display: flex;
-
 }
-
-
-
 .password-container {
   position: relative;
 }
@@ -546,3 +572,39 @@ b, strong {
   transform: translateY(-50%);
   cursor: pointer;
 }
+
+
+/* PANELL_USUARI.PHP */
+
+.seccio_panell {
+  justify-content: center;
+  text-align: center;
+  margin-bottom: -30px;
+}
+.contingut_panell {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: 30px;
+  width: 70%;
+  margin-left: auto;
+  margin-right: auto;
+}
+.botons_panell {
+  background-color: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0px 0px 10px rgb(219, 219, 219);
+  padding: 20px;
+  height: 150px;
+  margin: 10px;
+  align-content: center;
+  color: rgba(0, 0, 0, 0.5);
+  font-weight: bold;
+  transition: color 0.4s ease;
+}
+.botons_panell:hover {
+  color: #2CB9FF;
+  font-weight: bold;
+}
+
+
