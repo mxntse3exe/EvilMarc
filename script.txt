@@ -49,6 +49,7 @@ sudo service apache2 restart
 
 
 sudo a2enmod rewrite
+sudo service apache2 restart
 
 sudo nano /etc/apache2/sites-enabled/000-default.conf
 
