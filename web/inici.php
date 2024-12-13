@@ -28,8 +28,8 @@
 
 		if ($nfilas == 0) {
 			$_SESSION['valido'] = 0;
-			header("Location: inici");
 			echo "Credencials incorrectes. Torna a "."<a href='inici'>iniciar sessió</a>".".";
+			header("Location: inici");
 		}
 
 		else {
