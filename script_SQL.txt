@@ -1,0 +1,60 @@
+sudo mysql -u root -p
+
+CREATE USER 'web'@'localhost' IDENTIFIED BY 'T5Dk!xq'; 
+
+
+CREATE DATABASE IF NOT EXISTS evilmarc;
+
+GRANT ALL PRIVILEGES ON evilmarc.* TO 'web'@'localhost';
+
+FLUSH PRIVILEGES;
+
+exit
+
+sudo mysql -u web -p 
+
+use evilmarc
+
+CREATE TABLE DEPARTAMENTS (
+    id_dep INT AUTO_INCREMENT PRIMARY KEY,
+    nom VARCHAR(100) NOT NULL
+);
+
+
+CREATE TABLE USUARIS (
+    id_usu INT AUTO_INCREMENT PRIMARY KEY,
+    usuari VARCHAR(50) NOT NULL,
+    correu VARCHAR(100) NOT NULL,
+    contrasenya VARCHAR(30) NOT NULL,
+    nom VARCHAR(50),
+    cognoms VARCHAR(100),
+    direccio VARCHAR(255),
+    departament INT,
+    admin BOOLEAN DEFAULT FALSE,
+    validat BOOLEAN DEFAULT FALSE,
+    id_dep INT,
+    FOREIGN KEY (id_dep) REFERENCES DEPARTAMENTS(id_dep)
+);
+
+
+CREATE TABLE ARXIUS (
+    id_arxiu INT AUTO_INCREMENT PRIMARY KEY,
+    nom_arxiu VARCHAR(255) NOT NULL,
+    ruta VARCHAR(500) NOT NULL,
+    hash VARCHAR(64) NOT NULL,
+    infectat BOOLEAN DEFAULT FALSE
+);
+
+
+CREATE TABLE ARXIUS_PUJATS (
+    id_usu INT NOT NULL,
+    id_arxiu INT NOT NULL,
+    PRIMARY KEY (id_usu, id_arxiu),
+    FOREIGN KEY (id_usu) REFERENCES USUARIS(id_usu) ON DELETE CASCADE,
+    FOREIGN KEY (id_arxiu) REFERENCES ARXIUS(id_arxiu) ON DELETE CASCADE
+);
+
+
+
+
+
