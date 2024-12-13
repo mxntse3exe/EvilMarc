@@ -57,4 +57,24 @@ CREATE TABLE ARXIUS_PUJATS (
 
 
 
+CREATE TABLE ARXIUS_COMPARTITS (
+    id_propietari INT NOT NULL,
+    id_destinatari INT NOT NULL,
+    id_arxiu INT NOT NULL,
+    PRIMARY KEY (id_propietari, id_destinatari, id_arxiu),
+    FOREIGN KEY (id_propietari) REFERENCES USUARIS(id_usu) ON DELETE CASCADE,
+    FOREIGN KEY (id_destinatari) REFERENCES USUARIS(id_usu) ON DELETE CASCADE,
+    FOREIGN KEY (id_arxiu) REFERENCES ARXIUS(id_arxiu) ON DELETE CASCADE
+);
+
+
+
+
+
+
+
+
+
+
+
 
