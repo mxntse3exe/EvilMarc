@@ -60,3 +60,17 @@ sudo nano /etc/apache2/sites-enabled/000-default.conf
 </Directory>
 
 sudo service apache2 restart
+
+
+
+
+
+
+
+
+
+
+
+copiar de la carpeta dels arxius a la carpeta de la web:
+
+sudo cp -r * /var/www/html/

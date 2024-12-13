@@ -1,3 +1,50 @@
+<?php 
+	session_start();
+
+	if (isset($_POST['iniciar'])) {
+		$servidor = "";
+		$usuario = "";
+		$password = "";
+		$db = "";
+
+		$conexion = mysqli_connect($servidor,$usuario,$password,$db);
+
+		if (!$conexion) die ("Error al connectar amb la base de dades.");
+
+		$mail = $_REQUEST['mail'];
+		$mail = str_replace("=","",$mail);
+		$mail = str_replace(" ","",$mail);
+		$mail = str_replace("'","",$mail);
+
+		$pass = $_REQUEST['pass'];
+		$pass = hash('sha256', $pass, false);
+
+		$sql = "select * from USUARIS where correu='".$mail."' and contrasenya='".$pass."' and validat = 1";
+		
+
+		$filas = mysqli_query($conexion,$sql);
+		$nfilas = mysqli_num_rows($filas);
+
+
+		if ($nfilas == 0) {
+			$_SESSION['valido'] = 0;
+			header("Location: inici");
+			echo "Credencials incorrectes. Torna a "."<a href='inici'>iniciar sessió</a>".".";
+		}
+
+		else {
+			$_SESSION['valido'] = 1;
+
+            while($fila = $filas->fetch_assoc()) {
+                $_SESSION['usuari'] = $fila["usuari"];
+            }
+
+			header("Location: panell_usuari");
+		}
+	}
+?>
+
+
 <!doctype html>
 <html lang="en">
 
@@ -58,10 +105,14 @@
                             
                             <div class="contact-form">	
                                 <div class="formulari_reg_log">
-                                    <form method="post" action="contacte">
-                                        <input class="form-control" type="text" name="correu" placeholder="correu electrònic">
+                                    <form method="post" action="inici">
+
+                                        <input class="form-control" type="email" name="mail" placeholder="correu electrònic">
+
                                         <div class="password-container">
-                                            <input class="form-control" type="password" name="contrasenya" placeholder="contrasenya" id="passwordField">
+
+                                            <input class="form-control" type="password" name="pass" placeholder="contrasenya" id="passwordField">
+
                                             <span class="toggle-password" onclick="togglePasswordVisibility()">
                                                 <i class="unicon uil-eye" id="toggleIcon"></i>
                                             </span>
