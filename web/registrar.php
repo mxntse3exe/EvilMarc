@@ -124,15 +124,15 @@ if(isset($_REQUEST['registre'])) {
                                         }
                                         ?>
 
-                                        <input class="form-control" type="email" name="correu" placeholder="correu electrònic">
+                                        <input class="form-control" type="email" name="correu" placeholder="correu electrònic" required>
 
 
-                                        <input class="form-control" type="text" name="usuari" placeholder="nom d'usuari">
+                                        <input class="form-control" type="text" name="usuari" placeholder="nom d'usuari" required>
 
 
                                         <div class="password-container">
 
-                                            <input class="form-control" type="password" name="contrasenya" placeholder="contrasenya" id="passwordField">
+                                            <input class="form-control" type="password" name="contrasenya" placeholder="contrasenya" id="passwordField" required>
 
                                             <span class="toggle-password" onclick="togglePasswordVisibility()">
                                                 <i class="unicon uil-eye" id="toggleIcon"></i>
