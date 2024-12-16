@@ -25,7 +25,7 @@ CREATE TABLE USUARIS (
     id_usu INT AUTO_INCREMENT PRIMARY KEY,
     usuari VARCHAR(50) NOT NULL,
     correu VARCHAR(100) NOT NULL,
-    contrasenya VARCHAR(30) NOT NULL,
+    contrasenya VARCHAR(64) NOT NULL,
     nom VARCHAR(50),
     cognoms VARCHAR(100),
     direccio VARCHAR(255),
@@ -55,8 +55,6 @@ CREATE TABLE ARXIUS_PUJATS (
 );
 
 
-
-
 CREATE TABLE ARXIUS_COMPARTITS (
     id_propietari INT NOT NULL,
     id_destinatari INT NOT NULL,
@@ -66,14 +64,6 @@ CREATE TABLE ARXIUS_COMPARTITS (
     FOREIGN KEY (id_destinatari) REFERENCES USUARIS(id_usu) ON DELETE CASCADE,
     FOREIGN KEY (id_arxiu) REFERENCES ARXIUS(id_arxiu) ON DELETE CASCADE
 );
-
-
-
-
-
-
-
-
 
 
 

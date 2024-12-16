@@ -572,6 +572,10 @@ b, strong {
   transform: translateY(-50%);
   cursor: pointer;
 }
+.advert {
+  font-size: 10pt;
+}
+
 
 
 /* PANELL_USUARI.PHP */

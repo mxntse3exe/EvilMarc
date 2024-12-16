@@ -1,3 +1,39 @@
+<?php
+if(isset($_REQUEST['registre'])) {
+    $servidor = "localhost";
+    $usuario = "web";
+    $password = "T5Dk!xq";
+    $db = "evilmarc";
+
+    $conexion = mysqli_connect($servidor,$usuario,$password,$db);
+
+    if (!$conexion) die ("Error al connectar amb la base de dades.");
+
+    $correu = $_REQUEST['correu'];
+    $correu = str_replace("=","",$correu);
+    $correu = str_replace(" ","",$correu);
+    $correu = str_replace("'","",$correu);
+
+    $usuari = $_REQUEST['usuari'];
+    $usuari = str_replace("=","",$usuari);
+    $usuari = str_replace(" ","",$usuari);
+    $usuari = str_replace("'","",$usuari);
+
+    $pass = $_REQUEST['contrasenya'];
+    $pass = hash('sha256', $pass, false);
+
+
+    $sql_comprovar_correu = "select * from USUARIS where correu = '".$correu."'";
+    $sql_comprovar_usuari = "select * from USUARIS where usuari = '".$usuari."'";
+
+
+    $sql = "insert into USUARIS(usuari,correu,contrasenya) values('".$usuari."','".$correu."','".$pass."')";
+
+}
+?>
+
+
+
 <!doctype html>
 <html lang="en">
 
@@ -58,19 +94,52 @@
                             
                             <div class="contact-form">	
                                 <div class="formulari_reg_log">
-                                    <form method="post" action="contacte">
-                                        <input class="form-control" type="text" name="correu" placeholder="correu electrònic">
+                                    <form method="post" action="registrar">
+
+                                        <?php
+
+                                        if(isset($_REQUEST['registre'])) {
+                                            $files_correu = mysqli_query($conexion,$sql_comprovar_correu);
+                                            $num_files_correu = mysqli_num_rows($files_correu);
+
+                                            $files_usuari = mysqli_query($conexion,$sql_comprovar_usuari);
+                                            $num_files_usuari = mysqli_num_rows($files_usuari);
+
+                                            if ($num_files_correu == 0) {
+                                                if ($num_files_usuari == 0) {
+                                                    if (mysqli_query($conexion,$sql)) {
+                                                        echo "<p class='adverts'>Usuari creat correctament, esperi que l'administrador verifiqui el seu compte.</p>";
+                                                    }
+                                                    else {
+                                                        echo "<p class='adverts'>No hem pogut crear el seu usuari en aquests moments.</p>";
+                                                    }
+                                                }
+                                                else {
+                                                    echo "<p class='adverts'>Ja existeix un compte amb aquest correu o usuari.</p>";
+                                                }
+                                            }
+                                            else {
+                                                echo "<p class='adverts'>Ja existeix un compte amb aquest correu o usuari.</p>";
+                                            }
+                                        }
+                                        ?>
+
+                                        <input class="form-control" type="email" name="correu" placeholder="correu electrònic">
+
+
                                         <input class="form-control" type="text" name="usuari" placeholder="nom d'usuari">
 
 
                                         <div class="password-container">
+
                                             <input class="form-control" type="password" name="contrasenya" placeholder="contrasenya" id="passwordField">
+
                                             <span class="toggle-password" onclick="togglePasswordVisibility()">
                                                 <i class="unicon uil-eye" id="toggleIcon"></i>
                                             </span>
                                         </div>
                                         
-                                        <input class="form-control submit-btn" type="submit" value="Iniciar" name="iniciar">
+                                        <input class="form-control submit-btn" type="submit" value="Iniciar" name="registre">
                                     </form>
                                 </div>		
                             </div>

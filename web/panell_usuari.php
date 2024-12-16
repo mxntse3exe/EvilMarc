@@ -1,3 +1,16 @@
+<?php 
+	session_start();
+
+    $servidor = "localhost";
+    $usuario = "web";
+    $password = "T5Dk!xq";
+    $db = "evilmarc";
+
+    $conexion = mysqli_connect($servidor,$usuario,$password,$db);
+
+    if (!$conexion) die ("Error al connectar amb la base de dades.");
+?>
+
 <!doctype html>
 <html lang="en">
 
@@ -26,14 +39,20 @@
         <div class="container">
             <a class="navbar-brand" href="index"> EvilMarc</a>
 
-            
-
             <div id="navbarNav">
                 <ul class="navbar-nav">
                     
-                    <li class="nav-item">
-                        <a href="sortir" class="nav-link"><span data-hover="Sortir">Sortir</span></a>
-                    </li>
+                    <?php
+                    if($_SESSION['valido'] == 1) {
+                        $usuari = $_SESSION['usuari'];
+                        echo '<li class="nav-item"><a href="sortir" class="nav-link"><span data-hover="Sortir">Sortir</span></a></li>';
+                    }
+                    else {
+                        echo '<li class="nav-item"><a href="inici" class="nav-link"><span data-hover="Iniciar sessió">Iniciar sessió</span></a></li>';
+                        echo '<li class="nav-item"><a href="registrar" class="nav-link"><span data-hover="Registrar-se">Registrar-se</span></a></li>';
+                    }
+                    ?>
+
                 </ul>
             </div>
         </div>
@@ -45,10 +64,19 @@
     
     <section class="about full-screen d-lg-flex justify-content-center align-items-center">
         <div class="container">
+
+
+        <?php
+        if($_SESSION['valido'] == 1) {
+            $usuari = $_SESSION['usuari']
+        ?>
+
             <div class="row seccio_panell">
                 <div>
                     <h2>Panell d'usuari</h2>
-                    <p>Benvingut/da, xxx!</p>
+                    <?php
+                    echo "<p>Benvingut/da, ".$usuari."!</p>";
+                    ?>
 
                     <div class="contingut_panell">
                         <a href="" class="link_panell"><div class="botons_panell"><span>Pujar i escanejar arxius</span></div></a>
@@ -58,14 +86,30 @@
                         <a href="" class="link_panell"><div class="botons_panell"><span>El meu compte</span></div></a>
 
                         <!-- Revisar!!! Amb PHP haurem de fer que només apareixi aquest apartat als usuaris administradors!!! -->
-                        <a href="" class="link_panell"><div class="botons_panell"><span>El meu compte</span></div></a>
+
+                        <?php
+                            $sql = "select admin from USUARIS where usuari = '".$usuari."'";
+
+                            $files = mysqli_query($conexion,$sql);
+
+                            while($fila = $files->fetch_assoc()) {
+                                $admin = $fila["admin"];
+                            }
+
+                            if ($admin == 1) {
+                                echo '<a href="" class="link_panell"><div class="botons_panell"><span>Panell de control d\'usuaris</span></div></a>';
+                            }
+                        ?>
+
                     </div>
 
+        <?php
+        }
+        else {
+            echo "Credencials incorrectes. Fes clic "."<a href='inici'>aquí</a>"." per iniciar sessió.";
+        }
+        ?>
 
-
-
-
-                    
                 </div>
                 
             </div>
@@ -96,22 +140,6 @@
     <script src="js/owl.carousel.min.js"></script>
     <script src="js/smoothscroll.js"></script>
     <script src="js/custom.js"></script>
-
-    <script>
-        function togglePasswordVisibility() {
-            const passwordField = document.getElementById('passwordField');
-            const toggleIcon = document.getElementById('toggleIcon');
-            if (passwordField.type === "password") {
-                passwordField.type = "text";
-                toggleIcon.classList.remove('uil-eye');
-                toggleIcon.classList.add('uil-eye-slash');
-            } else {
-                passwordField.type = "password";
-                toggleIcon.classList.remove('uil-eye-slash');
-                toggleIcon.classList.add('uil-eye');
-            }
-        }
-    </script>
 
 </body>
 
