@@ -329,6 +329,8 @@ b, strong {
   }
   .botons_panell {
     width: 180px;
+    margin-left: 10px;
+    margin-right: 10px;
   }
 }
 
@@ -338,6 +340,8 @@ b, strong {
   }
   .botons_panell {
     width: 180px;
+    margin-left: 10px;
+    margin-right: 10px;
   }
 }
 
@@ -368,7 +372,8 @@ b, strong {
   }
   .botons_panell {
     width: 180px;
-
+    margin-left: 10px;
+    margin-right: 10px;
   }
 
 }
@@ -408,8 +413,6 @@ b, strong {
   }
   .botons_panell {
     width: 100%;
-    margin-left: 10px;
-    margin-right: 10px;
   }
 
 }
@@ -448,8 +451,6 @@ b, strong {
   }
   .botons_panell {
     width: 100%;
-    margin-left: 10px;
-    margin-right: 10px;
   }
 
 }
@@ -493,8 +494,6 @@ b, strong {
   }
   .botons_panell {
     width: 100%;
-    margin-left: 10px;
-    margin-right: 10px;
   }
 }
 
