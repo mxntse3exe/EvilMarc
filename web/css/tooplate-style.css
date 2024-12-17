@@ -368,6 +368,7 @@ b, strong {
   }
   .botons_panell {
     width: 180px;
+
   }
 
 }
@@ -407,6 +408,8 @@ b, strong {
   }
   .botons_panell {
     width: 100%;
+    margin-left: 10px;
+    margin-right: 10px;
   }
 
 }
@@ -445,6 +448,8 @@ b, strong {
   }
   .botons_panell {
     width: 100%;
+    margin-left: 10px;
+    margin-right: 10px;
   }
 
 }
@@ -488,6 +493,8 @@ b, strong {
   }
   .botons_panell {
     width: 100%;
+    margin-left: 10px;
+    margin-right: 10px;
   }
 }
 
@@ -600,15 +607,16 @@ b, strong {
   box-shadow: 0px 0px 10px rgb(219, 219, 219);
   padding: 20px;
   height: 150px;
-  margin: 10px;
+  
   align-content: center;
   color: rgba(0, 0, 0, 0.5);
   font-weight: bold;
   transition: color 0.4s ease;
+
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 .botons_panell:hover {
   color: #2CB9FF;
   font-weight: bold;
 }
-
-

@@ -139,7 +139,7 @@ if(isset($_REQUEST['registre'])) {
                                             </span>
                                         </div>
                                         
-                                        <input class="form-control submit-btn" type="submit" value="Iniciar" name="registre">
+                                        <input class="form-control submit-btn" type="submit" value="Registrar-se" name="registre">
                                     </form>
                                 </div>		
                             </div>
