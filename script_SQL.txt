@@ -29,7 +29,7 @@ CREATE TABLE USUARIS (
     nom VARCHAR(50),
     cognoms VARCHAR(100),
     direccio VARCHAR(255),
-    departament INT,
+    imatge VARCHAR(255),
     admin BOOLEAN DEFAULT FALSE,
     validat BOOLEAN DEFAULT FALSE,
     id_dep INT,

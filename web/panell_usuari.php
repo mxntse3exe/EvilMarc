@@ -83,7 +83,7 @@
                         <a href="" class="link_panell"><div class="botons_panell"><span>Els meus arxius</span></div></a>
                         <a href="" class="link_panell"><div class="botons_panell"><span>Arxius compartits amb mi</span></div></a>
                         <a href="" class="link_panell"><div class="botons_panell"><span>Registre d'arxius pujats</span></div></a>
-                        <a href="" class="link_panell"><div class="botons_panell"><span>El meu compte</span></div></a>
+                        <a href="compte" class="link_panell"><div class="botons_panell"><span>El meu compte</span></div></a>
 
                         <!-- Revisar!!! Amb PHP haurem de fer que només apareixi aquest apartat als usuaris administradors!!! -->
 

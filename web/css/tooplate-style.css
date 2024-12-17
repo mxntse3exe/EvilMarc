@@ -12,7 +12,7 @@ body {
 }
 
 .full-screen {
-  padding: 3rem 0;
+  padding: 1rem 0;
 }
 
 .small-text {
@@ -332,6 +332,9 @@ b, strong {
     margin-left: 10px;
     margin-right: 10px;
   }
+  .mod_dades_inp {
+    width: 300px;
+  }
 }
 
 @media (max-width: 1270px) {
@@ -342,6 +345,9 @@ b, strong {
     width: 180px;
     margin-left: 10px;
     margin-right: 10px;
+  }
+  .mod_dades_inp {
+    width: 300px;
   }
 }
 
@@ -374,6 +380,9 @@ b, strong {
     width: 180px;
     margin-left: 10px;
     margin-right: 10px;
+  }
+  .mod_dades_inp {
+    width: 300px;
   }
 
 }
@@ -586,7 +595,6 @@ b, strong {
 }
 
 
-
 /* PANELL_USUARI.PHP */
 
 .seccio_panell {
@@ -621,4 +629,15 @@ b, strong {
 .botons_panell:hover {
   color: #2CB9FF;
   font-weight: bold;
+}
+
+
+/* COMPTE.PHP */
+
+.form_dades_mod {
+  text-align: left;
+}
+.label_mod {
+  font-size: 10pt;
+  margin-bottom: -10px;
 }

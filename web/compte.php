@@ -115,7 +115,7 @@
                 $sql = "update USUARIS set usuari = '$usuari_nou', correu = '$correu_nou', nom = '$nom_nou', cognoms = '$cognoms_nou', direccio = '$direccio_nou' where id_usu = '$id_usu'";
 
                 if (mysqli_query($conexion,$sql)) {
-                    echo "Usuari modificat correctament"."<br><br>";
+                    header("Location: compte");
                 }
                 else {
                     echo "Usuari no modificat"."<br><br>";
@@ -133,53 +133,40 @@
                     <h2>El meu compte</h2>
 
                     <div class="contingut_panell">
-
-                    <form action="compte" method="post" enctype="multipart/form-data">
-
-                        <input type="text" name="usuari_input" value="<?php echo $usuari_mod; ?>">
-                        <input type="text" name="correu_input" value="<?php echo $correu_mod; ?>">
-                        <input type="text" name="nom_input" value="<?php echo $nom_mod; ?>">
-                        <input type="text" name="cognoms_input" value="<?php echo $cognoms_mod; ?>">
-                        <input type="text" name="direccio_input" value="<?php echo $direccio_mod; ?>">
                         
-                        
-                        <!-- <img class="imagestyle" src="images/imatges_productes/<?php echo $imatge_mod; ?>" onerror="<?php echo 'Aquest producte no té imatge' ?>"><br>
-                        
-                        <span class="files_up">
-                            <label for="files_up">Selecciona una imatge</label>
-                            <input type="file" id="files_up" name="imatge">
-                        </span><br><br> -->
+                        <div class="contact-form">	
+                            <div class="formulari_reg_log">
+                                <form action="compte" method="post" enctype="multipart/form-data" class="form_dades_mod">
+                                    <p class="label_mod">Nom d'usuari</p>
+                                    <input class="form-control mod_dades_inp" type="text" name="usuari_input" value="<?php echo $usuari_mod; ?>">
 
-                        
-                        <input type="submit" value="Modificar dades" name="modificar">
-                    </form>
+                                    <p class="label_mod">Correu electrònic</p>
+                                    <input class="form-control mod_dades_inp" type="text" name="correu_input" value="<?php echo $correu_mod; ?>">
+
+                                    <p class="label_mod">Nom</p>
+                                    <input class="form-control mod_dades_inp" type="text" name="nom_input" value="<?php echo $nom_mod; ?>">
+
+                                    <p class="label_mod">Cognoms</p>
+                                    <input class="form-control mod_dades_inp" type="text" name="cognoms_input" value="<?php echo $cognoms_mod; ?>">
+
+                                    <p class="label_mod">Direcció</p>
+                                    <input class="form-control mod_dades_inp" type="text" name="direccio_input" value="<?php echo $direccio_mod; ?>">
+                                    
+                                    
+                                    <!-- <img class="imagestyle" src="images/imatges_productes/<?php echo $imatge_mod; ?>" onerror="<?php echo 'Aquest producte no té imatge' ?>"><br>
+                                    
+                                    <span class="files_up">
+                                        <label for="files_up">Selecciona una imatge</label>
+                                        <input type="file" id="files_up" name="imatge">
+                                    </span><br><br> -->
+            
+                                    
+                                    <input class="form-control submit-btn" type="submit" value="Modificar dades" name="modificar">
+                                </form>
+                            </div>
+                        </div>
 
 
-
-
-
-
-                        <a href="" class="link_panell"><div class="botons_panell"><span>Pujar i escanejar arxius</span></div></a>
-                        <a href="" class="link_panell"><div class="botons_panell"><span>Els meus arxius</span></div></a>
-                        <a href="" class="link_panell"><div class="botons_panell"><span>Arxius compartits amb mi</span></div></a>
-                        <a href="" class="link_panell"><div class="botons_panell"><span>Registre d'arxius pujats</span></div></a>
-                        <a href="" class="link_panell"><div class="botons_panell"><span>El meu compte</span></div></a>
-
-                        <!-- Revisar!!! Amb PHP haurem de fer que només apareixi aquest apartat als usuaris administradors!!! -->
-
-                        <?php
-                            $sql = "select admin from USUARIS where usuari = '".$usuari."'";
-
-                            $files = mysqli_query($conexion,$sql);
-
-                            while($fila = $files->fetch_assoc()) {
-                                $admin = $fila["admin"];
-                            }
-
-                            if ($admin == 1) {
-                                echo '<a href="" class="link_panell"><div class="botons_panell"><span>Panell de control d\'usuaris</span></div></a>';
-                            }
-                        ?>
 
                     </div>
 
