@@ -88,12 +88,15 @@
                         <!-- Revisar!!! Amb PHP haurem de fer que només apareixi aquest apartat als usuaris administradors!!! -->
 
                         <?php
-                            $sql = "select admin from USUARIS where usuari = '".$usuari."'";
+                            $sql = "select id_usu, admin from USUARIS where usuari = '".$usuari."'";
 
                             $files = mysqli_query($conexion,$sql);
 
                             while($fila = $files->fetch_assoc()) {
                                 $admin = $fila["admin"];
+
+                                $_SESSION['admin'] = $admin;
+                                $_SESSION['id_usu'] = $fila["id_usu"];
                             }
 
                             if ($admin == 1) {
