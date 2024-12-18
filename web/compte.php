@@ -41,7 +41,9 @@
 
             <div id="navbarNav">
                 <ul class="navbar-nav">
-        
+                    <li class="nav-item">
+                        <a href="panell_usuari" class="nav-link"><span data-hover="Panell principal">Panell principal</span></a>
+                    </li>
                     <li class="nav-item">
                         <a href="sortir" class="nav-link"><span data-hover="Sortir">Sortir</span></a>
                     </li>
