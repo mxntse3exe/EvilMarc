@@ -1,0 +1,20 @@
+pasos per treballar en un directori branca per no afectar el repositori main:
+
+En un directori que desitjem, que tingui permisos de usuari i les claus estiguin ben enllaçades:
+
+	git clone git@github.com:mxntse3exe/EvilMarc.git
+
+
+	cd EvilMarc/
+
+	
+	git switch entorn_proves
+
+
+Per verificar que s'ha conectat correctament:
+
+	git status
+
+
+
+
