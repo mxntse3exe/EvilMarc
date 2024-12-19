@@ -84,41 +84,29 @@
                     <div class="pujar_arxius_index">
                         <h3 class="text_analitzar">Analitza el teu arxiu</h3>
                         <br>
-                        <form enctype="multipart/form-data" method="post">
-                            <input type="hidden" name="max_file_size" value='681574400'> <!-- 650 MB en bytes -->
-                            Fichero: <input type="file" name="archivo">
-                            <br><br>
-                            <input type="submit" value="Pujar i Analitzar">
+                        <form action="upload.php" method="post" enctype="multipart/form-data">
+                            Select image to upload:
+                            <input type="file" name="fileToUpload" id="fileToUpload">
+                            <input type="submit" value="Upload Image" name="submit">
                         </form>
                         <br>
                         <?php
-                            // Directorio de carga
-                            $uploadDir = __DIR__ . '/fitxers/fitxers_usuaris/'; // Ruta relativa
-                            $mensaje = '';
-
-                            // Comprobar si el formulario se ha enviado y si hay un archivo
-                            if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['archivo'])) {
-                                $file = $_FILES['archivo'];
-                                $filename = basename($file['name']);
-                                $filePath = $uploadDir . $filename;
-
-                                // Comprobar si el archivo excede el tamaño máximo permitido
-                                if ($file['size'] > 681574400) { // 650MB en bytes
-                                    $mensaje = '<p style="color: red;">El archivo excede el tamaño máximo permitido de 650MB.</p>';
-                                } else {
-                                    // Intentar mover el archivo subido
-                                    if (move_uploaded_file($file['tmp_name'], $filePath)) {
-                                        $mensaje = '<p style="color: green;">Archivo subido con éxito: ' . htmlspecialchars($filename) . '</p>';
-                                    } else {
-                                        $mensaje = '<p style="color: red;">Error al subir el archivo.</p>';
-                                        // Registrar un mensaje de error en el log con detalles adicionales
-                                        error_log("Error al intentar mover el archivo: " . $file['name'] . " a la ruta: " . $filePath . " - Error: " . print_r(error_get_last(), true));
-                                    }
-                                }
-                            }
-
-                            // Mostrar mensaje de estado
-                            echo $mensaje;
+                        $target_dir = "fitxers/fitxers_usuaris/";
+                        $target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
+                        $uploadOk = 1;
+                        $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
+                        
+                        // Check if image file is a actual image or fake image
+                        if(isset($_POST["submit"])) {
+                        $check = getimagesize($_FILES["fileToUpload"]["tmp_name"]);
+                        if($check !== false) {
+                            echo "File is an image - " . $check["mime"] . ".";
+                            $uploadOk = 1;
+                        } else {
+                            echo "File is not an image.";
+                            $uploadOk = 0;
+                        }
+                        }
                         ?>
                     </div>
                 </div>
