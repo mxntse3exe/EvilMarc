@@ -117,7 +117,9 @@
                                         $mensaje = '<p style="color: green;">Archivo subido con éxito: ' . htmlspecialchars($filename) . '</p>';
                                     } else {
                                         $mensaje = '<p style="color: red;">Error al subir el archivo.</p>';
-                                    }
+                                        // Registrar un mensaje de error en el log
+                                        error_log("Error al intentar mover el archivo: " . $file['name'] . " a la ruta: " . $filePath);
+                                    }                                
                                 }
                             }
                             ?>
