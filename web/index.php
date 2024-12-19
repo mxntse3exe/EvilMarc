@@ -98,7 +98,7 @@
                         <br>
                         <?php
                         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['archivo'])) {
-                            if (strlen($_FILES['archivo']['name']) < 20) {
+                            if (strlen($_FILES['archivo']['name']) < 50) {
                                 if ($_FILES['archivo']['type'] == "image/jpeg" || $_FILES['archivo']['type'] == "application/pdf") {
                                     if ($_FILES['archivo']['size'] <= 680244480) { // 649MB en bytes
                                         if (is_uploaded_file($_FILES['archivo']['tmp_name'])) {
