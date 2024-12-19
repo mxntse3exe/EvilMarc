@@ -10,6 +10,7 @@
 
     if (!$conexion) die ("Error al connectar amb la base de dades.");
 
+    $usuari = $_SESSION['usuari'];
 
     $sql = "select id_usu, admin from USUARIS where usuari = '".$usuari."'";
 
@@ -87,10 +88,13 @@
             <div class="row seccio_panell">
                 <div>
                     <h2>Panell d'usuari</h2>
-                    <?php
-                    echo "<p>Benvingut/da, ".$usuari."!</p>";
-                    echo "<img src='images/perfil/foto_$'></img>";
-                    ?>
+                    <div class="text_foto">
+                        <?php
+                        echo "<p>Benvingut/da, ".$usuari."!</p>";
+
+                        echo "<img src='images/perfil/foto_".$_SESSION['id_usu'].".png'></img>";
+                        ?>
+                    </div>
 
                     <div class="contingut_panell">
                         <a href="" class="link_panell"><div class="botons_panell"><span>Pujar i escanejar arxius</span></div></a>
@@ -103,7 +107,6 @@
 
                         <?php
                             
-
                             if ($admin == 1) {
                                 echo '<a href="" class="link_panell"><div class="botons_panell"><span>Panell de control d\'usuaris</span></div></a>';
                             }

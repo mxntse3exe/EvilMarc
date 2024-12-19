@@ -650,6 +650,22 @@ b, strong {
   color: #2CB9FF;
   font-weight: bold;
 }
+.text_foto {
+  display: flex;
+  justify-content: center;
+}
+.text_foto img {
+  margin-left: 15px;
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  clip-path: inset(0);
+  border-radius: 100%;
+}
+.text_foto p {
+  margin-bottom: -10px;
+  margin-top: 6px;
+}
 
 
 /* COMPTE.PHP */

@@ -178,19 +178,34 @@
                             <div class="form_modificar columna">
 
 
-                                <form action="compte" method="post" enctype="multipart/form-data">
+                                <!-- <form action="compte" method="post" enctype="multipart/form-data">
                                     
                                     <div><img class="foto_perfil" src="<?php echo $info_usuari_bd['imatge']; ?>" alt="Foto de perfil"></div>
 
-                                    <!-- <input class="form-control submit-btn" type="submit" value="Cambiar foto..." name="foto"> -->
 
                                     <span class="files_up">
                                         <label for="files_up">Selecciona una imatge</label>
                                         <input type="file" id="files_up" name="imatge">
                                     </span>
 
+                        
+
                                     <input class="form-control submit-btn" type="submit" value="Modificar foto" name="foto">
 
+
+                                </form> -->
+
+                                <form action="compte" method="post" enctype="multipart/form-data" id="formModificarFoto">
+                                    
+                                    <div><img class="foto_perfil" src="<?php echo $info_usuari_bd['imatge']; ?>" alt="Foto de perfil"></div>
+
+
+                                    <input type="file" id="files_up" name="imatge" style="display: none;" onchange="submitForm()">
+                                    
+                                    <input type="hidden" name="foto" value="1">
+
+
+                                    <button type="button" class="form-control submit-btn" id="btnModificarFoto" name="foto">Modificar foto</button>
 
                                 </form>
 
@@ -220,12 +235,7 @@
                                     <input class="form-control mod_dades_inp" type="text" name="direccio_input" value="<?php echo $direccio_mod; ?>">
                                     
                                     
-                                    <!-- <img class="imagestyle" src="images/imatges_productes/<?php echo $imatge_mod; ?>" onerror="<?php echo 'Aquest producte no té imatge' ?>"><br>
                                     
-                                    <span class="files_up">
-                                        <label for="files_up">Selecciona una imatge</label>
-                                        <input type="file" id="files_up" name="imatge">
-                                    </span><br><br> -->
             
                                     
                                     <input class="form-control submit-btn" type="submit" value="Modificar dades" name="modificar">
@@ -274,6 +284,24 @@
     <script src="js/owl.carousel.min.js"></script>
     <script src="js/smoothscroll.js"></script>
     <script src="js/custom.js"></script>
+
+    <script>
+        // Capturar clic en el botó "Modificar foto"
+        document.getElementById('btnModificarFoto').addEventListener('click', function () {
+            document.getElementById('files_up').click(); // Simular clic en el camp de fitxer
+        });
+
+        // Enviar formulari automàticament quan es selecciona un fitxer
+        function submitForm() {
+            var fileInput = document.getElementById('files_up');
+            if (fileInput.files.length > 0) { // Comprovar si s'ha seleccionat un fitxer
+                document.getElementById('formModificarFoto').submit();
+            } else {
+                alert('Si us plau, selecciona una imatge.');
+            }
+        }
+
+    </script>
 
 </body>
 
