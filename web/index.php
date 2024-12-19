@@ -92,50 +92,45 @@
                         </form>
                         <br>
                         <?php
-                            if (isset($_FILES['archivo'])) {
-                                echo "<pre>";
-                                print_r($_FILES);
-                                echo "</pre>";
-
-                                if ($_FILES['archivo']['error'] === UPLOAD_ERR_OK) {
-                                    if (strlen($_FILES['archivo']['name']) <= 120) {
-                                        if ($_FILES['archivo']['size'] <= 681574400) {
-                                            $nombreDirectorio = "archivos/";
-                                            if (!file_exists($nombreDirectorio)) {
-                                                mkdir($nombreDirectorio, 0777, true);
-                                            }
-                                            $nombreFichero = basename($_FILES['archivo']['name']);
-                                            $rutaCompleta = $nombreDirectorio . $nombreFichero;
-
-                                            if (move_uploaded_file($_FILES['archivo']['tmp_name'], $rutaCompleta)) {
-                                                echo "Fitxer pujat correctament.";
-                                            } else {
-                                                echo "Error: No s'ha pogut pujar el fitxer.";
-                                                if (!is_uploaded_file($_FILES['archivo']['tmp_name'])) {
-                                                    echo " No es un archivo subido.";
-                                                }
-                                                if (!is_writable($nombreDirectorio)) {
-                                                    echo " El directorio no tiene permisos de escritura.";
-                                                }
-                                            }
-                                        } else {
-                                            echo "Error: El fitxer supera el tamany màxim permès (650 MB).";
-                                        }
-                                    } else {
-                                        echo "Error: El nom del fitxer supera els 120 caràcters.";
-                                    }
+                            // Código de procesamiento de subida de archivos
+                            $uploadDir = __DIR__ . '/fitxers/fitxers_usuaris/';
+                            
+                            $mensaje = '';
+                            if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['archivo'])) {
+                                $file = $_FILES['archivo'];
+                                $filename = basename($file['name']);
+                                $filePath = $uploadDir . $filename;
+                            
+                                // Verificar que el tamaño del archivo no exceda los 650MB
+                                if ($file['size'] > 681574400) { // 650MB en bytes
+                                    $mensaje = '<p style="color: red;">Error: El archivo excede el tamaño máximo permitido de 650 MB.</p>';
                                 } else {
-                                    echo "Error: Hi ha hagut un problema amb la pujada del fitxer (Codi: " . $_FILES['archivo']['error'] . ").";
+                                    // Si existe un archivo con el mismo nombre, añadir un timestamp
+                                    if (file_exists($filePath)) {
+                                        $timestamp = time();
+                                        $filename = pathinfo($file['name'], PATHINFO_FILENAME) . "_$timestamp." . pathinfo($file['name'], PATHINFO_EXTENSION);
+                                        $filePath = $uploadDir . $filename;
+                                    }
+                                
+                                    // Intentar mover el archivo subido
+                                    if (move_uploaded_file($file['tmp_name'], $filePath)) {
+                                        $mensaje = '<p style="color: green;">Archivo subido con éxito: ' . htmlspecialchars($filename) . '</p>';
+                                    } else {
+                                        $mensaje = '<p style="color: red;">Error al subir el archivo.</p>';
+                                    }
                                 }
                             }
-                        ?>
+                            ?>
+                            
+                            <!-- Mostrar mensaje de error o éxito -->
+                            <?php if (!empty($mensaje)) { echo $mensaje; } ?>
+                            
                     </div>
                 </div>
 
             </div>
         </div>
     </section>
-
 
     <!-- FUNCIONAMENT -->
     
@@ -160,10 +155,6 @@
                     <h2>Formulari de contacte</h2>
                         <div class="contact_contents">
                             
-                            <div class="contact_text">
-                                <p>Per qualsevol dubte, consulta o pregunta, no dubtis de posar-te en contacte amb nosaltres mitjançant el següent formulari. <br><br> Us atendrem tan aviat com ens sigui possible. <br><br> Moltes gràcies per la vostra confiança!</p>
-                            </div>
-                            
 
                             <div class="contact-form">    
                                 <div class="contact_formulari">
@@ -182,6 +173,7 @@
                 </div>
                 
                 
+
 
             </div>
         </div>
@@ -219,4 +211,4 @@
 
 </body>
 
-</html
+</html>
