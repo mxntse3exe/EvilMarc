@@ -1,5 +1,5 @@
 <?php 
-	session_start(); 
+    session_start(); 
 ?>
 
 <!doctype html>
@@ -84,52 +84,37 @@
                     <div class="pujar_arxius_index">
                         <h3 class="text_analitzar">Analitza el teu arxiu</h3>
                         <br>
-                        <form enctype="multipart/form-data" method="post" class="form-inline">
-                            <input type="hidden" name="max_file_size" value="680244480"> <!-- Máximo 649MB -->
-                            <div class="form-group">
-                                <label for="archivo" class="mr-2">Selecciona el fitxer:</label>
-                                <input type="file" name="archivo" id="archivo" class="form-control">
-                            </div>
+                        <form enctype="multipart/form-data" method="post">
+                            <input type="hidden" name="max_file_size" value='681574400'> <!-- 650 MB en bytes -->
+                            Fichero: <input type="file" name="archivo">
                             <br><br>
-                            <button type="submit" class="btn custom-btn custom-btn-bg custom-btn-link mt-3">
-                                <i class='uil uil-file-alt'></i> Pujar i Analitzar
-                            </button>
+                            <input type="submit" value="Pujar i Analitzar">
                         </form>
                         <br>
                         <?php
-                        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['archivo'])) {
-                            if (strlen($_FILES['archivo']['name']) < 50) {
-                                if ($_FILES['archivo']['type'] == "image/jpeg" || $_FILES['archivo']['type'] == "application/pdf") {
-                                    if ($_FILES['archivo']['size'] <= 680244480) { // 649MB en bytes
-                                        if (is_uploaded_file($_FILES['archivo']['tmp_name'])) {
-                                            $nombreDirectorio = "archivos/";
-                                            $nombreFichero = $_FILES['archivo']['name'];
-                                            
-                                            if (move_uploaded_file($_FILES['archivo']['tmp_name'], $nombreDirectorio . $nombreFichero)) {
-                                                echo "<div class='alert alert-success mt-3'>Fitxer pujat correctament.</div>";
-                                            } else {
-                                                echo "<div class='alert alert-danger mt-3'>Error: No s'ha pogut pujar el fitxer.</div>";
-                                            }
+                            if (isset($_FILES['archivo'])) {
+                                if (strlen($_FILES['archivo']['name']) <= 120) {
+                                    if ($_FILES['archivo']['size'] <= 681574400) {
+                                        $nombreDirectorio = "archivos/";
+                                        if (!file_exists($nombreDirectorio)) {
+                                            mkdir($nombreDirectorio, 0777, true);
+                                        }
+                                        $nombreFichero = basename($_FILES['archivo']['name']);
+                                        $rutaCompleta = $nombreDirectorio . $nombreFichero;
+
+                                        if (move_uploaded_file($_FILES['archivo']['tmp_name'], $rutaCompleta)) {
+                                            echo "Fitxer pujat correctament.";
+                                        } else {
+                                            echo "Error en pujar el fitxer.";
                                         }
                                     } else {
-                                        echo "<div class='alert alert-danger mt-3'>Error: El tamany del fitxer supera els 649MB.</div>";
+                                        echo "Error: El fitxer supera el tamany màxim permès (650 MB).";
                                     }
                                 } else {
-                                    echo "<div class='alert alert-danger mt-3'>Error: Tipus de fitxer no permès. Només imatges JPEG i PDFs.</div>";
+                                    echo "Error: El nom del fitxer supera els 120 caràcters.";
                                 }
-                            } else {
-                                echo "<div class='alert alert-danger mt-3'>Error: El nom del fitxer supera els 20 caràcters.</div>";
                             }
-                        }
                         ?>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </section>
-
-                        <a href="www.google.es" class="btn custom-btn custom-btn-bg custom-btn-link"><i class='uil uil-file-alt'></i> Puja un arxiu...</a>
                     </div>
                 </div>
 
@@ -166,7 +151,7 @@
                             </div>
                             
 
-                            <div class="contact-form">	
+                            <div class="contact-form">    
                                 <div class="contact_formulari">
                                     <form method="post" action="contacte">
                                         <input class="form-control" type="text" name="assumpte" placeholder="Assumpte">
@@ -174,7 +159,7 @@
                                         <textarea class="form-control" name="mensaje" cols="30" rows="7" placeholder="Missatge"></textarea>
                                         <input class="form-control submit-btn" type="submit" value="Enviar" name="enviar">
                                     </form>
-                                </div>		
+                                </div>        
                             </div>
 
 
@@ -220,4 +205,4 @@
 
 </body>
 
-</html>
+</html
