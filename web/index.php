@@ -93,25 +93,39 @@
                         <br>
                         <?php
                             if (isset($_FILES['archivo'])) {
-                                if (strlen($_FILES['archivo']['name']) <= 120) {
-                                    if ($_FILES['archivo']['size'] <= 681574400) {
-                                        $nombreDirectorio = "archivos/";
-                                        if (!file_exists($nombreDirectorio)) {
-                                            mkdir($nombreDirectorio, 0777, true);
-                                        }
-                                        $nombreFichero = basename($_FILES['archivo']['name']);
-                                        $rutaCompleta = $nombreDirectorio . $nombreFichero;
+                                echo "<pre>";
+                                print_r($_FILES);
+                                echo "</pre>";
 
-                                        if (move_uploaded_file($_FILES['archivo']['tmp_name'], $rutaCompleta)) {
-                                            echo "Fitxer pujat correctament.";
+                                if ($_FILES['archivo']['error'] === UPLOAD_ERR_OK) {
+                                    if (strlen($_FILES['archivo']['name']) <= 120) {
+                                        if ($_FILES['archivo']['size'] <= 681574400) {
+                                            $nombreDirectorio = "archivos/";
+                                            if (!file_exists($nombreDirectorio)) {
+                                                mkdir($nombreDirectorio, 0777, true);
+                                            }
+                                            $nombreFichero = basename($_FILES['archivo']['name']);
+                                            $rutaCompleta = $nombreDirectorio . $nombreFichero;
+
+                                            if (move_uploaded_file($_FILES['archivo']['tmp_name'], $rutaCompleta)) {
+                                                echo "Fitxer pujat correctament.";
+                                            } else {
+                                                echo "Error: No s'ha pogut pujar el fitxer.";
+                                                if (!is_uploaded_file($_FILES['archivo']['tmp_name'])) {
+                                                    echo " No es un archivo subido.";
+                                                }
+                                                if (!is_writable($nombreDirectorio)) {
+                                                    echo " El directorio no tiene permisos de escritura.";
+                                                }
+                                            }
                                         } else {
-                                            echo "Error en pujar el fitxer.";
+                                            echo "Error: El fitxer supera el tamany màxim permès (650 MB).";
                                         }
                                     } else {
-                                        echo "Error: El fitxer supera el tamany màxim permès (650 MB).";
+                                        echo "Error: El nom del fitxer supera els 120 caràcters.";
                                     }
                                 } else {
-                                    echo "Error: El nom del fitxer supera els 120 caràcters.";
+                                    echo "Error: Hi ha hagut un problema amb la pujada del fitxer (Codi: " . $_FILES['archivo']['error'] . ").";
                                 }
                             }
                         ?>
