@@ -84,51 +84,6 @@
                     <div class="pujar_arxius_index">
                         <h3 class="text_analitzar">Analitza el teu arxiu</h3>
                         <br>
-                        <form enctype="multipart/form-data" method="post" class="form-inline">
-                            <input type="hidden" name="max_file_size" value="680244480"> <!-- Máximo 649MB -->
-                            <div class="form-group">
-                                <label for="archivo" class="mr-2">Selecciona el fitxer:</label>
-                                <input type="file" name="archivo" id="archivo" class="form-control">
-                            </div>
-                            <br><br>
-                            <button type="submit" class="btn custom-btn custom-btn-bg custom-btn-link mt-3">
-                                <i class='uil uil-file-alt'></i> Pujar i Analitzar
-                            </button>
-                        </form>
-                        <br>
-                        <?php
-                        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['archivo'])) {
-                            if (strlen($_FILES['archivo']['name']) < 50) {
-                                if ($_FILES['archivo']['type'] == "image/jpeg" || $_FILES['archivo']['type'] == "application/pdf") {
-                                    if ($_FILES['archivo']['size'] <= 680244480) { // 649MB en bytes
-                                        if (is_uploaded_file($_FILES['archivo']['tmp_name'])) {
-                                            $nombreDirectorio = "archivos/";
-                                            $nombreFichero = $_FILES['archivo']['name'];
-                                            
-                                            if (move_uploaded_file($_FILES['archivo']['tmp_name'], $nombreDirectorio . $nombreFichero)) {
-                                                echo "<div class='alert alert-success mt-3'>Fitxer pujat correctament.</div>";
-                                            } else {
-                                                echo "<div class='alert alert-danger mt-3'>Error: No s'ha pogut pujar el fitxer.</div>";
-                                            }
-                                        }
-                                    } else {
-                                        echo "<div class='alert alert-danger mt-3'>Error: El tamany del fitxer supera els 649MB.</div>";
-                                    }
-                                } else {
-                                    echo "<div class='alert alert-danger mt-3'>Error: Tipus de fitxer no permès. Només imatges JPEG i PDFs.</div>";
-                                }
-                            } else {
-                                echo "<div class='alert alert-danger mt-3'>Error: El nom del fitxer supera els 20 caràcters.</div>";
-                            }
-                        }
-                        ?>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </section>
-
                         <a href="www.google.es" class="btn custom-btn custom-btn-bg custom-btn-link"><i class='uil uil-file-alt'></i> Puja un arxiu...</a>
                     </div>
                 </div>

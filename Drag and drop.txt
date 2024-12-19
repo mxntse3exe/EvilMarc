@@ -1,0 +1,18 @@
+Drag and drop (per mes tard):
+
+8 events:
+1. Draggable - Indica si el element es arrastrable
+
+2. Ondragstart - S'executa al inici de assatrar un element
+
+3. Ondrag - s'executa constantment mentre el element s'arrastra
+
+4. Ondragend - S'executa al finalitzar l'arrastre del element
+
+5. Ondragenter - Quan l'element accedeix sobre l'area destí
+
+6. Ondragover - Quan l'element es troba sobre el area destío
+
+7. Ondragleave - Quan l'element surt de la zona destí
+
+8. Ondrop - Quan l'element es solta sobre la zona destí
