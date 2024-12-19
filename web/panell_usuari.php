@@ -9,6 +9,19 @@
     $conexion = mysqli_connect($servidor,$usuario,$password,$db);
 
     if (!$conexion) die ("Error al connectar amb la base de dades.");
+
+
+    $sql = "select id_usu, admin from USUARIS where usuari = '".$usuari."'";
+
+    $files = mysqli_query($conexion,$sql);
+
+    while($fila = $files->fetch_assoc()) {
+        $admin = $fila["admin"];
+
+        $_SESSION['admin'] = $admin;
+        $_SESSION['id_usu'] = $fila["id_usu"];
+        $_SESSION['imatge'] = $fila["imatge"];
+    }
 ?>
 
 <!doctype html>
@@ -76,6 +89,7 @@
                     <h2>Panell d'usuari</h2>
                     <?php
                     echo "<p>Benvingut/da, ".$usuari."!</p>";
+                    echo "<img src='images/perfil/foto_$'></img>";
                     ?>
 
                     <div class="contingut_panell">
@@ -88,16 +102,7 @@
                         <!-- Revisar!!! Amb PHP haurem de fer que només apareixi aquest apartat als usuaris administradors!!! -->
 
                         <?php
-                            $sql = "select id_usu, admin from USUARIS where usuari = '".$usuari."'";
-
-                            $files = mysqli_query($conexion,$sql);
-
-                            while($fila = $files->fetch_assoc()) {
-                                $admin = $fila["admin"];
-
-                                $_SESSION['admin'] = $admin;
-                                $_SESSION['id_usu'] = $fila["id_usu"];
-                            }
+                            
 
                             if ($admin == 1) {
                                 echo '<a href="" class="link_panell"><div class="botons_panell"><span>Panell de control d\'usuaris</span></div></a>';

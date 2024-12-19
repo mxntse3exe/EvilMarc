@@ -60,6 +60,9 @@
     <section class="about full-screen d-lg-flex justify-content-center align-items-center">
         <div class="container">
 
+            <div class="row seccio_panell">
+                <div>
+                    <h2>El meu compte</h2>
 
         <?php
         if($_SESSION['valido'] == 1) {
@@ -118,30 +121,82 @@
 
                 $sql = "update USUARIS set usuari = '$usuari_nou', correu = '$correu_nou', nom = '$nom_nou', cognoms = '$cognoms_nou', direccio = '$direccio_nou' where id_usu = '$id_usu'";
 
-                if (mysqli_query($conexion,$sql)) {
-                    header("Location: compte");
+
+                $sql_check_usuari = "select * from USUARIS where usuari = '$usuari_nou' and id_usu != '$id_usu'";
+                $sql_check_correu = "select * from USUARIS where correu = '$correu_nou' and id_usu != '$id_usu'";
+
+                $usuari_check = mysqli_query($conexion, $sql_check_usuari);
+                $correu_check = mysqli_query($conexion, $sql_check_correu);
+
+                if ($usuari_check && mysqli_num_rows($usuari_check) > 0) {
+                    echo "Aquest nom d'usuari ja existeix!";
                 }
                 else {
-                    echo "Usuari no modificat"."<br><br>";
+                    if ($correu_check && mysqli_num_rows($correu_check) > 0) {
+                        echo "Aquest correu electrònic ja existeix!";
+                    }
+                    else {
+                        if (mysqli_query($conexion,$sql)) {
+                            $_SESSION['usuari'] = $usuari_nou;
+                            header("Location: compte");
+                        }
+                        else {
+                            echo "Usuari no modificat"."<br><br>";
+                        }
+                    }
                 }
+
             }
 
+            if(isset($_POST['foto'])) {
+                if (is_uploaded_file ($_FILES['imatge']['tmp_name'])) {
+                    
+                    // $nombreFichero = str_replace(" ","-",$_FILES['imatge']['name']);
 
+                    $nombreFichero = "foto_$id_usu.png";
 
+                    $rutaDestino = "images/perfil/" . $nombreFichero;
 
+                    if (file_exists($rutaDestino)) {
+                        unlink($rutaDestino);
+                    }
+
+                    move_uploaded_file ($_FILES['imatge']['tmp_name'], $rutaDestino);
+                    
+                    $sqlimg = "update USUARIS set imatge = '$rutaDestino' where id_usu = '$id_usu'";
+                    mysqli_query($conexion,$sqlimg);
+                    header("Location: compte");
+
+                }	
+            }
 
         ?>
-
-            <div class="row seccio_panell">
-                <div>
-                    <h2>El meu compte</h2>
 
                     <div class="contingut_panell_dades">
 
                         <div class="contact-form marge">
-                            <div class="form_modificar">
-                                <div><img src="<?php echo "$info_usuari_bd['imatge']"; ?>" alt="Foto de perfil"></div>
+                            <div class="form_modificar columna">
+
+
+                                <form action="compte" method="post" enctype="multipart/form-data">
+                                    
+                                    <div><img class="foto_perfil" src="<?php echo $info_usuari_bd['imatge']; ?>" alt="Foto de perfil"></div>
+
+                                    <!-- <input class="form-control submit-btn" type="submit" value="Cambiar foto..." name="foto"> -->
+
+                                    <span class="files_up">
+                                        <label for="files_up">Selecciona una imatge</label>
+                                        <input type="file" id="files_up" name="imatge">
+                                    </span>
+
+                                    <input class="form-control submit-btn" type="submit" value="Modificar foto" name="foto">
+
+
+                                </form>
+
+
                             </div>
+
                         </div>
                         
                         

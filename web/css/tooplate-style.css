@@ -680,3 +680,13 @@ b, strong {
   
 }
 
+.foto_perfil {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  clip-path: inset(0);
+  border-radius: 100%;
+}
+.columna {
+  flex-direction: column
+}
