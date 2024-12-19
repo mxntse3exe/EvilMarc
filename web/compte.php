@@ -76,7 +76,9 @@
                 $correu_mod = $info_usuari_bd['correu'];
                 $nom_mod = $info_usuari_bd['nom'];
                 $cognoms_mod = $info_usuari_bd['cognoms'];
-                $direccio_mod = $info_usuari_bd['direccio'];  
+                $direccio_mod = $info_usuari_bd['direccio']; 
+
+                $foto_perfil_mod = $info_usuari_bd['imatge'];
             }
 
             if(isset($_REQUEST['modificar'])) {
@@ -134,10 +136,18 @@
                 <div>
                     <h2>El meu compte</h2>
 
-                    <div class="contingut_panell">
+                    <div class="contingut_panell_dades">
+
+                        <div class="contact-form marge">
+                            <div class="form_modificar">
+                                <div><img src="<?php echo "$info_usuari_bd['imatge']"; ?>" alt="Foto de perfil"></div>
+                            </div>
+                        </div>
+                        
                         
                         <div class="contact-form">	
-                            <div class="formulari_reg_log">
+                            <div class="form_modificar">
+
                                 <form action="compte" method="post" enctype="multipart/form-data" class="form_dades_mod">
                                     <p class="label_mod">Nom d'usuari</p>
                                     <input class="form-control mod_dades_inp" type="text" name="usuari_input" value="<?php echo $usuari_mod; ?>">

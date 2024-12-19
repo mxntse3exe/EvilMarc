@@ -335,6 +335,9 @@ b, strong {
   .mod_dades_inp {
     width: 300px;
   }
+  .marge {
+    margin-right: 20px;
+  }
 }
 
 @media (max-width: 1270px) {
@@ -348,6 +351,9 @@ b, strong {
   }
   .mod_dades_inp {
     width: 300px;
+  }
+  .marge {
+    margin-right: 20px;
   }
 }
 
@@ -383,6 +389,9 @@ b, strong {
   }
   .mod_dades_inp {
     width: 300px;
+  }
+  .marge {
+    margin-right: 20px;
   }
 
 }
@@ -424,6 +433,9 @@ b, strong {
   .botons_panell {
     width: 100%;
   }
+  .marge {
+    margin-right: 20px;
+  }
 
 }
 @media (max-width: 580px) {
@@ -462,6 +474,10 @@ b, strong {
   }
   .botons_panell {
     width: 100%;
+  }
+  .contingut_panell_dades {
+    align-items: center;
+    flex-direction: column;
   }
 
 }
@@ -506,6 +522,10 @@ b, strong {
   }
   .botons_panell {
     width: 100%;
+  }
+  .contingut_panell_dades {
+    align-items: center;
+    flex-direction: column;
   }
 }
 
@@ -642,3 +662,21 @@ b, strong {
   margin-bottom: -10px;
   margin-top: -7px;
 }
+
+.form_modificar {
+  background-color: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0px 0px 10px rgb(219, 219, 219);
+  padding: 20px;
+  width: max-content;
+  display: flex;
+}
+
+.contingut_panell_dades {
+  display: flex;
+  
+  justify-content: center;
+  margin: 30px;
+  
+}
+
