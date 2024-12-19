@@ -93,7 +93,7 @@
                         <br>
                         <?php
                             // Código de procesamiento de subida de archivos
-                            $uploadDir = __DIR__ . '/fitxers/fitxers_usuaris/';
+                            $uploadDir = __DIR__ . '/home/bob/EvilMarc/web/fitxers/fitxers_usuaris/';
                             
                             $mensaje = '';
                             if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['archivo'])) {
