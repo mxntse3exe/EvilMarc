@@ -1,5 +1,5 @@
 <?php 
-	session_start(); 
+    session_start(); 
 ?>
 
 <!doctype html>
@@ -84,59 +84,71 @@
                     <div class="pujar_arxius_index">
                         <h3 class="text_analitzar">Analitza el teu arxiu</h3>
                         <br>
-                        <form enctype="multipart/form-data" method="post" class="form-inline">
-                            <input type="hidden" name="max_file_size" value="680244480"> <!-- Máximo 649MB -->
-                            <div class="form-group">
-                                <label for="archivo" class="mr-2">Selecciona el fitxer:</label>
-                                <input type="file" name="archivo" id="archivo" class="form-control">
-                            </div>
-                            <br><br>
-                            <button type="submit" class="btn custom-btn custom-btn-bg custom-btn-link mt-3">
-                                <i class='uil uil-file-alt'></i> Pujar i Analitzar
-                            </button>
+                        <form method="post" enctype="multipart/form-data">
+                            Selecciona el archivo para subir:
+                            <input type="file" name="fileToUpload" id="fileToUpload">
+                            <input type="submit" value="Subir archivo" name="submit">
                         </form>
                         <br>
                         <?php
-                        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['archivo'])) {
-                            if (strlen($_FILES['archivo']['name']) < 50) {
-                                if ($_FILES['archivo']['type'] == "image/jpeg" || $_FILES['archivo']['type'] == "application/pdf") {
-                                    if ($_FILES['archivo']['size'] <= 680244480) { // 649MB en bytes
-                                        if (is_uploaded_file($_FILES['archivo']['tmp_name'])) {
-                                            $nombreDirectorio = "archivos/";
-                                            $nombreFichero = $_FILES['archivo']['name'];
-                                            
-                                            if (move_uploaded_file($_FILES['archivo']['tmp_name'], $nombreDirectorio . $nombreFichero)) {
-                                                echo "<div class='alert alert-success mt-3'>Fitxer pujat correctament.</div>";
-                                            } else {
-                                                echo "<div class='alert alert-danger mt-3'>Error: No s'ha pogut pujar el fitxer.</div>";
-                                            }
-                                        }
-                                    } else {
-                                        echo "<div class='alert alert-danger mt-3'>Error: El tamany del fitxer supera els 649MB.</div>";
-                                    }
-                                } else {
-                                    echo "<div class='alert alert-danger mt-3'>Error: Tipus de fitxer no permès. Només imatges JPEG i PDFs.</div>";
-                                }
+                        // Definir la carpeta donde se subirán los archivos
+                        $target_dir = "fitxers/fitxers_usuaris/";
+                        $mensaje = '';
+
+                        // Verificar si el formulario fue enviado
+                        if (isset($_POST["submit"])) {
+                            // Obtener la información del archivo subido
+                            $target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
+                            $uploadOk = 1;
+                            $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+
+                            // Verificar si el archivo es una imagen (aunque no estés limitando los tipos de archivo, esto es parte del código original)
+                            $check = getimagesize($_FILES["fileToUpload"]["tmp_name"]);
+                            if ($check !== false) {
+                                $mensaje = "El archivo es una imagen - " . $check["mime"] . ".";
+                                $uploadOk = 1;
                             } else {
-                                echo "<div class='alert alert-danger mt-3'>Error: El nom del fitxer supera els 20 caràcters.</div>";
+                                $mensaje = "El archivo no es una imagen.";
+                                $uploadOk = 0;
                             }
+
+                            // Verificar si el archivo ya existe
+                            if (file_exists($target_file)) {
+                                $mensaje = "El archivo ya existe.";
+                                $uploadOk = 0;
+                            }
+
+                            // Verificar el tamaño del archivo
+                            if ($_FILES["fileToUpload"]["size"] > 681574400) { // 650 MB
+                                $mensaje = "El archivo es demasiado grande.";
+                                $uploadOk = 0;
+                            }
+
+                            // Si todo está bien, intentar mover el archivo
+                            if ($uploadOk == 0) {
+                                $mensaje .= " El archivo no se subió.";
+                            } else {
+                                if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
+                                    $mensaje = "El archivo " . htmlspecialchars(basename($_FILES["fileToUpload"]["name"])) . " se ha subido correctamente.";
+                                } else {
+                                    $mensaje = "Error al subir el archivo.";
+                                }
+                            }
+                        }
+
+                        // Mostrar mensaje
+                        if ($mensaje) {
+                            echo "<p>$mensaje</p>";
                         }
                         ?>
                     </div>
                 </div>
 
-            </div>
-        </div>
-    </section>
 
-                        <a href="www.google.es" class="btn custom-btn custom-btn-bg custom-btn-link"><i class='uil uil-file-alt'></i> Puja un arxiu...</a>
-                    </div>
-                </div>
 
             </div>
         </div>
     </section>
-
 
     <!-- FUNCIONAMENT -->
     
@@ -161,12 +173,8 @@
                     <h2>Formulari de contacte</h2>
                         <div class="contact_contents">
                             
-                            <div class="contact_text">
-                                <p>Per qualsevol dubte, consulta o pregunta, no dubtis de posar-te en contacte amb nosaltres mitjançant el següent formulari. <br><br> Us atendrem tan aviat com ens sigui possible. <br><br> Moltes gràcies per la vostra confiança!</p>
-                            </div>
-                            
 
-                            <div class="contact-form">	
+                            <div class="contact-form">    
                                 <div class="contact_formulari">
                                     <form method="post" action="contacte">
                                         <input class="form-control" type="text" name="assumpte" placeholder="Assumpte">
@@ -174,7 +182,7 @@
                                         <textarea class="form-control" name="mensaje" cols="30" rows="7" placeholder="Missatge"></textarea>
                                         <input class="form-control submit-btn" type="submit" value="Enviar" name="enviar">
                                     </form>
-                                </div>		
+                                </div>        
                             </div>
 
 
@@ -183,6 +191,7 @@
                 </div>
                 
                 
+
 
             </div>
         </div>
