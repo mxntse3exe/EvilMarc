@@ -84,32 +84,66 @@
                     <div class="pujar_arxius_index">
                         <h3 class="text_analitzar">Analitza el teu arxiu</h3>
                         <br>
-                        <form action="upload.php" method="post" enctype="multipart/form-data">
-                            Select image to upload:
+                        <form method="post" enctype="multipart/form-data">
+                            Selecciona el archivo para subir:
                             <input type="file" name="fileToUpload" id="fileToUpload">
-                            <input type="submit" value="Upload Image" name="submit">
+                            <input type="submit" value="Subir archivo" name="submit">
                         </form>
                         <br>
                         <?php
+                        // Definir la carpeta donde se subirán los archivos
                         $target_dir = "fitxers/fitxers_usuaris/";
-                        $target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
-                        $uploadOk = 1;
-                        $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
-                        
-                        // Check if image file is a actual image or fake image
-                        if(isset($_POST["submit"])) {
-                        $check = getimagesize($_FILES["fileToUpload"]["tmp_name"]);
-                        if($check !== false) {
-                            echo "File is an image - " . $check["mime"] . ".";
+                        $mensaje = '';
+
+                        // Verificar si el formulario fue enviado
+                        if (isset($_POST["submit"])) {
+                            // Obtener la información del archivo subido
+                            $target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
                             $uploadOk = 1;
-                        } else {
-                            echo "File is not an image.";
-                            $uploadOk = 0;
+                            $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+
+                            // Verificar si el archivo es una imagen (aunque no estés limitando los tipos de archivo, esto es parte del código original)
+                            $check = getimagesize($_FILES["fileToUpload"]["tmp_name"]);
+                            if ($check !== false) {
+                                $mensaje = "El archivo es una imagen - " . $check["mime"] . ".";
+                                $uploadOk = 1;
+                            } else {
+                                $mensaje = "El archivo no es una imagen.";
+                                $uploadOk = 0;
+                            }
+
+                            // Verificar si el archivo ya existe
+                            if (file_exists($target_file)) {
+                                $mensaje = "El archivo ya existe.";
+                                $uploadOk = 0;
+                            }
+
+                            // Verificar el tamaño del archivo
+                            if ($_FILES["fileToUpload"]["size"] > 681574400) { // 650 MB
+                                $mensaje = "El archivo es demasiado grande.";
+                                $uploadOk = 0;
+                            }
+
+                            // Si todo está bien, intentar mover el archivo
+                            if ($uploadOk == 0) {
+                                $mensaje .= " El archivo no se subió.";
+                            } else {
+                                if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
+                                    $mensaje = "El archivo " . htmlspecialchars(basename($_FILES["fileToUpload"]["name"])) . " se ha subido correctamente.";
+                                } else {
+                                    $mensaje = "Error al subir el archivo.";
+                                }
+                            }
                         }
+
+                        // Mostrar mensaje
+                        if ($mensaje) {
+                            echo "<p>$mensaje</p>";
                         }
                         ?>
                     </div>
                 </div>
+
 
 
             </div>
