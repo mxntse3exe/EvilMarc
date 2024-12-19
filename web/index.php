@@ -92,43 +92,37 @@
                         </form>
                         <br>
                         <?php
-                            // Código de procesamiento de subida de archivos
-                            $uploadDir = __DIR__ . '/home/bob/EvilMarc/web/fitxers/fitxers_usuaris/';
-                            
+                            // Directorio de carga
+                            $uploadDir = __DIR__ . '/fitxers/fitxers_usuaris/'; // Ruta relativa
                             $mensaje = '';
+
+                            // Comprobar si el formulario se ha enviado y si hay un archivo
                             if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['archivo'])) {
                                 $file = $_FILES['archivo'];
                                 $filename = basename($file['name']);
                                 $filePath = $uploadDir . $filename;
-                            
-                                // Verificar que el tamaño del archivo no exceda los 650MB
+
+                                // Comprobar si el archivo excede el tamaño máximo permitido
                                 if ($file['size'] > 681574400) { // 650MB en bytes
-                                    $mensaje = '<p style="color: red;">Error: El archivo excede el tamaño máximo permitido de 650 MB.</p>';
+                                    $mensaje = '<p style="color: red;">El archivo excede el tamaño máximo permitido de 650MB.</p>';
                                 } else {
-                                    // Si existe un archivo con el mismo nombre, añadir un timestamp
-                                    if (file_exists($filePath)) {
-                                        $timestamp = time();
-                                        $filename = pathinfo($file['name'], PATHINFO_FILENAME) . "_$timestamp." . pathinfo($file['name'], PATHINFO_EXTENSION);
-                                        $filePath = $uploadDir . $filename;
-                                    }
-                                
                                     // Intentar mover el archivo subido
                                     if (move_uploaded_file($file['tmp_name'], $filePath)) {
                                         $mensaje = '<p style="color: green;">Archivo subido con éxito: ' . htmlspecialchars($filename) . '</p>';
                                     } else {
                                         $mensaje = '<p style="color: red;">Error al subir el archivo.</p>';
-                                        // Registrar un mensaje de error en el log
-                                        error_log("Error al intentar mover el archivo: " . $file['name'] . " a la ruta: " . $filePath);
-                                    }                                
+                                        // Registrar un mensaje de error en el log con detalles adicionales
+                                        error_log("Error al intentar mover el archivo: " . $file['name'] . " a la ruta: " . $filePath . " - Error: " . print_r(error_get_last(), true));
+                                    }
                                 }
                             }
-                            ?>
-                            
-                            <!-- Mostrar mensaje de error o éxito -->
-                            <?php if (!empty($mensaje)) { echo $mensaje; } ?>
-                            
+
+                            // Mostrar mensaje de estado
+                            echo $mensaje;
+                        ?>
                     </div>
                 </div>
+
 
             </div>
         </div>
