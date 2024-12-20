@@ -74,3 +74,10 @@ sudo service apache2 restart
 copiar de la carpeta dels arxius a la carpeta de la web:
 
 sudo cp -r * /var/www/html/
+
+
+coses a tenir en compte:
+- si fem el pull en el nostre Ubuntu i copiem tots els arxius de la web directament a la carpeta de l'Apache, hem de donar permisos i canviar l'usuari de la carpeta images/perfil. Ho fem amb la comanda següent:
+
+	sudo chown www-data:www-data /var/www/html/images/perfil
+	sudo chmod 755 /var/www/html/images/perfil
