@@ -107,10 +107,10 @@
                         #$directorio = "fitxers/fitxers_usuaris/";
                         #$mensaje = subirArchivo($directorio, $_FILES["fileToUpload"]);
                         $uploaddir = '/home/bob/EvilMarc/web/fitxers/fitxers_usuaris';
-                        $uploadfile = $uploaddir . basename($_FILES['userfile']['name']);
+                        $uploadfile = $uploaddir . basename($_FILES['fileToUpload']['name']);
 
                         echo '<pre>';
-                        if (move_uploaded_file($_FILES['userfile']['tmp_name'], $uploadfile)) {
+                        if (move_uploaded_file($_FILES['fileToUpload']['tmp_name'], $uploadfile)) {
                             echo "File is valid, and was successfully uploaded.\n";
                         } else {
                             echo "Possible file upload attack!\n";
