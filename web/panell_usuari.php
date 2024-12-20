@@ -12,7 +12,7 @@
 
     $usuari = $_SESSION['usuari'];
 
-    $sql = "select id_usu, admin from USUARIS where usuari = '".$usuari."'";
+    $sql = "select * from USUARIS where usuari = '".$usuari."'";
 
     $files = mysqli_query($conexion,$sql);
 
@@ -22,6 +22,12 @@
         $_SESSION['admin'] = $admin;
         $_SESSION['id_usu'] = $fila["id_usu"];
         $_SESSION['imatge'] = $fila["imatge"];
+
+        $nom = $fila['nom'];
+        $cognoms = $fila['cognoms'];
+        $direccio = $fila['direccio'];
+
+
     }
 ?>
 
@@ -72,7 +78,7 @@
         </div>
     </nav>
 
-
+    
 
     <!-- FUNCIONAMENT -->
     
@@ -92,7 +98,7 @@
                         <?php
                         echo "<p>Benvingut/da, ".$usuari."!</p>";
 
-                        echo "<img src='images/perfil/foto_".$_SESSION['id_usu'].".png'></img>";
+                        echo "<img src='".$_SESSION['imatge']."'>";
                         ?>
                     </div>
 
@@ -101,9 +107,16 @@
                         <a href="" class="link_panell"><div class="botons_panell"><span>Els meus arxius</span></div></a>
                         <a href="" class="link_panell"><div class="botons_panell"><span>Arxius compartits amb mi</span></div></a>
                         <a href="" class="link_panell"><div class="botons_panell"><span>Registre d'arxius pujats</span></div></a>
-                        <a href="compte" class="link_panell"><div class="botons_panell"><span>El meu compte</span></div></a>
-
-                        <!-- Revisar!!! Amb PHP haurem de fer que només apareixi aquest apartat als usuaris administradors!!! -->
+                        <a href="compte" class="link_panell">
+                            <div class="botons_panell">
+                                <span>El meu compte</span>
+                                <?php
+                                if($nom == $null || $cognoms == $null || $direccio == $null || $_SESSION['imatge'] == 'images/perfil/perfil_default.png') {
+                                    echo "<span class='advertencia'>!</span>";
+                                }
+                                ?>
+                            </div>
+                        </a>
 
                         <?php
                             

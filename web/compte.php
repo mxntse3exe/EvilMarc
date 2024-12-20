@@ -110,14 +110,7 @@
                 $direccio_nou = str_replace("=","",$direccio_nou);
                 $direccio_nou = str_replace("'","\'",$direccio_nou);
                 $direccio_nou = str_replace('"','\"',$direccio_nou);
-
-                // if (is_uploaded_file ($_FILES['imatge']['tmp_name'])) {
-                //     $nombreFichero = $_FILES['imatge']['name'];
-                //     move_uploaded_file ($_FILES['imatge']['tmp_name'], "images/imatges_productes/".$nombreFichero);
-                    
-                //     $sqlimg = "update COMPONENTES set imatge = '".$nombreFichero."' WHERE cod_prod = '".$_SESSION['id_producto']."'";
-                //     mysqli_query($conexion,$sqlimg);
-                // }												
+										
 
                 $sql = "update USUARIS set usuari = '$usuari_nou', correu = '$correu_nou', nom = '$nom_nou', cognoms = '$cognoms_nou', direccio = '$direccio_nou' where id_usu = '$id_usu'";
 
@@ -150,8 +143,6 @@
 
             if(isset($_POST['foto'])) {
                 if (is_uploaded_file ($_FILES['imatge']['tmp_name'])) {
-                    
-                    // $nombreFichero = str_replace(" ","-",$_FILES['imatge']['name']);
 
                     $nombreFichero = "foto_$id_usu.png";
 
@@ -165,7 +156,7 @@
                     
                     $sqlimg = "update USUARIS set imatge = '$rutaDestino' where id_usu = '$id_usu'";
                     mysqli_query($conexion,$sqlimg);
-                    header("Location: compte");
+                    header("Location: compte?rand=".uniqid());
 
                 }	
             }
@@ -178,26 +169,9 @@
                             <div class="form_modificar columna">
 
 
-                                <!-- <form action="compte" method="post" enctype="multipart/form-data">
-                                    
-                                    <div><img class="foto_perfil" src="<?php echo $info_usuari_bd['imatge']; ?>" alt="Foto de perfil"></div>
-
-
-                                    <span class="files_up">
-                                        <label for="files_up">Selecciona una imatge</label>
-                                        <input type="file" id="files_up" name="imatge">
-                                    </span>
-
-                        
-
-                                    <input class="form-control submit-btn" type="submit" value="Modificar foto" name="foto">
-
-
-                                </form> -->
-
                                 <form action="compte" method="post" enctype="multipart/form-data" id="formModificarFoto">
                                     
-                                    <div><img class="foto_perfil" src="<?php echo $info_usuari_bd['imatge']; ?>" alt="Foto de perfil"></div>
+                                    <div><img class="foto_perfil" src="<?php echo $foto_perfil_mod. '?rand=' . uniqid(); ?>" alt="Foto de perfil"></div>
 
 
                                     <input type="file" id="files_up" name="imatge" style="display: none;" onchange="submitForm()">
@@ -220,10 +194,10 @@
 
                                 <form action="compte" method="post" enctype="multipart/form-data" class="form_dades_mod">
                                     <p class="label_mod">Nom d'usuari</p>
-                                    <input class="form-control mod_dades_inp" type="text" name="usuari_input" value="<?php echo $usuari_mod; ?>">
+                                    <input class="form-control mod_dades_inp" type="text" name="usuari_input" value="<?php echo $usuari_mod; ?>" required>
 
                                     <p class="label_mod">Correu electrònic</p>
-                                    <input class="form-control mod_dades_inp" type="text" name="correu_input" value="<?php echo $correu_mod; ?>">
+                                    <input class="form-control mod_dades_inp" type="text" name="correu_input" value="<?php echo $correu_mod; ?>" required>
 
                                     <p class="label_mod">Nom</p>
                                     <input class="form-control mod_dades_inp" type="text" name="nom_input" value="<?php echo $nom_mod; ?>">

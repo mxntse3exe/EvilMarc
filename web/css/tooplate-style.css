@@ -645,11 +645,33 @@ b, strong {
 
   margin-top: 10px;
   margin-bottom: 10px;
+
+  position: relative;
 }
+
 .botons_panell:hover {
   color: #2CB9FF;
   font-weight: bold;
 }
+
+.advertencia {
+  position: absolute;
+  top: -3px; /* Ajusta la posició vertical */
+  right: -6px; /* Ajusta la posició horitzontal */
+  width: 25px;
+  height: 25px;
+  background-color: #2CB9FF;
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+  text-align: center;
+  line-height: 20px;
+  border-radius: 50%;
+  border: 2px solid white; /* Opcional: afegeix un marge blanc */
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+
 .text_foto {
   display: flex;
   justify-content: center;
@@ -659,8 +681,11 @@ b, strong {
   width: 40px;
   height: 40px;
   object-fit: cover;
-  clip-path: inset(0);
+  
   border-radius: 100%;
+
+  border: 2px solid white; /* Opcional: afegeix un marge blanc */
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
 }
 .text_foto p {
   margin-bottom: -10px;
@@ -700,8 +725,10 @@ b, strong {
   width: 150px;
   height: 150px;
   object-fit: cover;
-  clip-path: inset(0);
+
   border-radius: 100%;
+  border: 2px solid white; /* Opcional: afegeix un marge blanc */
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
 }
 .columna {
   flex-direction: column

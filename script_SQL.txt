@@ -29,7 +29,7 @@ CREATE TABLE USUARIS (
     nom VARCHAR(50),
     cognoms VARCHAR(100),
     direccio VARCHAR(255),
-    imatge VARCHAR(255),
+    imatge VARCHAR(255) DEFAULT 'images/perfil/perfil_default.png',
     admin BOOLEAN DEFAULT FALSE,
     validat BOOLEAN DEFAULT FALSE,
     id_dep INT,
