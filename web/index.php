@@ -59,55 +59,55 @@
     </nav>
 
     <!-- PUJAR ARXIUS -->
-        <section class="about full-screen d-lg-flex justify-content-center align-items-center">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-5 col-md-12 col-12">
-                    <div class="pujar_arxius_index">
-                        <h3 class="text_analitzar">Analitza el teu arxiu</h3>
-                        <br>
-                        <form method="post" enctype="multipart/form-data">
-                            Selecciona el archivo para subir:
-                            <input type="file" name="fileToUpload" id="fileToUpload" class="form-control mb-3">
-                            <input type="submit" value="Subir archivo" name="submit" class="btn btn-primary">
-                        </form>
-                        <br>
-                        <?php
-                        // Función para subir archivos
-                        function subirArchivo($directorio, $archivo) {
-                            if (!is_dir($directorio)) {
-                                return "El directorio de destino no existe.";
-                            }
-
-                            if (!is_writable($directorio)) {
-                                return "El directorio de destino no tiene permisos de escritura.";
-                            }
-
-                            $rutaArchivo = $directorio . basename($archivo["name"]);
-                            if (move_uploaded_file($archivo["tmp_name"], $rutaArchivo)) {
-                                return "El archivo se ha subido correctamente.";
-                            } else {
-                                return "Error al mover el archivo. Revisa los permisos y el tamaño del archivo.";
-                            }
+    <section class="about full-screen d-lg-flex justify-content-center align-items-center">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-5 col-md-12 col-12">
+                <div class="pujar_arxius_index">
+                    <h3 class="text_analitzar">Analitza el teu arxiu</h3>
+                    <br>
+                    <form method="post" enctype="multipart/form-data">
+                        Selecciona el archivo para subir:
+                        <input type="file" name="fileToUpload" id="fileToUpload" class="form-control mb-3">
+                        <input type="submit" value="Subir archivo" name="submit" class="btn btn-primary">
+                    </form>
+                    <br>
+                    <?php
+                    // Función para subir archivos
+                    function subirArchivo($directorio, $archivo) {
+                        if (!is_dir($directorio)) {
+                            return "El directorio de destino no existe.";
                         }
 
-                        // Verificar si el formulario fue enviado
-                        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES["fileToUpload"])) {
-                            $directorio = '/home/bob/EvilMarc/web/fitxers/fitxers_usuaris/';
-                            $mensaje = subirArchivo($directorio, $_FILES["fileToUpload"]);
-                            
-                            // Mostrar resultados detallados
-                            echo "<p>$mensaje</p>";
-                            echo '<pre>';
-                            print_r($_FILES);
-                            echo '</pre>';
+                        if (!is_writable($directorio)) {
+                            return "El directorio de destino no tiene permisos de escritura.";
                         }
-                        ?>
-                    </div>
+
+                        $rutaArchivo = $directorio . basename($archivo["name"]);
+                        if (move_uploaded_file($archivo["tmp_name"], $rutaArchivo)) {
+                            return "El archivo se ha subido correctamente.";
+                        } else {
+                            return "Error al mover el archivo. Revisa los permisos y el tamaño del archivo.";
+                        }
+                    }
+
+                    // Verificar si el formulario fue enviado
+                    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES["fileToUpload"])) {
+                        $directorio = '/home/bob/.ssh/EvilMarc/web/fitxers/fitxers_usuaris';
+                        $mensaje = subirArchivo($directorio, $_FILES["fileToUpload"]);
+                        
+                        // Mostrar resultados detallados
+                        echo "<p>$mensaje</p>";
+                        echo '<pre>';
+                        print_r($_FILES);
+                        echo '</pre>';
+                    }
+                    ?>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
     <!-- FUNCIONAMENT -->
     
