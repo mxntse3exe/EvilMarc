@@ -93,7 +93,7 @@
 
                     // Verificar si el formulario fue enviado
                     if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES["fileToUpload"])) {
-                        $directorio = '/home/bob/.ssh/EvilMarc/web/fitxers/fitxers_usuaris';
+                        $directorio = '/fitxers/fitxers_usuaris';
                         $mensaje = subirArchivo($directorio, $_FILES["fileToUpload"]);
                         
                         // Mostrar resultados detallados
