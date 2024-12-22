@@ -75,7 +75,10 @@
                     <?php
                     // Función para subir archivos
                     function subirArchivo($directorio, $archivo) {
-                        if (!is_dir($directorio)) {
+                        $tamanoMaximo = 650 * 1024 * 1024; // 650 MB en bytes
+
+                         // Validar que el directorio existe y es escribible
+                         if (!is_dir($directorio)) {
                             return "El directorio de destino no existe.";
                         }
 
@@ -83,24 +86,35 @@
                             return "El directorio de destino no tiene permisos de escritura.";
                         }
 
-                        $rutaArchivo = $directorio . basename($archivo["name"]);
-                        if (move_uploaded_file($archivo["tmp_name"], $rutaArchivo)) {
-                            return "El archivo se ha subido correctamente.";
+                         // Validar el tamaño del archivo
+                         if ($archivo["size"] > $tamanoMaximo) {
+                            return "El archivo excede el tamaño máximo permitido de 650 MB.";
+                        }
+
+
+                         // Añadir timestamp al nombre del archivo para evitar duplicados
+                         $nombreArchivo = pathinfo($archivo["name"], PATHINFO_FILENAME);
+                         $extension = pathinfo($archivo["name"], PATHINFO_EXTENSION);
+                         $nombreConTimestamp = $nombreArchivo . '_' . time() . '.' . $extension;
+
+                         $rutaArchivo = $directorio . '/' . $nombreConTimestamp;
+
+
+                         // Intentar mover el archivo al directorio de destino
+                         if (move_uploaded_file($archivo["tmp_name"], $rutaArchivo)) {
+                            return "El archivo se ha subido correctamente como " . htmlspecialchars($nombreConTimestamp) . ".";
                         } else {
                             return "Error al mover el archivo. Revisa los permisos y el tamaño del archivo.";
                         }
                     }
 
-                    // Verificar si el formulario fue enviado
-                    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES["fileToUpload"])) {
-                        $directorio = '/fitxers/fitxers_usuaris';
+                     // Verificar si el formulario fue enviado
+                     if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES["fileToUpload"])) {
+                        $directorio = '/home/bob/.ssh/EvilMarc/web/fitxers/fitxers_usuaris';
                         $mensaje = subirArchivo($directorio, $_FILES["fileToUpload"]);
-                        
+
                         // Mostrar resultados detallados
                         echo "<p>$mensaje</p>";
-                        echo '<pre>';
-                        print_r($_FILES);
-                        echo '</pre>';
                     }
                     ?>
                 </div>
