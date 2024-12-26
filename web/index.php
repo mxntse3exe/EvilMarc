@@ -66,56 +66,31 @@
                 <div class="pujar_arxius_index">
                     <h3 class="text_analitzar">Analitza el teu arxiu</h3>
                     <br>
-                    <form method="post" enctype="multipart/form-data">
-                        Selecciona el archivo para subir:
-                        <input type="file" name="fileToUpload" id="fileToUpload" class="form-control mb-3">
-                        <input type="submit" value="Subir archivo" name="submit" class="btn btn-primary">
+                    <form enctype="multipart/form-data" method="post">
+                        <input type="hidden" name="max_file_size" value='5000000'>
+                        Fichero: <input type="file" name="archivo">
+                        <br><br>
+                        <input type="submit">
+                        <br><br>
                     </form>
                     <br>
                     <?php
-                    // Función para subir archivos
-                    function subirArchivo($directorio, $archivo) {
-                        $tamanoMaximo = 650 * 1024 * 1024; // 650 MB en bytes
-
-                         // Validar que el directorio existe y es escribible
-                         if (!is_dir($directorio)) {
-                            return "El directorio de destino no existe.";
+                    if (strlen($_FILES['archivo']['name']) < 20) {
+                        if ($_FILES['archivo']['type'] == "image/jpeg" || $_FILES['archivo']['type'] == "application/pdf") {
+                            if ($_FILES['archivo']['size'] <= 5000000) {
+                                
+                                if (is_uploaded_file ($_FILES['archivo']['tmp_name'])) {
+                                    $nombreDirectorio = "fitxers/";
+                                    $nombreFichero = $_FILES['archivo']['name'];
+                                    move_uploaded_file ($_FILES['archivo']['tmp_name'], $nombreDirectorio.$nombreFichero);
+                                }
+    
+                            }
+                            else echo "Error: El tamaño del archivo supera los 1KB";
                         }
-
-                        if (!is_writable($directorio)) {
-                            return "El directorio de destino no tiene permisos de escritura.";
-                        }
-
-                         // Validar el tamaño del archivo
-                         if ($archivo["size"] > $tamanoMaximo) {
-                            return "El archivo excede el tamaño máximo permitido de 650 MB.";
-                        }
-
-
-                         // Añadir timestamp al nombre del archivo para evitar duplicados
-                         $nombreArchivo = pathinfo($archivo["name"], PATHINFO_FILENAME);
-                         $extension = pathinfo($archivo["name"], PATHINFO_EXTENSION);
-                         $nombreConTimestamp = $nombreArchivo . '_' . time() . '.' . $extension;
-
-                         $rutaArchivo = $directorio . '/' . $nombreConTimestamp;
-
-
-                         // Intentar mover el archivo al directorio de destino
-                         if (move_uploaded_file($archivo["tmp_name"], $rutaArchivo)) {
-                            return "El archivo se ha subido correctamente como " . htmlspecialchars($nombreConTimestamp) . ".";
-                        } else {
-                            return "Error al mover el archivo. Revisa los permisos y el tamaño del archivo.";
-                        }
+                        else echo "Error: Tipo de archivo no permitido";
                     }
-
-                     // Verificar si el formulario fue enviado
-                     if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES["fileToUpload"])) {
-                        $directorio = '/home/bob/.ssh/EvilMarc/web/fitxers/fitxers_usuaris';
-                        $mensaje = subirArchivo($directorio, $_FILES["fileToUpload"]);
-
-                        // Mostrar resultados detallados
-                        echo "<p>$mensaje</p>";
-                    }
+                    else echo "Error: El nombre del archivo supera los 20 caracteres";
                     ?>
                 </div>
             </div>

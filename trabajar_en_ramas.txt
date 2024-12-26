@@ -1,0 +1,76 @@
+
+Para trabajar en una rama específica sin afectar otra rama, puedes usar el sistema de ramas de Git para mantener los cambios aislados. Aquí te dejo los pasos que debes seguir:
+
+1. Cambiar a una rama específica
+Si ya tienes la rama creada, asegúrate de estar en esa rama para trabajar:
+
+
+Copiar código
+git checkout nombre-de-la-rama
+Por ejemplo, si quieres trabajar en entorn proves:
+
+
+Copiar código
+git checkout entorn proves
+2. Crear una nueva rama basada en una rama existente
+Si quieres comenzar un nuevo trabajo sin afectar la rama actual (por ejemplo, main o entorn proves), puedes crear una nueva rama:
+
+
+Copiar código
+git checkout -b nombre-nueva-rama
+Por ejemplo:
+
+
+Copiar código
+git checkout -b pruebas-aisladas
+Esto crea y cambia automáticamente a la nueva rama, que estará basada en la rama actual.
+
+3. Asegúrate de que los cambios están aislados
+Mientras trabajas en una rama, cualquier cambio que hagas estará limitado solo a esa rama hasta que decidas fusionarlos con otra.
+
+Puedes verificar en qué rama estás trabajando con:
+
+
+Copiar código
+git branch
+La rama activa aparecerá con un asterisco (*).
+
+4. Guardar tus cambios en la rama específica
+Cuando termines de trabajar, guarda tus cambios en la rama:
+
+
+Copiar código
+git add .
+git commit -m "Descripción de los cambios"
+5. Subir la rama al repositorio remoto (si es necesario)
+Si necesitas colaborar o mantener una copia de seguridad en el repositorio remoto, puedes subir la rama:
+
+
+Copiar código
+git push origin nombre-de-la-rama
+Por ejemplo:
+
+
+Copiar código
+git push origin pruebas-aisladas
+6. Cambiar entre ramas sin mezclar cambios
+Asegúrate de no tener cambios pendientes antes de cambiar de rama. Si tienes cambios no guardados, haz un commit o guárdalos temporalmente con git stash.
+
+Para cambiar a otra rama, usa:
+
+
+Copiar código
+git checkout nombre-de-la-rama
+7. Fusionar cambios entre ramas (cuando sea necesario)
+Si en algún momento decides que los cambios de una rama específica deben ser aplicados a otra (por ejemplo, de pruebas-aisladas a main), puedes fusionarlos:
+
+Cambia a la rama de destino (por ejemplo, main):
+
+
+Copiar código
+git checkout main
+Fusiona la rama específica:
+
+
+Copiar código
+git merge pruebas-aisladas
