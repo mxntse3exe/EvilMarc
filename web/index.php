@@ -60,43 +60,54 @@
 
     <!-- PUJAR ARXIUS -->
     <section class="about full-screen d-lg-flex justify-content-center align-items-center">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-5 col-md-12 col-12">
-                <div class="pujar_arxius_index">
-                    <h3 class="text_analitzar">Analitza el teu arxiu</h3>
-                    <br>
-                    <form enctype="multipart/form-data" method="post">
-                        <input type="hidden" name="max_file_size" value='5000000'>
-                        Fichero: <input type="file" name="archivo">
-                        <br><br>
-                        <input type="submit">
-                        <br><br>
-                    </form>
-                    <br>
-                    <?php
-                    if (strlen($_FILES['archivo']['name']) < 20) {
-                        if ($_FILES['archivo']['type'] == "image/jpeg" || $_FILES['archivo']['type'] == "application/pdf") {
-                            if ($_FILES['archivo']['size'] <= 5000000) {
-                                
-                                if (is_uploaded_file ($_FILES['archivo']['tmp_name'])) {
-                                    $nombreDirectorio = "fitxers/";
-                                    $nombreFichero = $_FILES['archivo']['name'];
-                                    move_uploaded_file ($_FILES['archivo']['tmp_name'], $nombreDirectorio.$nombreFichero);
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-5 col-md-12 col-12">
+                    <div class="pujar_arxius_index">
+                        <h3 class="text_analitzar">Analitza el teu arxiu</h3>
+                        <br>
+                        <form enctype="multipart/form-data" method="post">
+                            <input type="hidden" name="max_file_size" value="5000000">
+                            Fichero: <input type="file" name="archivo" class="form-control mb-3">
+                            <br>
+                            <input type="submit" value="Subir archivo" class="btn btn-primary">
+                            <br><br>
+                        </form>
+                        <?php
+                        if (isset($_FILES['archivo'])) {
+                            if (strlen($_FILES['archivo']['name']) < 20) {
+                                if ($_FILES['archivo']['type'] == "image/jpeg" || $_FILES['archivo']['type'] == "application/pdf") {
+                                    if ($_FILES['archivo']['size'] <= 5000000) {
+                                        if (is_uploaded_file($_FILES['archivo']['tmp_name'])) {
+                                            $nombreDirectorio = '/home/bob/.ssh/EvilMarc/web/fitxers/fitxers_usuaris/';
+                                            $nombreFichero = $_FILES['archivo']['name'];
+                                            $rutaCompleta = $nombreDirectorio . $nombreFichero;
+
+                                            if (move_uploaded_file($_FILES['archivo']['tmp_name'], $rutaCompleta)) {
+                                                echo "<p>El archivo se ha subido correctamente como " . htmlspecialchars($nombreFichero) . ".</p>";
+                                            } else {
+                                                echo "<p>Error al mover el archivo. Verifica los permisos del directorio.</p>";
+                                            }
+                                        } else {
+                                            echo "<p>Error al cargar el archivo.</p>";
+                                        }
+                                    } else {
+                                        echo "<p>Error: El tamaño del archivo supera los 5MB.</p>";
+                                    }
+                                } else {
+                                    echo "<p>Error: Tipo de archivo no permitido.</p>";
                                 }
-    
+                            } else {
+                                echo "<p>Error: El nombre del archivo supera los 20 caracteres.</p>";
                             }
-                            else echo "Error: El tamaño del archivo supera los 1KB";
                         }
-                        else echo "Error: Tipo de archivo no permitido";
-                    }
-                    else echo "Error: El nombre del archivo supera los 20 caracteres";
-                    ?>
+                        ?>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
+
 
     <!-- FUNCIONAMENT -->
     
