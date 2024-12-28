@@ -1,5 +1,5 @@
 <?php 
-    session_start(); 
+	session_start(); 
 ?>
 
 <!doctype html>
@@ -60,54 +60,38 @@
 
     <!-- PUJAR ARXIUS -->
     <section class="about full-screen d-lg-flex justify-content-center align-items-center">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-5 col-md-12 col-12">
-                <div class="pujar_arxius_index">
-                    <h3 class="text_analitzar">Analitza el teu arxiu</h3>
-                    <br>
-                    <form method="post" enctype="multipart/form-data">
-                        Seleccionaaaaa el archivo para subir:
-                        <input type="file" name="fileToUpload" id="fileToUpload" class="form-control mb-3">
-                        <input type="submit" value="Subir archivo" name="submit" class="btn btn-primary">
-                    </form>
-                    <br>
-                    <?php
-                    // Función para subir archivos
-                    function subirArchivo($directorio, $archivo) {
-                        if (!is_dir($directorio)) {
-                            return "El directorio de destino no existe.";
-                        }
+        <div class="container">
+            <div class="row">
 
-                        if (!is_writable($directorio)) {
-                            return "El directorio de destino no tiene permisos de escritura.";
-                        }
+                <div class="col-lg-7 col-md-12 col-12 d-flex align-items-center">
+                    <div class="about-text">
+                        <h1 class="animated animated-text">
+                            <span class="mr-2">Amb EvilMarc podràs</span>
+                                <div class="animated-info">
+                                    <span class="animated-item">analitzar arxius</span>
+                                    <span class="animated-item">gestionar carpetes</span>
+                                    <span class="animated-item">compartir fitxers</span>
+                                </div>
+                        </h1>
 
-                        $rutaArchivo = $directorio . basename($archivo["name"]);
-                        if (move_uploaded_file($archivo["tmp_name"], $rutaArchivo)) {
-                            return "El archivo se ha subido correctamente.";
-                        } else {
-                            return "Error al mover el archivo. Revisa los permisos y el tamaño del archivo.";
-                        }
-                    }
+                        <p>Building a successful product is a challenge. I am highly energetic in user experience design, interfaces and web development.</p>
 
-                    // Verificar si el formulario fue enviado
-                    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES["fileToUpload"])) {
-                        $directorio = '/home/bob/.ssh/EvilMarc/web/fitxers/fitxers_usuaris';
-                        $mensaje = subirArchivo($directorio, $_FILES["fileToUpload"]);
-                        
-                        // Mostrar resultados detallados
-                        echo "<p>$mensaje</p>";
-                        echo '<pre>';
-                        print_r($_FILES);
-                        echo '</pre>';
-                    }
-                    ?>
+
+                    </div>
                 </div>
+
+                <div class="col-lg-5 col-md-12 col-12">
+                    <div class="pujar_arxius_index">
+                        <h3 class="text_analitzar">Analitza el teu arxiu</h3>
+                        <br>
+                        <a href="www.google.es" class="btn custom-btn custom-btn-bg custom-btn-link"><i class='uil uil-file-alt'></i> Puja un arxiu...</a>
+                    </div>
+                </div>
+
             </div>
         </div>
-    </div>
-</section>
+    </section>
+
 
     <!-- FUNCIONAMENT -->
     
@@ -121,7 +105,7 @@
                             <!-- <iframe width="400" height="250" src="https://www.youtube.com/embed/xvFZjo5PgG0?si=OxInnWXff0cEFuFZ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe> -->
                         </div>
                         <div class="text_funcionament">
-                            <p>Perfadsfasdfdsaf tal de poder analitzar el teu arxiu, hauras de pujar-lo a la nostra web seguint els passos del vídeo que trobaràs a continuació.</p>
+                            <p>Per tal de poder analitzar el teu arxiu, hauras de pujar-lo a la nostra web seguint els passos del vídeo que trobaràs a continuació.</p>
                         </div>
                     </div>
                 </div>
@@ -132,8 +116,12 @@
                     <h2>Formulari de contacte</h2>
                         <div class="contact_contents">
                             
+                            <div class="contact_text">
+                                <p>Per qualsevol dubte, consulta o pregunta, no dubtis de posar-te en contacte amb nosaltres mitjançant el següent formulari. <br><br> Us atendrem tan aviat com ens sigui possible. <br><br> Moltes gràcies per la vostra confiança!</p>
+                            </div>
+                            
 
-                            <div class="contact-form">    
+                            <div class="contact-form">	
                                 <div class="contact_formulari">
                                     <form method="post" action="contacte">
                                         <input class="form-control" type="text" name="assumpte" placeholder="Assumpte">
@@ -141,7 +129,7 @@
                                         <textarea class="form-control" name="mensaje" cols="30" rows="7" placeholder="Missatge"></textarea>
                                         <input class="form-control submit-btn" type="submit" value="Enviar" name="enviar">
                                     </form>
-                                </div>        
+                                </div>		
                             </div>
 
 
@@ -150,7 +138,6 @@
                 </div>
                 
                 
-
 
             </div>
         </div>

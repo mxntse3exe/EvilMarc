@@ -9,6 +9,26 @@
     $conexion = mysqli_connect($servidor,$usuario,$password,$db);
 
     if (!$conexion) die ("Error al connectar amb la base de dades.");
+
+    $usuari = $_SESSION['usuari'];
+
+    $sql = "select * from USUARIS where usuari = '".$usuari."'";
+
+    $files = mysqli_query($conexion,$sql);
+
+    while($fila = $files->fetch_assoc()) {
+        $admin = $fila["admin"];
+
+        $_SESSION['admin'] = $admin;
+        $_SESSION['id_usu'] = $fila["id_usu"];
+        $_SESSION['imatge'] = $fila["imatge"];
+
+        $nom = $fila['nom'];
+        $cognoms = $fila['cognoms'];
+        $direccio = $fila['direccio'];
+
+
+    }
 ?>
 
 <!doctype html>
@@ -58,7 +78,7 @@
         </div>
     </nav>
 
-
+    
 
     <!-- FUNCIONAMENT -->
     
@@ -74,31 +94,32 @@
             <div class="row seccio_panell">
                 <div>
                     <h2>Panell d'usuari</h2>
-                    <?php
-                    echo "<p>Benvingut/da, ".$usuari."!</p>";
-                    ?>
+                    <div class="text_foto">
+                        <?php
+                        echo "<p>Benvingut/da, ".$usuari."!</p>";
+
+                        echo "<img src='".$_SESSION['imatge']."'>";
+                        ?>
+                    </div>
 
                     <div class="contingut_panell">
                         <a href="" class="link_panell"><div class="botons_panell"><span>Pujar i escanejar arxius</span></div></a>
                         <a href="" class="link_panell"><div class="botons_panell"><span>Els meus arxius</span></div></a>
                         <a href="" class="link_panell"><div class="botons_panell"><span>Arxius compartits amb mi</span></div></a>
                         <a href="" class="link_panell"><div class="botons_panell"><span>Registre d'arxius pujats</span></div></a>
-                        <a href="" class="link_panell"><div class="botons_panell"><span>El meu compte</span></div></a>
-
-                        <!-- Revisar!!! Amb PHP haurem de fer que només apareixi aquest apartat als usuaris administradors!!! -->
+                        <a href="compte" class="link_panell">
+                            <div class="botons_panell">
+                                <span>El meu compte</span>
+                                <?php
+                                if($nom == $null || $cognoms == $null || $direccio == $null || $_SESSION['imatge'] == 'images/perfil/perfil_default.png') {
+                                    echo "<span class='advertencia'>!</span>";
+                                }
+                                ?>
+                            </div>
+                        </a>
 
                         <?php
-                            $sql = "select id_usu, admin from USUARIS where usuari = '".$usuari."'";
-
-                            $files = mysqli_query($conexion,$sql);
-
-                            while($fila = $files->fetch_assoc()) {
-                                $admin = $fila["admin"];
-
-                                $_SESSION['admin'] = $admin;
-                                $_SESSION['id_usu'] = $fila["id_usu"];
-                            }
-
+                            
                             if ($admin == 1) {
                                 echo '<a href="" class="link_panell"><div class="botons_panell"><span>Panell de control d\'usuaris</span></div></a>';
                             }

@@ -12,7 +12,7 @@ body {
 }
 
 .full-screen {
-  padding: 3rem 0;
+  padding: 1rem 0;
 }
 
 .small-text {
@@ -332,6 +332,12 @@ b, strong {
     margin-left: 10px;
     margin-right: 10px;
   }
+  .mod_dades_inp {
+    width: 300px;
+  }
+  .marge {
+    margin-right: 20px;
+  }
 }
 
 @media (max-width: 1270px) {
@@ -342,6 +348,12 @@ b, strong {
     width: 180px;
     margin-left: 10px;
     margin-right: 10px;
+  }
+  .mod_dades_inp {
+    width: 300px;
+  }
+  .marge {
+    margin-right: 20px;
   }
 }
 
@@ -374,6 +386,12 @@ b, strong {
     width: 180px;
     margin-left: 10px;
     margin-right: 10px;
+  }
+  .mod_dades_inp {
+    width: 300px;
+  }
+  .marge {
+    margin-right: 20px;
   }
 
 }
@@ -415,6 +433,9 @@ b, strong {
   .botons_panell {
     width: 100%;
   }
+  .marge {
+    margin-right: 20px;
+  }
 
 }
 @media (max-width: 580px) {
@@ -453,6 +474,10 @@ b, strong {
   }
   .botons_panell {
     width: 100%;
+  }
+  .contingut_panell_dades {
+    align-items: center;
+    flex-direction: column;
   }
 
 }
@@ -497,6 +522,10 @@ b, strong {
   }
   .botons_panell {
     width: 100%;
+  }
+  .contingut_panell_dades {
+    align-items: center;
+    flex-direction: column;
   }
 }
 
@@ -586,7 +615,6 @@ b, strong {
 }
 
 
-
 /* PANELL_USUARI.PHP */
 
 .seccio_panell {
@@ -617,8 +645,91 @@ b, strong {
 
   margin-top: 10px;
   margin-bottom: 10px;
+
+  position: relative;
 }
+
 .botons_panell:hover {
   color: #2CB9FF;
   font-weight: bold;
+}
+
+.advertencia {
+  position: absolute;
+  top: -3px; /* Ajusta la posició vertical */
+  right: -6px; /* Ajusta la posició horitzontal */
+  width: 25px;
+  height: 25px;
+  background-color: #2CB9FF;
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+  text-align: center;
+  line-height: 20px;
+  border-radius: 50%;
+  border: 2px solid white; /* Opcional: afegeix un marge blanc */
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+
+.text_foto {
+  display: flex;
+  justify-content: center;
+}
+.text_foto img {
+  margin-left: 15px;
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  
+  border-radius: 100%;
+
+  border: 2px solid white; /* Opcional: afegeix un marge blanc */
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+.text_foto p {
+  margin-bottom: -10px;
+  margin-top: 6px;
+}
+
+
+/* COMPTE.PHP */
+
+.form_dades_mod {
+  text-align: left;
+}
+.label_mod {
+  font-size: 10pt;
+  margin-bottom: -10px;
+  margin-top: -7px;
+}
+
+.form_modificar {
+  background-color: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0px 0px 10px rgb(219, 219, 219);
+  padding: 20px;
+  width: max-content;
+  display: flex;
+}
+
+.contingut_panell_dades {
+  display: flex;
+  
+  justify-content: center;
+  margin: 30px;
+  
+}
+
+.foto_perfil {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+
+  border-radius: 100%;
+  border: 2px solid white; /* Opcional: afegeix un marge blanc */
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+.columna {
+  flex-direction: column
 }

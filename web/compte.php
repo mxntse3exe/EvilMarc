@@ -41,7 +41,9 @@
 
             <div id="navbarNav">
                 <ul class="navbar-nav">
-        
+                    <li class="nav-item">
+                        <a href="panell_usuari" class="nav-link"><span data-hover="Panell principal">Panell principal</span></a>
+                    </li>
                     <li class="nav-item">
                         <a href="sortir" class="nav-link"><span data-hover="Sortir">Sortir</span></a>
                     </li>
@@ -58,6 +60,9 @@
     <section class="about full-screen d-lg-flex justify-content-center align-items-center">
         <div class="container">
 
+            <div class="row seccio_panell">
+                <div>
+                    <h2>El meu compte</h2>
 
         <?php
         if($_SESSION['valido'] == 1) {
@@ -74,7 +79,9 @@
                 $correu_mod = $info_usuari_bd['correu'];
                 $nom_mod = $info_usuari_bd['nom'];
                 $cognoms_mod = $info_usuari_bd['cognoms'];
-                $direccio_mod = $info_usuari_bd['direccio'];  
+                $direccio_mod = $info_usuari_bd['direccio']; 
+
+                $foto_perfil_mod = $info_usuari_bd['imatge'];
             }
 
             if(isset($_REQUEST['modificar'])) {
@@ -103,83 +110,114 @@
                 $direccio_nou = str_replace("=","",$direccio_nou);
                 $direccio_nou = str_replace("'","\'",$direccio_nou);
                 $direccio_nou = str_replace('"','\"',$direccio_nou);
-
-                // if (is_uploaded_file ($_FILES['imatge']['tmp_name'])) {
-                //     $nombreFichero = $_FILES['imatge']['name'];
-                //     move_uploaded_file ($_FILES['imatge']['tmp_name'], "images/imatges_productes/".$nombreFichero);
-                    
-                //     $sqlimg = "update COMPONENTES set imatge = '".$nombreFichero."' WHERE cod_prod = '".$_SESSION['id_producto']."'";
-                //     mysqli_query($conexion,$sqlimg);
-                // }												
+										
 
                 $sql = "update USUARIS set usuari = '$usuari_nou', correu = '$correu_nou', nom = '$nom_nou', cognoms = '$cognoms_nou', direccio = '$direccio_nou' where id_usu = '$id_usu'";
 
-                if (mysqli_query($conexion,$sql)) {
-                    echo "Usuari modificat correctament"."<br><br>";
+
+                $sql_check_usuari = "select * from USUARIS where usuari = '$usuari_nou' and id_usu != '$id_usu'";
+                $sql_check_correu = "select * from USUARIS where correu = '$correu_nou' and id_usu != '$id_usu'";
+
+                $usuari_check = mysqli_query($conexion, $sql_check_usuari);
+                $correu_check = mysqli_query($conexion, $sql_check_correu);
+
+                if ($usuari_check && mysqli_num_rows($usuari_check) > 0) {
+                    echo "Aquest nom d'usuari ja existeix!";
                 }
                 else {
-                    echo "Usuari no modificat"."<br><br>";
+                    if ($correu_check && mysqli_num_rows($correu_check) > 0) {
+                        echo "Aquest correu electrònic ja existeix!";
+                    }
+                    else {
+                        if (mysqli_query($conexion,$sql)) {
+                            $_SESSION['usuari'] = $usuari_nou;
+                            header("Location: compte");
+                        }
+                        else {
+                            echo "Usuari no modificat"."<br><br>";
+                        }
+                    }
                 }
+
             }
 
+            if(isset($_POST['foto'])) {
+                if (is_uploaded_file ($_FILES['imatge']['tmp_name'])) {
 
+                    $nombreFichero = "foto_$id_usu.png";
 
+                    $rutaDestino = "images/perfil/" . $nombreFichero;
 
+                    if (file_exists($rutaDestino)) {
+                        unlink($rutaDestino);
+                    }
+
+                    move_uploaded_file ($_FILES['imatge']['tmp_name'], $rutaDestino);
+                    
+                    $sqlimg = "update USUARIS set imatge = '$rutaDestino' where id_usu = '$id_usu'";
+                    mysqli_query($conexion,$sqlimg);
+                    header("Location: compte?rand=".uniqid());
+
+                }	
+            }
 
         ?>
 
-            <div class="row seccio_panell">
-                <div>
-                    <h2>El meu compte</h2>
+                    <div class="contingut_panell_dades">
 
-                    <div class="contingut_panell">
+                        <div class="contact-form marge">
+                            <div class="form_modificar columna">
 
-                    <form action="compte" method="post" enctype="multipart/form-data">
 
-                        <input type="text" name="usuari_input" value="<?php echo $usuari_mod; ?>">
-                        <input type="text" name="correu_input" value="<?php echo $correu_mod; ?>">
-                        <input type="text" name="nom_input" value="<?php echo $nom_mod; ?>">
-                        <input type="text" name="cognoms_input" value="<?php echo $cognoms_mod; ?>">
-                        <input type="text" name="direccio_input" value="<?php echo $direccio_mod; ?>">
+                                <form action="compte" method="post" enctype="multipart/form-data" id="formModificarFoto">
+                                    
+                                    <div><img class="foto_perfil" src="<?php echo $foto_perfil_mod. '?rand=' . uniqid(); ?>" alt="Foto de perfil"></div>
+
+
+                                    <input type="file" id="files_up" name="imatge" style="display: none;" onchange="submitForm()">
+                                    
+                                    <input type="hidden" name="foto" value="1">
+
+
+                                    <button type="button" class="form-control submit-btn" id="btnModificarFoto" name="foto">Modificar foto</button>
+
+                                </form>
+
+
+                            </div>
+
+                        </div>
                         
                         
-                        <!-- <img class="imagestyle" src="images/imatges_productes/<?php echo $imatge_mod; ?>" onerror="<?php echo 'Aquest producte no té imatge' ?>"><br>
-                        
-                        <span class="files_up">
-                            <label for="files_up">Selecciona una imatge</label>
-                            <input type="file" id="files_up" name="imatge">
-                        </span><br><br> -->
+                        <div class="contact-form">	
+                            <div class="form_modificar">
 
-                        
-                        <input type="submit" value="Modificar dades" name="modificar">
-                    </form>
+                                <form action="compte" method="post" enctype="multipart/form-data" class="form_dades_mod">
+                                    <p class="label_mod">Nom d'usuari</p>
+                                    <input class="form-control mod_dades_inp" type="text" name="usuari_input" value="<?php echo $usuari_mod; ?>" required>
+
+                                    <p class="label_mod">Correu electrònic</p>
+                                    <input class="form-control mod_dades_inp" type="text" name="correu_input" value="<?php echo $correu_mod; ?>" required>
+
+                                    <p class="label_mod">Nom</p>
+                                    <input class="form-control mod_dades_inp" type="text" name="nom_input" value="<?php echo $nom_mod; ?>">
+
+                                    <p class="label_mod">Cognoms</p>
+                                    <input class="form-control mod_dades_inp" type="text" name="cognoms_input" value="<?php echo $cognoms_mod; ?>">
+
+                                    <p class="label_mod">Direcció</p>
+                                    <input class="form-control mod_dades_inp" type="text" name="direccio_input" value="<?php echo $direccio_mod; ?>">
+                                    
+                                    
+                                    
+            
+                                    
+                                    <input class="form-control submit-btn" type="submit" value="Modificar dades" name="modificar">
+                                </form>
+                            </div>
+                        </div>
 
 
-
-
-
-
-                        <a href="" class="link_panell"><div class="botons_panell"><span>Pujar i escanejar arxius</span></div></a>
-                        <a href="" class="link_panell"><div class="botons_panell"><span>Els meus arxius</span></div></a>
-                        <a href="" class="link_panell"><div class="botons_panell"><span>Arxius compartits amb mi</span></div></a>
-                        <a href="" class="link_panell"><div class="botons_panell"><span>Registre d'arxius pujats</span></div></a>
-                        <a href="" class="link_panell"><div class="botons_panell"><span>El meu compte</span></div></a>
-
-                        <!-- Revisar!!! Amb PHP haurem de fer que només apareixi aquest apartat als usuaris administradors!!! -->
-
-                        <?php
-                            $sql = "select admin from USUARIS where usuari = '".$usuari."'";
-
-                            $files = mysqli_query($conexion,$sql);
-
-                            while($fila = $files->fetch_assoc()) {
-                                $admin = $fila["admin"];
-                            }
-
-                            if ($admin == 1) {
-                                echo '<a href="" class="link_panell"><div class="botons_panell"><span>Panell de control d\'usuaris</span></div></a>';
-                            }
-                        ?>
 
                     </div>
 
@@ -220,6 +258,24 @@
     <script src="js/owl.carousel.min.js"></script>
     <script src="js/smoothscroll.js"></script>
     <script src="js/custom.js"></script>
+
+    <script>
+        // Capturar clic en el botó "Modificar foto"
+        document.getElementById('btnModificarFoto').addEventListener('click', function () {
+            document.getElementById('files_up').click(); // Simular clic en el camp de fitxer
+        });
+
+        // Enviar formulari automàticament quan es selecciona un fitxer
+        function submitForm() {
+            var fileInput = document.getElementById('files_up');
+            if (fileInput.files.length > 0) { // Comprovar si s'ha seleccionat un fitxer
+                document.getElementById('formModificarFoto').submit();
+            } else {
+                alert('Si us plau, selecciona una imatge.');
+            }
+        }
+
+    </script>
 
 </body>
 
