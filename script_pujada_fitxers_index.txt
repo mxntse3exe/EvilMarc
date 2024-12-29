@@ -1,0 +1,40 @@
+<?php
+    session_start();
+?>
+
+
+
+    <!-- PUJAR ARXIUS -->
+    <section class="about full-screen d-lg-flex justify-content-center align-items-center">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-5 col-md-12 col-12">
+                <div class="pujar_arxius_index">
+                    <h3 class="text_analitzar">Analitza el teu arxiu</h3>
+                    <br>
+                    <form method="post" enctype="multipart/form-data">
+                        <label for="fileToUpload">Selecciona el arxiu que vols analitzar:</label>
+                        <input type="file" name="fileToUpload" id="fileToUpload" class="form-control mb-3">
+                        <input type="submit" value="Subir archivo" name="submit" class="btn btn-primary">
+                    </form>
+                    <br>
+                    <?php
+                    // Función para subir archivos
+                    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['fileToUpload'])) {
+                        $directorio = '/var/www/html/fitxers/fitxers_usuaris';
+
+                        // Intentar mover el archivo al directorio de destino
+                        if (move_uploaded_file($_FILES['fileToUpload']['tmp_name'], rtrim($directorio, '/') . '/' . $_FILES['fileToUpload']['name'])) {
+                            echo "<p>Archivo subido correctamente.</p>";
+                        } else {
+                            echo "<p>Error al subir el archivo. Verifica los permisos del directorio.</p>";
+                        }
+                    }
+                    ?>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+   
