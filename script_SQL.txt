@@ -1,6 +1,6 @@
 sudo mysql -u root -p
 
-CREATE USER 'web'@'localhost' IDENTIFIED BY 'T5Dk!xq'; 
+CREATE USER 'web'@'localhost' IDENTIFIED BY 'T5Dk!xq';   (Stucom1234)
 
 
 CREATE DATABASE IF NOT EXISTS evilmarc;
