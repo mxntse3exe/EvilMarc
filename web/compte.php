@@ -209,9 +209,6 @@
                                     <input class="form-control mod_dades_inp" type="text" name="direccio_input" value="<?php echo $direccio_mod; ?>">
                                     
                                     
-                                    
-            
-                                    
                                     <input class="form-control submit-btn" type="submit" value="Modificar dades" name="modificar">
                                 </form>
                             </div>

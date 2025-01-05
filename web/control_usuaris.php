@@ -26,9 +26,17 @@
         $nom = $fila['nom'];
         $cognoms = $fila['cognoms'];
         $direccio = $fila['direccio'];
-
-
     }
+
+    if(isset($_REQUEST['validar'])) {
+        $sql_validar = 'update USUARIS set validat = 1 where id_usu ='.$_REQUEST["id"].';';
+
+        mysqli_query($conexion,$sql_validar);
+    }
+
+
+
+
 ?>
 
 <!doctype html>
@@ -62,16 +70,15 @@
             <div id="navbarNav">
                 <ul class="navbar-nav">
                     
-                    <?php
-                    if($_SESSION['valido'] == 1) {
-                        $usuari = $_SESSION['usuari'];
-                        echo '<li class="nav-item"><a href="sortir" class="nav-link"><span data-hover="Sortir">Sortir</span></a></li>';
-                    }
-                    else {
-                        echo '<li class="nav-item"><a href="inici" class="nav-link"><span data-hover="Iniciar sessió">Iniciar sessió</span></a></li>';
-                        echo '<li class="nav-item"><a href="registrar" class="nav-link"><span data-hover="Registrar-se">Registrar-se</span></a></li>';
-                    }
-                    ?>
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a href="panell_usuari" class="nav-link"><span data-hover="Panell principal">Panell principal</span></a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="sortir" class="nav-link"><span data-hover="Sortir">Sortir</span></a>
+                        </li>
+                
+                    </ul>
 
                 </ul>
             </div>
@@ -87,45 +94,59 @@
 
 
         <?php
-        if($_SESSION['valido'] == 1) {
+        if(($_SESSION['valido'] == 1) && ($admin == 1)) {
             $usuari = $_SESSION['usuari']
+
         ?>
 
             <div class="row seccio_panell">
                 <div>
-                    <h2>Panell d'usuari</h2>
-                    <div class="text_foto">
-                        <?php
-                        echo "<p>Benvingut/da, ".$usuari."!</p>";
-
-                        echo "<img src='".$_SESSION['imatge']."'>";
-                        ?>
-                    </div>
-
+                    <h2>Panell de control d'usuaris</h2>
                     <div class="contingut_panell">
-                        <a href="" class="link_panell"><div class="botons_panell"><span>Pujar i escanejar arxius</span></div></a>
-                        <a href="" class="link_panell"><div class="botons_panell"><span>Els meus arxius</span></div></a>
-                        <a href="" class="link_panell"><div class="botons_panell"><span>Arxius compartits amb mi</span></div></a>
-                        <a href="" class="link_panell"><div class="botons_panell"><span>Registre d'arxius pujats</span></div></a>
-                        <a href="compte" class="link_panell">
-                            <div class="botons_panell">
-                                <span>El meu compte</span>
-                                <?php
-                                if($nom == $null || $cognoms == $null || $direccio == $null || $_SESSION['imatge'] == 'images/perfil/perfil_default.png') {
-                                    echo "<span class='advertencia'>!</span>";
-                                }
-                                ?>
+                    
+                    <?php
+                    $consulta_usuaris = "select * from USUARIS;";
+
+                    $usuaris_bd = mysqli_query($conexion,$consulta_usuaris);
+
+                    while($usuari_bd = $usuaris_bd->fetch_assoc()) {
+                    ?>
+
+
+
+                        <div class="boto_control_usu">
+
+                            <img src="<?php echo $usuari_bd['imatge']; ?>" class="boto_control_usu_img">
+                            <div class="dades_usu">
+                                <span><?php echo $usuari_bd['usuari']; ?></span>
+                                <p class="text_dades"><?php echo $usuari_bd['nom']; ?> <?php echo $usuari_bd['cognoms']; ?></p>
+                                <p class="text_dades"><?php echo $usuari_bd['correu']; ?></p>
                             </div>
-                        </a>
+                            <div>
 
+                                <!-- botó per validar els usuaris -->
+                                <form action="control_usuaris" method="POST">
+                                    <input type="hidden" name="id" value="<?php echo $usuari_bd['id_usu']; ?>">
+
+                                    <input class="form-control submit-btn" type="submit" value="Validar" name="validar">
+                                </form>
+
+                                <!-- botó per eliminar els usuaris -->
+                                <form action="control_usuaris" method="POST">
+                                    <input type="hidden" name="id" value="<?php echo $usuari_bd['id_usu']; ?>">
+
+                                    <input class="form-control submit-btn" type="submit" value="Eliminar" name="eliminar">
+                                </form>
+
+                            </div>
+
+                        </div>
+                        
+                        
                         <?php
-                            
-                            if ($admin == 1) {
-                                echo '<a href="control_usuaris" class="link_panell"><div class="botons_panell"><span>Panell de control d\'usuaris</span></div></a>';
-                            }
-                        ?>
-
-                    </div>
+                    }
+                    echo "</div>";
+                    ?>
 
         <?php
         }
