@@ -121,7 +121,7 @@
                         <?php
                             
                             if ($admin == 1) {
-                                echo '<a href="control_usuaris" class="link_panell"><div class="botons_panell"><span>Panell de control d\'usuaris</span></div></a>';
+                                echo '<a href="control_usuaris" class="link_panell"><div class="botons_panell"><span>Panell de control d\'usuaris i departaments</span></div></a>';
                             }
                         ?>
 
