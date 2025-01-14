@@ -338,6 +338,9 @@ b, strong {
   .marge {
     margin-right: 20px;
   }
+  .boto_control_usu {
+    height: 130px;
+  }
 }
 
 @media (max-width: 1270px) {
@@ -354,6 +357,9 @@ b, strong {
   }
   .marge {
     margin-right: 20px;
+  }
+  .boto_control_usu {
+    height: 130px;
   }
 }
 
@@ -392,6 +398,9 @@ b, strong {
   }
   .marge {
     margin-right: 20px;
+  }
+  .boto_control_usu {
+    height: 130px;
   }
 
 }
@@ -436,6 +445,16 @@ b, strong {
   .marge {
     margin-right: 20px;
   }
+  .boto_control_usu {
+    flex-direction: column;
+    height: auto;
+  }
+  .info_usu {
+    margin-bottom: 15px;
+  }
+  .crear_usu_boto {
+    margin-bottom: 15px;
+  }
 
 }
 @media (max-width: 580px) {
@@ -478,6 +497,17 @@ b, strong {
   .contingut_panell_dades {
     align-items: center;
     flex-direction: column;
+  }
+  .boto_control_usu {
+    flex-direction: column;
+    height: auto;
+
+  }
+  .info_usu {
+    margin-bottom: 15px;
+  }
+  .crear_usu_boto {
+    margin-bottom: 15px;
   }
 
 }
@@ -526,6 +556,17 @@ b, strong {
   .contingut_panell_dades {
     align-items: center;
     flex-direction: column;
+  }
+  .boto_control_usu {
+    flex-direction: column;
+    height: auto;
+
+  }
+  .info_usu {
+    margin-bottom: 15px;
+  }
+  .crear_usu_boto {
+    margin-bottom: 15px;
   }
 }
 
@@ -742,7 +783,7 @@ b, strong {
   border-radius: 20px;
   box-shadow: 0px 0px 10px rgb(219, 219, 219);
   padding: 20px;
-  height: 130px;
+
   width: 100%;
   
   align-content: center;
@@ -754,6 +795,10 @@ b, strong {
   margin-bottom: 10px;
 
   position: relative;
+  display: flex;
+}
+
+.info_usu {
   display: flex;
 }
 
@@ -844,6 +889,10 @@ b, strong {
 
 .btn:hover {
   color: #2CB9FF;
+}
+
+.gestionar_deps {
+  display: flex;
 }
 
 /* Fondo oscuro */
@@ -939,4 +988,10 @@ b, strong {
   border: 2px solid white;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
   margin-right: 8px;
+}
+
+.msg_comprovacio {
+  margin-top: 35px;
+  margin-bottom: -20px;
+  font-size: 16px;
 }

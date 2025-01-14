@@ -84,6 +84,30 @@
         mysqli_query($conexion,$update_dep_usu);
     }
 
+    if(isset($_REQUEST['crear_usu'])) {
+
+        $correu = $_REQUEST['correu'];
+        $correu = str_replace("=","",$correu);
+        $correu = str_replace(" ","",$correu);
+        $correu = str_replace("'","",$correu);
+    
+        $usuari = $_REQUEST['usuari'];
+        $usuari = str_replace("=","",$usuari);
+        $usuari = str_replace(" ","",$usuari);
+        $usuari = str_replace("'","",$usuari);
+    
+        $pass = $_REQUEST['contrasenya'];
+        $pass = hash('sha256', $pass, false);
+    
+    
+        $sql_comprovar_correu = "select * from USUARIS where correu = '".$correu."'";
+        $sql_comprovar_usuari = "select * from USUARIS where usuari = '".$usuari."'";
+    
+    
+        $sql = "insert into USUARIS(usuari,correu,contrasenya,validat) values('".$usuari."','".$correu."','".$pass."','1')";
+    
+    }
+
 
 
 ?>
@@ -154,13 +178,44 @@
 
                     <div class="botons_administracio">
 
-                        <div>
-                            <span class="btn" onclick="abrirPopup()">Crear usuari</span>
+                        <div class="crear_usu_boto">
+                            <span class="btn" onclick="abrirPopup_crearusu()">Crear usuari</span>
+                            
+                            <div class="overlay" id="overlay_crearusu" onclick="cerrarPopup_crearusu()"></div>
+                            <div class="popup" id="popup_crearusu">
+                                <h4>Crear usuari</h4>
+                                <div class="contact-form">
+                                    <form action="control_usuaris" method="post">
+
+
+                                    
+        
+                                        <input class="form-control" type="email" name="correu" placeholder="correu electrònic" required>
+                                        <input class="form-control" type="text" name="usuari" placeholder="nom d'usuari" required>
+
+                                        <div class="password-container">
+
+                                            <input class="form-control" type="password" name="contrasenya" placeholder="contrasenya" id="passwordField" required>
+
+                                            <span class="toggle-password" onclick="togglePasswordVisibility()">
+                                                <i class="unicon uil-eye" id="toggleIcon"></i>
+                                            </span>
+
+                                        </div>
+
+                                        <input class="form-control submit-btn" type="submit" value="Crear usuari" name="crear_usu">
+    
+                                    </form>
+                                </div>
+                                <span class="close-icon" onclick="cerrarPopup_crearusu()">×</span>
+                            </div>
                         </div>
 
-                        <div>
+
+
+                        <div class="gestionar_deps">
                             <span class="btn" onclick="abrirPopup_veuredep()">Veure departaments</span>
-                            <div class="overlay" id="overlay_veuredep"></div>
+                            <div class="overlay" id="overlay_veuredep" onclick="cerrarPopup_veuredep()"></div>
                             <div class="popup_dep" id="popup_veuredep">
                                 <h4>Veure departaments</h4>
 
@@ -190,10 +245,6 @@
                                 }
                                 
                                 ?>
-                                
-
-
-
                                 <span class="close-icon" onclick="cerrarPopup_veuredep()">×</span>
                             </div>
 
@@ -202,7 +253,7 @@
 
 
                             <span class="btn" onclick="abrirPopup_creardep()">Crear departament</span>
-                            <div class="overlay" id="overlay_creardep"></div>
+                            <div class="overlay" id="overlay_creardep" onclick="cerrarPopup_creardep()"></div>
                             <div class="popup" id="popup_creardep">
                                 <h4>Crear departament</h4>
                                 <div class="contact-form">
@@ -217,7 +268,7 @@
                             </div>
 
                             <span class="btn" onclick="abrirPopup_eliminardep()">Eliminar departament</span>
-                            <div class="overlay" id="overlay_eliminardep"></div>
+                            <div class="overlay" id="overlay_eliminardep" onclick="cerrarPopup_eliminardep()"></div>
                             <div class="popup" id="popup_eliminardep">
                                 <h4>Eliminar departament</h4>
                                 <div class="contact-form">
@@ -242,6 +293,33 @@
 
                     </div>
 
+                    <?php
+                    if(isset($_REQUEST['crear_usu'])) {
+                        $files_correu = mysqli_query($conexion,$sql_comprovar_correu);
+                        $num_files_correu = mysqli_num_rows($files_correu);
+
+                        $files_usuari = mysqli_query($conexion,$sql_comprovar_usuari);
+                        $num_files_usuari = mysqli_num_rows($files_usuari);
+
+                        if ($num_files_correu == 0) {
+                            if ($num_files_usuari == 0) {
+                                if (mysqli_query($conexion,$sql)) {
+                                    echo "<p class='msg_comprovacio'>Usuari creat correctament.</p>";
+                                }
+                                else {
+                                    echo "<p class='msg_comprovacio'>No hem pogut crear l'usuari en aquests moments.</p>";
+                                }
+                            }
+                            else {
+                                echo "<p class='msg_comprovacio'>Ja existeix un compte amb aquest correu o usuari.</p>";
+                            }
+                        }
+                        else {
+                            echo "<p class='msg_comprovacio'>Ja existeix un compte amb aquest correu o usuari.</p>";
+                        }
+                    }
+                    ?>
+
 
                     <div class="contingut_panell" style="width: 90%;">
                     
@@ -256,12 +334,14 @@
 
 
                         <div class="boto_control_usu">
+                            <div class="info_usu">
 
-                            <img src="<?php echo $usuari_bd['imatge']; ?>" class="boto_control_usu_img">
-                            <div class="dades_usu">
-                                <span><?php echo $usuari_bd['usuari']; ?></span>
-                                <p class="text_dades"><?php echo $usuari_bd['nom']; ?> <?php echo $usuari_bd['cognoms']; ?></p>
-                                <p class="text_dades"><?php echo $usuari_bd['correu']; ?></p>
+                                <img src="<?php echo $usuari_bd['imatge']; ?>" class="boto_control_usu_img">
+                                <div class="dades_usu">
+                                    <span><?php echo $usuari_bd['usuari']; ?></span>
+                                    <p class="text_dades"><?php echo $usuari_bd['nom']; ?> <?php echo $usuari_bd['cognoms']; ?></p>
+                                    <p class="text_dades"><?php echo $usuari_bd['correu']; ?></p>
+                                </div>
                             </div>
                             <div class="botons_usu">
 
@@ -353,6 +433,7 @@
         </div>
     </footer>
 
+
     <script src="js/jquery-3.3.1.min.js"></script>
     <script src="js/popper.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
@@ -362,7 +443,21 @@
     <script src="js/smoothscroll.js"></script>
     <script src="js/custom.js"></script>
 
-
+    <script>
+        function togglePasswordVisibility() {
+            const passwordField = document.getElementById('passwordField');
+            const toggleIcon = document.getElementById('toggleIcon');
+            if (passwordField.type === "password") {
+                passwordField.type = "text";
+                toggleIcon.classList.remove('uil-eye');
+                toggleIcon.classList.add('uil-eye-slash');
+            } else {
+                passwordField.type = "password";
+                toggleIcon.classList.remove('uil-eye-slash');
+                toggleIcon.classList.add('uil-eye');
+            }
+        }
+    </script>
 
     <script>
         // popup per crear departaments
@@ -395,6 +490,18 @@
             document.getElementById("overlay_veuredep").style.display = "none";
             document.getElementById("popup_veuredep").style.display = "none";
         }
+
+        // popup per crear usuaris
+        function abrirPopup_crearusu() {
+            document.getElementById("overlay_crearusu").style.display = "block";
+            document.getElementById("popup_crearusu").style.display = "block";
+        }
+        function cerrarPopup_crearusu() {
+            document.getElementById("overlay_crearusu").style.display = "none";
+            document.getElementById("popup_crearusu").style.display = "none";
+        }
+
+
     </script>
 
 </body>

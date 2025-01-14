@@ -21,16 +21,17 @@
 
 		$sql = "select * from USUARIS where correu='".$mail."' and contrasenya='".$pass."' and validat = 1";
 		
-
 		$filas = mysqli_query($conexion,$sql);
 		$nfilas = mysqli_num_rows($filas);
+        
+        $sql_novalidat = "select * from USUARIS where correu='".$mail."' and contrasenya='".$pass."' and validat = 0";
 
+        $files_usuarinovalidat = mysqli_query($conexion,$sql_novalidat);
+        $usuari_validat = mysqli_num_rows($files_usuarinovalidat);
 
-		if ($nfilas == 0) {
-			$_SESSION['valido'] = 0;
-			echo "Credencials incorrectes. Torna a "."<a href='inici'>iniciar sessió</a>".".";
-			header("Location: inici");
-		}
+        if ($nfilas == 0) {
+            $_SESSION['valido'] = 0;
+        }
 
 		else {
 			$_SESSION['valido'] = 1;
@@ -106,6 +107,18 @@
                             <div class="contact-form">	
                                 <div class="formulari_reg_log">
                                     <form method="post" action="inici">
+
+                                        <?php
+                                        if (isset($_POST['iniciar'])) {
+
+                                            if ($usuari_validat == 1) {
+                                                echo "<p class='adverts'>El seu usuari està pendent de validació.</p>";
+                                            }
+                                            else if ($nfilas == 0) {
+                                                echo "<p class='adverts'>Credencials incorrectes.</p>";
+                                            }
+                                        }
+                                        ?>
 
                                         <input class="form-control" type="email" name="mail" placeholder="correu electrònic">
 
