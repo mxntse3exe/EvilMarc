@@ -65,6 +65,11 @@ sudo service apache2 restart
 
 
 
+per fer servir el Python amb MySQL:
+
+	sudo apt install python3-pip
+	pip3 install mysql-connector-python
+
 
 
 
@@ -95,8 +100,8 @@ coses a tenir en compte:
 	sudo chmod 755 /var/www/html/fitxers/fitxers_temp
 
 
-
 - hem d'editar l'arxiu /etc/php/8.1/apache2/php.ini:
 
+	sudo nano /etc/php/8.1/apache2/php.ini
 	upload_max_filesize = 650M 
 	post_max_size = 650M

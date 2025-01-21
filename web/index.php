@@ -81,6 +81,7 @@
                                     $nombreDirectorio = "/var/www/html/fitxers/fitxers_temp/";
                                     $nombreFichero = $_FILES['archivo']['name'];
                                     move_uploaded_file ($_FILES['archivo']['tmp_name'], $nombreDirectorio.$nombreFichero);
+                                    
                                     $output = shell_exec('python3 /var/www/html/evilmarc_web.py');
                                     echo $output;
                                 }
