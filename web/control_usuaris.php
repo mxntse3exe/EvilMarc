@@ -40,6 +40,18 @@
         mysqli_query($conexion,$sql_eliminar);
     }
 
+    if(isset($_REQUEST['fer_admin'])) {
+        $sql_admin = 'update USUARIS set admin = 1 where id_usu ='.$_REQUEST["id"].';';
+
+        mysqli_query($conexion,$sql_admin);
+    }
+
+    if(isset($_REQUEST['treure_admin'])) {
+        $sql_admin = 'update USUARIS set admin = 0 where id_usu ='.$_REQUEST["id"].';';
+
+        mysqli_query($conexion,$sql_admin);
+    }
+
     if(isset($_REQUEST['crear_dep'])) {
         $nom_dep = $_REQUEST['nom_dep'];
         $nom_dep = str_replace("=","",$nom_dep);
@@ -338,7 +350,7 @@
 
                                 <img src="<?php echo $usuari_bd['imatge']; ?>" class="boto_control_usu_img">
                                 <div class="dades_usu">
-                                    <span><?php echo $usuari_bd['usuari']; ?></span>
+                                    <span><?php echo $usuari_bd['usuari']; if ($usuari_bd["admin"] == 1) echo "  (administrador)";?></span>
                                     <p class="text_dades"><?php echo $usuari_bd['nom']; ?> <?php echo $usuari_bd['cognoms']; ?></p>
                                     <p class="text_dades"><?php echo $usuari_bd['correu']; ?></p>
                                 </div>
@@ -361,6 +373,30 @@
                                 }
                                 else {
                                 ?>
+
+                                    <?php
+                                    if ($usuari_bd["admin"] == 0 && $usuari_bd["usuari"] != $usuari) {
+                                    ?>
+
+                                    <form action="control_usuaris" method="POST">
+                                        <input type="hidden" name="id" value="<?php echo $usuari_bd['id_usu']; ?>">
+                                        <input class="boto_fer_admin" type="submit" value="&#10003; Admin" name="fer_admin">
+                                    </form>
+
+                                    <?php
+                                    }
+                                    else if ($usuari_bd["admin"] == 1 && $usuari_bd["usuari"] != $usuari) {
+                                    ?>
+
+                                    <form action="control_usuaris" method="POST">
+                                        <input type="hidden" name="id" value="<?php echo $usuari_bd['id_usu']; ?>">
+                                        <input class="boto_treure_admin" type="submit" value="&#10007; Admin" name="treure_admin">
+                                    </form>
+
+                                    <?php
+                                    }
+                                    ?>
+
 
                                     <!-- botó per canviar el departament dels usuaris -->
                                     <form action="control_usuaris" method="POST">

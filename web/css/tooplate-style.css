@@ -341,6 +341,9 @@ b, strong {
   .boto_control_usu {
     height: 130px;
   }
+  .botons_usu {
+    font-size: 16px;
+  }
 }
 
 @media (max-width: 1270px) {
@@ -360,6 +363,9 @@ b, strong {
   }
   .boto_control_usu {
     height: 130px;
+  }
+  .botons_usu {
+    font-size: 16px;
   }
 }
 
@@ -401,6 +407,9 @@ b, strong {
   }
   .boto_control_usu {
     height: 130px;
+  }
+  .botons_usu {
+    font-size: 16px;
   }
 
 }
@@ -455,6 +464,9 @@ b, strong {
   .crear_usu_boto {
     margin-bottom: 15px;
   }
+  .botons_usu {
+    font-size: 13px;
+  }
 
 }
 @media (max-width: 580px) {
@@ -508,6 +520,9 @@ b, strong {
   }
   .crear_usu_boto {
     margin-bottom: 15px;
+  }
+  .botons_usu {
+    font-size: 13px;
   }
 
 }
@@ -567,6 +582,9 @@ b, strong {
   }
   .crear_usu_boto {
     margin-bottom: 15px;
+  }
+  .botons_usu {
+    font-size: 13px;
   }
 }
 
@@ -862,7 +880,48 @@ b, strong {
   background: #43742e;
 }
 
+.boto_fer_admin {
+  background: #b8d051;
+  border-radius: 50px;
+  color: #ffffff;
+  font-weight: bold;
+  border: 0;
+  transition: all 0.4s ease;
+  padding: 10px 15px;
+  margin-left: 10px;
+}
+.boto_fer_admin:hover {
+  background: #798930;
+}
 
+.boto_treure_admin {
+  background: #ff9215;
+  border-radius: 50px;
+  color: #ffffff;
+  font-weight: bold;
+  border: 0;
+  transition: all 0.4s ease;
+  padding: 10px 15px;
+  margin-left: 10px;
+}
+.boto_treure_admin:hover {
+  background: #94550c;
+}
+
+.departament_usuari_selector {
+  background: #2CB9FF;
+  border-radius: 50px;
+  color: #ffffff;
+  font-weight: bold;
+  border: 0;
+  transition: all 0.4s ease;
+  padding: 10px 15px;
+  margin-left: 10px;
+}
+
+.departament_usuari_selector:hover {
+  background-color: #474559;
+}
 
 
 .botons_administracio {
@@ -944,20 +1003,6 @@ b, strong {
   color: #2CB9FF;
 }
 
-.departament_usuari_selector {
-  background: #2CB9FF;
-  border-radius: 50px;
-  color: #ffffff;
-  font-weight: bold;
-  border: 0;
-  transition: all 0.4s ease;
-  padding: 10px 15px;
-  margin-left: 10px;
-}
-
-.departament_usuari_selector:hover {
-  background-color: #474559;
-}
 
 .popup_dep {
   display: none;

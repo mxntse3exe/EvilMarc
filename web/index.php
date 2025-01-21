@@ -28,7 +28,7 @@
     <!-- MENU -->
     <nav class="navbar navbar-expand-sm navbar-light">
         <div class="container">
-            <a class="navbar-brand" href="index"> EvilMarc</a>
+            <a class="navbar-brand" href="index">EvilMarc</a>
 
             <ul class="navbar-nav">
                 <li class="nav-item">
