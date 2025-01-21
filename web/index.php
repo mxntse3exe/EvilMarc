@@ -74,14 +74,14 @@
                             <br><br>
                         </form>
                         <?php
+                        
                             if(isset($_POST['arxiu'])){
                                 
-                                    
                                 if (is_uploaded_file ($_FILES['archivo']['tmp_name'])) {
                                     $nombreDirectorio = "/var/www/html/fitxers/fitxers_temp/";
                                     $nombreFichero = $_FILES['archivo']['name'];
                                     move_uploaded_file ($_FILES['archivo']['tmp_name'], $nombreDirectorio.$nombreFichero);
-                                    $output = shell_exec('python3 /var/www/evilmarc/evilmarc_web.py');
+                                    $output = shell_exec('python3 /var/www/html/evilmarc_web.py');
                                     echo $output;
                                 }
 

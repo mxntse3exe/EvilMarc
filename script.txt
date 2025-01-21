@@ -71,7 +71,7 @@ sudo service apache2 restart
 
 
 
-copiar de la carpeta dels arxius a la carpeta de la web:
+fem un pull del directori de github, i copiem els arxius de la carpeta dels arxius web a la carpeta de la web:
 
 sudo cp -r * /var/www/html/
 
@@ -81,3 +81,22 @@ coses a tenir en compte:
 
 	sudo chown www-data:www-data /var/www/html/images/perfil
 	sudo chmod 755 /var/www/html/images/perfil
+
+
+- hem de donar permisos d'execució al programa de Python:
+
+	sudo chown www-data:www-data /var/www/html/evilmarc_web.py
+	sudo chmod 755 /var/www/html/evilmarc_web.py
+
+
+- hem de donar permisos a la carpeta on guardarem els arxius pujats:
+
+	sudo chown www-data:www-data /var/www/html/fitxers/fitxers_temp
+	sudo chmod 755 /var/www/html/fitxers/fitxers_temp
+
+
+
+- hem d'editar l'arxiu /etc/php/8.1/apache2/php.ini:
+
+	upload_max_filesize = 650M 
+	post_max_size = 650M
