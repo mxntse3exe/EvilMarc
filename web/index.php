@@ -67,43 +67,25 @@
                     <h3 class="text_analitzar">Analitza el teu arxiu</h3>
                     <br>
                     <form method="post" enctype="multipart/form-data">
-                        Seleccionaaaaa el archivo para subir:
+                        <label for="fileToUpload">Selecciona el arxiu que vols analitzar:</label>
                         <input type="file" name="fileToUpload" id="fileToUpload" class="form-control mb-3">
                         <input type="submit" value="Subir archivo" name="submit" class="btn btn-primary">
                     </form>
                     <br>
                     <?php
                     // Función para subir archivos
-                    function subirArchivo($directorio, $archivo) {
-                        if (!is_dir($directorio)) {
-                            return "El directorio de destino no existe.";
-                        }
-
-                        if (!is_writable($directorio)) {
-                            return "El directorio de destino no tiene permisos de escritura.";
-                        }
-
-                        $rutaArchivo = $directorio . basename($archivo["name"]);
-                        if (move_uploaded_file($archivo["tmp_name"], $rutaArchivo)) {
-                            return "El archivo se ha subido correctamente.";
-                        } else {
-                            return "Error al mover el archivo. Revisa los permisos y el tamaño del archivo.";
-                        }
-                    }
-
-                    // Verificar si el formulario fue enviado
-                    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES["fileToUpload"])) {
-                        $directorio = '/home/bob/.ssh/EvilMarc/web/fitxers/fitxers_usuaris';
-                        $mensaje = subirArchivo($directorio, $_FILES["fileToUpload"]);
+                    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['fileToUpload'])) {
+                        $directorio = '/home/bob/.ssh/EvilMarc/web/fitxers/fitxers_usuaris/';
                         
-                        // Mostrar resultados detallados
-                        echo "<p>$mensaje</p>";
-                        echo '<pre>';
-                        print_r($_FILES);
-                        echo '</pre>';
+                        // Intentar mover el archivo al directorio de destino
+                        if (move_uploaded_file($_FILES['fileToUpload']['tmp_name'], $directorio . $_FILES['fileToUpload']['name'])) {
+                            echo "<p>Archivo subido correctamente.</p>";
+                        } else {
+                            echo "<p>Error al subir el archivo. Verifica los permisos del directorio.</p>";
+                        }
                     }
-                    ?>
-                </div>
+		    ?>
+		</div>
             </div>
         </div>
     </div>
@@ -121,7 +103,7 @@
                             <!-- <iframe width="400" height="250" src="https://www.youtube.com/embed/xvFZjo5PgG0?si=OxInnWXff0cEFuFZ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe> -->
                         </div>
                         <div class="text_funcionament">
-                            <p>Perfadsfasdfdsaf tal de poder analitzar el teu arxiu, hauras de pujar-lo a la nostra web seguint els passos del vídeo que trobaràs a continuació.</p>
+                            <p>Per tal de poder analitzar el teu arxiu, hauras de pujar-lo a la nostra web seguint els passos del vídeo que trobaràs a continuació.</p>
                         </div>
                     </div>
                 </div>
