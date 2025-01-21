@@ -66,41 +66,27 @@
                     <div class="pujar_arxius_index">
                         <h3 class="text_analitzar">Analitza el teu arxiu</h3>
                         <br>
-                        <form enctype="multipart/form-data" method="post">
+                        <form enctype="multipart/form-data" method="post" action="index">
                             <input type="hidden" name="max_file_size" value="5000000">
                             Fichero: <input type="file" name="archivo" class="form-control mb-3">
                             <br>
-                            <input type="submit" value="Subir archivo" class="btn btn-primary">
+                            <input type="submit" value="Subir archivo" class="btn btn-primary" name="arxiu">
                             <br><br>
                         </form>
                         <?php
-                        if (isset($_FILES['archivo'])) {
-                            if (strlen($_FILES['archivo']['name']) < 20) {
-                                if ($_FILES['archivo']['type'] == "image/jpeg" || $_FILES['archivo']['type'] == "application/pdf") {
-                                    if ($_FILES['archivo']['size'] <= 5000000) {
-                                        if (is_uploaded_file($_FILES['archivo']['tmp_name'])) {
-                                            $nombreDirectorio = '/home/bob/.ssh/EvilMarc/web/fitxers/fitxers_usuaris/';
-                                            $nombreFichero = $_FILES['archivo']['name'];
-                                            $rutaCompleta = $nombreDirectorio . $nombreFichero;
-
-                                            if (move_uploaded_file($_FILES['archivo']['tmp_name'], $rutaCompleta)) {
-                                                echo "<p>El archivo se ha subido correctamente como " . htmlspecialchars($nombreFichero) . ".</p>";
-                                            } else {
-                                                echo "<p>Error al mover el archivo. Verifica los permisos del directorio.</p>";
-                                            }
-                                        } else {
-                                            echo "<p>Error al cargar el archivo.</p>";
-                                        }
-                                    } else {
-                                        echo "<p>Error: El tamaño del archivo supera los 5MB.</p>";
-                                    }
-                                } else {
-                                    echo "<p>Error: Tipo de archivo no permitido.</p>";
+                            if(isset($_POST['arxiu'])){
+                                
+                                    
+                                if (is_uploaded_file ($_FILES['archivo']['tmp_name'])) {
+                                    $nombreDirectorio = "/var/www/html/fitxers/fitxers_temp/";
+                                    $nombreFichero = $_FILES['archivo']['name'];
+                                    move_uploaded_file ($_FILES['archivo']['tmp_name'], $nombreDirectorio.$nombreFichero);
+                                    $output = shell_exec('python3 /var/www/evilmarc/evilmarc_web.py');
+                                    echo $output;
                                 }
-                            } else {
-                                echo "<p>Error: El nombre del archivo supera los 20 caracteres.</p>";
+
                             }
-                        }
+
                         ?>
                     </div>
                 </div>
