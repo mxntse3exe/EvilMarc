@@ -44,7 +44,7 @@ def hash_in_bd(host, user, password, hash_arxiu):
         user=user, 
         password=password)
     mariadb_cursor = mariadb_conn.cursor()
-    mariadb_cursor.execute("USE virustotal")
+    mariadb_cursor.execute("USE evilmarc")
 
     mariadb_cursor.execute("SELECT COUNT(*) FROM fitxers WHERE file_hash = %s", (hash_arxiu,))
     result = mariadb_cursor.fetchone()
@@ -94,7 +94,7 @@ def guardar_escaneig_bd(host, user, password, hash_arxiu, id_scan, virus):
         user=user, 
         password=password)
     mariadb_cursor = mariadb_conn.cursor()
-    mariadb_cursor.execute("USE virustotal")
+    mariadb_cursor.execute("USE evilmarc")
 
 
     mariadb_cursor.execute("INSERT INTO fitxers (file_hash, scan_id, infected) VALUES (%s, %s, %s)", (hash_arxiu, id_scan, virus))
@@ -130,7 +130,7 @@ def info_arxiu_bd(host, user, password, hash_arxiu):
         user=user, 
         password=password)
     mariadb_cursor = mariadb_conn.cursor()
-    mariadb_cursor.execute("USE virustotal")
+    mariadb_cursor.execute("USE evilmarc")
 
     mariadb_cursor.execute("SELECT infected FROM fitxers WHERE file_hash = %s", (hash_arxiu,))
 
@@ -148,8 +148,8 @@ def info_arxiu_bd(host, user, password, hash_arxiu):
 
 
 host = "localhost"
-user = "root"
-password = "Stucom1234"
+user = "web"
+password = "T5Dk!xq"
 
 creacio_bd(host, user, password)
 ruta_carpeta = "/var/www/html/fitxers/fitxers_temp/"

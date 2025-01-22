@@ -79,7 +79,10 @@
                                 
                                 if (is_uploaded_file ($_FILES['archivo']['tmp_name'])) {
                                     $nombreDirectorio = "/var/www/html/fitxers/fitxers_temp/";
-                                    $nombreFichero = $_FILES['archivo']['name'];
+
+                                    $uniqid = uniqid();
+
+                                    $nombreFichero = $uniqid."_".$_FILES['archivo']['name'];
 
 
                                     move_uploaded_file ($_FILES['archivo']['tmp_name'], $nombreDirectorio.$nombreFichero);
