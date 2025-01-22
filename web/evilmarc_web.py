@@ -5,6 +5,7 @@ import mysql.connector
 import hashlib
 import mimetypes
 import time
+import sys
 
 
 # Connexió i creació BD
@@ -20,7 +21,7 @@ def creacio_bd(host, user, password):
         mariadb_cursor.execute("CREATE DATABASE IF NOT EXISTS evilmarc")
         mariadb_cursor.execute("USE evilmarc")
         mariadb_cursor.execute("""
-            CREATE TABLE IF NOT EXISTS fitxers (
+            CREATE TABLE IF NOT EXISTS FITXERS_ANALITZATS (
                 file_hash VARCHAR(64) PRIMARY KEY,
                 scan_id VARCHAR(60),
                 infected BOOLEAN
@@ -46,7 +47,7 @@ def hash_in_bd(host, user, password, hash_arxiu):
     mariadb_cursor = mariadb_conn.cursor()
     mariadb_cursor.execute("USE evilmarc")
 
-    mariadb_cursor.execute("SELECT COUNT(*) FROM fitxers WHERE file_hash = %s", (hash_arxiu,))
+    mariadb_cursor.execute("SELECT COUNT(*) FROM FITXERS_ANALITZATS WHERE file_hash = %s", (hash_arxiu,))
     result = mariadb_cursor.fetchone()
 
     mariadb_cursor.close()
@@ -97,7 +98,7 @@ def guardar_escaneig_bd(host, user, password, hash_arxiu, id_scan, virus):
     mariadb_cursor.execute("USE evilmarc")
 
 
-    mariadb_cursor.execute("INSERT INTO fitxers (file_hash, scan_id, infected) VALUES (%s, %s, %s)", (hash_arxiu, id_scan, virus))
+    mariadb_cursor.execute("INSERT INTO FITXERS_ANALITZATS (file_hash, scan_id, infected) VALUES (%s, %s, %s)", (hash_arxiu, id_scan, virus))
     mariadb_conn.commit()
 
     mariadb_cursor.close()
@@ -132,7 +133,7 @@ def info_arxiu_bd(host, user, password, hash_arxiu):
     mariadb_cursor = mariadb_conn.cursor()
     mariadb_cursor.execute("USE evilmarc")
 
-    mariadb_cursor.execute("SELECT infected FROM fitxers WHERE file_hash = %s", (hash_arxiu,))
+    mariadb_cursor.execute("SELECT infected FROM FITXERS_ANALITZATS WHERE file_hash = %s", (hash_arxiu,))
 
     result = mariadb_cursor.fetchone()
     infected = result[0]
@@ -151,6 +152,14 @@ host = "localhost"
 user = "web"
 password = "T5Dk!xq"
 
+
+if len(sys.argv) != 2:
+    exit()
+
+nom_temp_arxiu = sys.argv[1]
+
+
+
 creacio_bd(host, user, password)
 ruta_carpeta = "/var/www/html/fitxers/fitxers_temp/"
 
@@ -159,53 +168,56 @@ if os.path.exists(ruta_carpeta) and os.path.isdir(ruta_carpeta):
     # Descobrim els fitxers dins del directori.
     for ruta_actual, directoris, arxius in os.walk(ruta_carpeta):
         for arxiu in arxius:
-            # Obtenir ruta i hash de l'arxiu 
-            ruta_arxiu = os.path.join(ruta_actual, arxiu)    
-            hash_arxiu = obtenir_hash(ruta_arxiu)
-    
-            if hash_in_bd(host, user, password, hash_arxiu):
 
-                arxiu_infectat = info_arxiu_bd(host, user, password, hash_arxiu)
+            # Obtenir ruta i hash de l'arxiu 
+            if arxiu == nom_temp_arxiu:
+
+                ruta_arxiu = os.path.join(ruta_actual, arxiu)    
+                hash_arxiu = obtenir_hash(ruta_arxiu)
+        
+                if hash_in_bd(host, user, password, hash_arxiu):
+
+                    arxiu_infectat = info_arxiu_bd(host, user, password, hash_arxiu)
+                    
+                else:
+                    # Obtenir tamany de fitxer en MB
+                    tamany_arxiu = os.path.getsize(ruta_arxiu) / (1024 * 1024)
                 
-            else:
-                # Obtenir tamany de fitxer en MB
-                tamany_arxiu = os.path.getsize(ruta_arxiu) / (1024 * 1024)
-            
-                if tamany_arxiu < 650:
-                    if tamany_arxiu < 32:
-                        url = "https://www.virustotal.com/api/v3/files"
+                    if tamany_arxiu < 650:
+                        if tamany_arxiu < 32:
+                            url = "https://www.virustotal.com/api/v3/files"
+
+                        else:
+                            url = obtenir_url_arxiu_gran()
+
+
+                        ####################
+                        escanejat = False
+                        while not escanejat:
+                            try:
+                                id_scan = pujar_arxiu(arxiu, ruta_arxiu, url)
+                                arxiu_infectat = obtenir_escaneig_arxiu(id_scan, host, user, password, hash_arxiu)
+                                escanejat = True
+                            except:
+                                time.sleep(1)
+                        ####################
 
                     else:
-                        url = obtenir_url_arxiu_gran()
+                        print(f"L'arxiu {arxiu} pesa massa! No podem escanejar arxius tan grans.")
 
 
-                    ####################
-                    escanejat = False
-                    while not escanejat:
-                        try:
-                            id_scan = pujar_arxiu(arxiu, ruta_arxiu, url)
-                            arxiu_infectat = obtenir_escaneig_arxiu(id_scan, host, user, password, hash_arxiu)
-                            escanejat = True
-                        except:
-                            time.sleep(1)
-                    ####################
 
+                
+
+                if arxiu_infectat:
+                    print(f"Atenció, l'arxiu pujat pot ser perillós!")
+                    if os.path.exists(ruta_arxiu):
+                        os.remove(ruta_arxiu)
+
+
+                
                 else:
-                    print(f"L'arxiu {arxiu} pesa massa! No podem escanejar arxius tan grans.")
-
-
-
-            
-
-            if arxiu_infectat:
-                print(f"Atenció, l'arxiu {arxiu} pot ser perillós!")
-                if os.path.exists(ruta_arxiu):
-                    os.remove(ruta_arxiu)
-
-
-             
-            else:
-                print(f"No s'ha trobat cap amenaça en l'arxiu {arxiu}")
-                if os.path.exists(ruta_arxiu):
-                   os.remove(ruta_arxiu)
+                    print(f"No s'ha trobat cap amenaça en l'arxiu pujat.")
+                    if os.path.exists(ruta_arxiu):
+                        os.remove(ruta_arxiu)
                 

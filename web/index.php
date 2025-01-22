@@ -88,7 +88,10 @@
                                     move_uploaded_file ($_FILES['archivo']['tmp_name'], $nombreDirectorio.$nombreFichero);
                                     
 
-                                    $output = shell_exec('python3 /var/www/html/evilmarc_web.py');
+                                    $command = escapeshellcmd("python3 /var/www/html/evilmarc_web.py ".escapeshellarg($nombreFichero));
+
+
+                                    $output = shell_exec($command);
                                     echo $output;
                                 }
 
