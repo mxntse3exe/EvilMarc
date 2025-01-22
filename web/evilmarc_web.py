@@ -17,8 +17,8 @@ def creacio_bd(host, user, password):
 
         mariadb_cursor = mariadb_conn.cursor()
 
-        mariadb_cursor.execute("CREATE DATABASE IF NOT EXISTS virustotal")
-        mariadb_cursor.execute("USE virustotal")
+        mariadb_cursor.execute("CREATE DATABASE IF NOT EXISTS evilmarc")
+        mariadb_cursor.execute("USE evilmarc")
         mariadb_cursor.execute("""
             CREATE TABLE IF NOT EXISTS fitxers (
                 file_hash VARCHAR(64) PRIMARY KEY,
@@ -148,8 +148,8 @@ def info_arxiu_bd(host, user, password, hash_arxiu):
 
 
 host = "localhost"
-user = "web"
-password = "T5Dk!xq"
+user = "root"
+password = "Stucom1234"
 
 creacio_bd(host, user, password)
 ruta_carpeta = "/var/www/html/fitxers/fitxers_temp/"

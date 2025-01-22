@@ -1,4 +1,4 @@
-sudo apt-update
+sudo apt update
 sudo apt-get install apache2
 
 sudo service apache2 start
@@ -68,7 +68,11 @@ sudo service apache2 restart
 per fer servir el Python amb MySQL:
 
 	sudo apt install python3-pip
-	pip3 install mysql-connector-python
+
+	sudo apt update && sudo apt install python3-pip
+
+	sudo pip3 install mysql-connector-python
+
 
 
 
