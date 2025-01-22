@@ -344,6 +344,9 @@ b, strong {
   .botons_usu {
     font-size: 16px;
   }
+  .index_pujar_arxius {
+    width: 45%;
+  }
 }
 
 @media (max-width: 1270px) {
@@ -366,6 +369,9 @@ b, strong {
   }
   .botons_usu {
     font-size: 16px;
+  }
+  .index_pujar_arxius {
+    width: 45%;
   }
 }
 
@@ -410,6 +416,10 @@ b, strong {
   }
   .botons_usu {
     font-size: 16px;
+  }
+
+  .index_pujar_arxius {
+    width: 100%;
   }
 
 }
@@ -467,6 +477,9 @@ b, strong {
   .botons_usu {
     font-size: 13px;
   }
+  .index_pujar_arxius {
+    width: 100%;
+  }
 
 }
 @media (max-width: 580px) {
@@ -523,6 +536,9 @@ b, strong {
   }
   .botons_usu {
     font-size: 13px;
+  }
+  .index_pujar_arxius {
+    width: 100%;
   }
 
 }
@@ -586,6 +602,9 @@ b, strong {
   .botons_usu {
     font-size: 13px;
   }
+  .index_pujar_arxius {
+    width: 100%;
+  }
 }
 
 
@@ -604,25 +623,74 @@ b, strong {
   align-content: center;
   flex-wrap: wrap;
   margin-top: 24px;
-  height: 90%;
+  height: 100%;
   flex-direction: column;
+  padding: 40px;
+  margin-right: 15px;
 }
-.text_analitzar {
-  padding: 10px;
+
+.seccio_panell_index {
+  justify-content: space-between;
+  margin-bottom: -30px;
+  display: flex;
+  margin-left: 0px;
+  margin-right: 0px;
+}
+
+.form_pujar_arxius {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 10px;
+}
+
+.custom-file-upload {
+  background: #2CB9FF;
+  border-radius: 15px;
+  color: #ffffff;
+  font-weight: bold;
+  border: 0;
+  cursor: pointer;
+  transition: all 0.4s ease;
+  padding: 10px 20px;
+}
+.custom-file-upload:hover {
+  background-color: #474559; /* Azul más oscuro */
+}
+.input_arxiu {
+  display: none;
+}
+
+.pujar_arxiu_submit {
+  background: #474559;
+  border-radius: 50px;
+  color: #ffffff;
+  font-weight: bold;
+  border: 0;
+  cursor: pointer;
+  transition: all 0.4s ease;
+  padding: 10px 20px;
+}
+.pujar_arxiu_submit:hover {
+  background-color: #2CB9FF; /* Azul más oscuro */
+}
+
+.sortida_analisi {
+  margin-top: 15px;
 }
 
 
 /* INDEX.PHP secció funcionament */
 
-.funcionament_contents {
+.contents {
   display: flex;
-  margin-top: 25px;
+  margin-top: 45px;
+  flex-direction: column;
 }
-.text_funcionament {
-  margin-right: 15px;
-}
-.video_funcionament {
-  width: auto;
+
+.videotext_funcionament {
+  display: flex;
+  margin-top: 15px;
 }
 
 

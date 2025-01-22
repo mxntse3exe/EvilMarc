@@ -185,7 +185,7 @@
         ?>
 
             <div class="row seccio_panell">
-                <div>
+                <div style="width: 90%;">
                     <h2>Panell de control d'usuaris</h2>
 
                     <div class="botons_administracio">

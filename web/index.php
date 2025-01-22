@@ -59,104 +59,112 @@
     </nav>
 
     <!-- PUJAR ARXIUS -->
+
+
     <section class="about full-screen d-lg-flex justify-content-center align-items-center">
         <div class="container">
-            <div class="row">
-                <div class="col-lg-5 col-md-12 col-12">
-                    <div class="pujar_arxius_index">
-                        <h3 class="text_analitzar">Analitza el teu arxiu</h3>
-                        <br>
-                        <form enctype="multipart/form-data" method="post" action="index">
-                            <input type="hidden" name="max_file_size" value="5000000">
-                            Fichero: <input type="file" name="archivo" class="form-control mb-3">
-                            <br>
-                            <input type="submit" value="Subir archivo" class="btn btn-primary" name="arxiu">
-                            <br><br>
-                        </form>
-                        <?php
+            <div class="row seccio_panell_index">
+                <div class="index_pujar_arxius">
+
+                    <h1 class="animated animated-text">
+                        <span class="mr-2">Amb EvilMarc</span>
+                        <div class="animated-info">
+                            <span class="animated-item">analitza arxius</span>
+                            <span class="animated-item">puja carpetes</span>
+                            <span class="animated-item">gestiona fitxers</span>
+                        </div>
+                    </h1>
+                    <p>Amb EvilMarc podràs analitzar els teus fitxers per detectar virus en qüestió de segons i guardar-los de manera segura al nostre núvol privat. Protegeix els teus documents amb EvilMarc!</p>
+                </div>
+
+                <div class="pujar_arxius_index">
+                    <h3 class="text_analitzar">Analitza el teu arxiu</h3>
+                    
+                    <form enctype="multipart/form-data" method="post" action="index" class="form_pujar_arxius">
+                        <input type="hidden" name="max_file_size" value="5000000">
+
+
+
+                        <label for="archivo" class="custom-file-upload"><i class="uil uil-file-alt"></i>Selecciona l'arxiu que vols analitzar...</label>
                         
-                            if(isset($_POST['arxiu'])){
-                                
-                                if (is_uploaded_file ($_FILES['archivo']['tmp_name'])) {
-                                    $nombreDirectorio = "/var/www/html/fitxers/fitxers_temp/";
-
-                                    $uniqid = uniqid();
-
-                                    $nombreFichero = $uniqid."_".$_FILES['archivo']['name'];
 
 
-                                    move_uploaded_file ($_FILES['archivo']['tmp_name'], $nombreDirectorio.$nombreFichero);
-                                    
-
-                                    $command = escapeshellcmd("python3 /var/www/html/evilmarc_web.py ".escapeshellarg($nombreFichero));
-
-
-                                    $output = shell_exec($command);
-                                    echo $output;
-                                }
-
-                            }
-
-                        ?>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+                        <input type="file" name="archivo" class="input_arxiu" id="archivo">
+                        
+                        <input type="submit" value="Subir archivo" class="pujar_arxiu_submit" name="arxiu">
+                    </form>
 
 
-    <!-- FUNCIONAMENT -->
-    
-    <section class="about full-screen d-lg-flex justify-content-center align-items-center">
-        <div class="container">
-            <div class="row">
-                <div class="seccio_index" id="Funcionament">
-                    <h2>Com analitzar un arxiu?</h2>
-                    <div class="funcionament_contents">
-                        <div class="video_funcionament">
-                            <!-- <iframe width="400" height="250" src="https://www.youtube.com/embed/xvFZjo5PgG0?si=OxInnWXff0cEFuFZ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe> -->
-                        </div>
-                        <div class="text_funcionament">
-                            <p>Per tal de poder analitzar el teu arxiu, hauras de pujar-lo a la nostra web seguint els passos del vídeo que trobaràs a continuació.</p>
-                        </div>
-                    </div>
-                </div>
-
-
-    <!-- CONTACTE -->
-                <div class="seccio_index" id="Contacte">
-                    <h2>Formulari de contacte</h2>
-                        <div class="contact_contents">
+                    <?php 
+                        if(isset($_POST['arxiu'])){
                             
+                            if (is_uploaded_file ($_FILES['archivo']['tmp_name'])) {
+                                $nombreDirectorio = "/var/www/html/fitxers/fitxers_temp/";
 
-                            <div class="contact-form">    
-                                <div class="contact_formulari">
-                                    <form method="post" action="contacte">
-                                        <input class="form-control" type="text" name="assumpte" placeholder="Assumpte">
-                                        <input class="form-control" type="text" name="correu" placeholder="El teu correu">
-                                        <textarea class="form-control" name="mensaje" cols="30" rows="7" placeholder="Missatge"></textarea>
-                                        <input class="form-control submit-btn" type="submit" value="Enviar" name="enviar">
-                                    </form>
-                                </div>        
-                            </div>
+                                $uniqid = uniqid();
 
+                                $nombreFichero = $uniqid."_".$_FILES['archivo']['name'];
 
-                        </div>
+                                move_uploaded_file ($_FILES['archivo']['tmp_name'], $nombreDirectorio.$nombreFichero);
+                                
+                                $command = escapeshellcmd("python3 /var/www/html/evilmarc_web.py ".escapeshellarg($nombreFichero));
+
+                                $output = shell_exec($command);
+                                echo "<p class='sortida_analisi'>".$output."</p>";
+                            }
+                        }
+                    ?>
 
                 </div>
-                
-                
-
 
             </div>
+
+
+
+
+            <div class="row seccio_panell_index" id="Funcionament">
+                <div class="contents">
+                    <h2>Com analitzar un arxiu?</h2>
+                    <div class="videotext_funcionament">
+
+                        <p>Per tal de poder analitzar el teu arxiu, hauras de pujar-lo a la nostra web seguint els passos del vídeo que trobaràs a continuació.</p>
+
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="row seccio_panell_index" id="Contacte">
+                <div class="contents">
+                <h2>Formulari de contacte</h2>
+                    <div class="contact_contents">
+                        
+
+                        <div class="contact-form">    
+                            <div class="contact_formulari">
+                                <form method="post" action="contacte">
+                                    <input class="form-control" type="text" name="assumpte" placeholder="Assumpte">
+                                    <input class="form-control" type="text" name="correu" placeholder="El teu correu">
+                                    <textarea class="form-control" name="mensaje" cols="30" rows="7" placeholder="Missatge"></textarea>
+                                    <input class="form-control submit-btn" type="submit" value="Enviar" name="enviar">
+                                </form>
+                            </div>        
+                        </div>
+
+
+                    </div>
+
+                </div>
+            </div>
+
+
+
+
+
+
         </div>
     </section>
 
-
-    </section>
-    <section class="about full-screen d-lg-flex justify-content-center align-items-center" id="Contacte">
-
-    </section>
 
 
     <!-- FOOTER -->

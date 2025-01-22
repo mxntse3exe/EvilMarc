@@ -158,7 +158,7 @@ if len(sys.argv) != 2:
 
 nom_temp_arxiu = sys.argv[1]
 
-
+nom_arxiu_net = nom_temp_arxiu.split("_", 1)[1]
 
 creacio_bd(host, user, password)
 ruta_carpeta = "/var/www/html/fitxers/fitxers_temp/"
@@ -210,14 +210,14 @@ if os.path.exists(ruta_carpeta) and os.path.isdir(ruta_carpeta):
                 
 
                 if arxiu_infectat:
-                    print(f"Atenció, l'arxiu pujat pot ser perillós!")
+                    print(f"Atenció, l'arxiu <b>{nom_arxiu_net}</b> pot ser perillós!")
                     if os.path.exists(ruta_arxiu):
                         os.remove(ruta_arxiu)
 
 
                 
                 else:
-                    print(f"No s'ha trobat cap amenaça en l'arxiu pujat.")
+                    print(f"No s'ha trobat cap amenaça en l'arxiu <b>{nom_arxiu_net}</b>.")
                     if os.path.exists(ruta_arxiu):
                         os.remove(ruta_arxiu)
                 
