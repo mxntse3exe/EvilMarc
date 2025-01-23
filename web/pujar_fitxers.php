@@ -118,17 +118,15 @@
                         <form enctype="multipart/form-data" method="post" action="pujar_fitxers" class="pujar_arxius_carpetes">
                             <input type="hidden" name="max_file_size" value="5000000">
 
-                            <label for="archivo" class="custom-file-upload"><i class="uil uil-file-alt"></i>Selecciona l'arxiu o carpeta que vols pujar...</label>
-
+                            <label for="archivo" class="custom-file-upload"><i class="uil uil-file-alt"></i>Selecciona l'arxiu...</label>
                             <input type="file" name="archivo" class="input_arxiu" id="archivo" onchange="mostrarNombreArchivo()">
-                            
+                        
                             <input type="submit" value="Pujar arxiu" class="pujar_arxiu_submit" name="arxiu">
                         </form>
                         <span id="file-name"></span>
                     </div>
-
                     
-                    
+   
                 </div>
             </div>
 
