@@ -91,7 +91,7 @@
 
                         <input type="file" name="archivo" class="input_arxiu" id="archivo">
                         
-                        <input type="submit" value="Subir archivo" class="pujar_arxiu_submit" name="arxiu">
+                        <input type="submit" value="Pujar arxiu" class="pujar_arxiu_submit" name="arxiu">
                     </form>
 
 

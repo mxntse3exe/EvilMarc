@@ -1108,3 +1108,56 @@ b, strong {
   margin-bottom: -20px;
   font-size: 16px;
 }
+
+
+
+/* PUJAR_FITXERS.PHP */
+
+.pujar_arxius {
+  background-color: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0px 0px 10px rgb(219, 219, 219);
+  justify-content: center;
+  display: flex;
+
+  flex-wrap: wrap;
+  margin-top: 24px;
+
+  flex-direction: column;
+  padding: 20px;
+
+  width: 80%;
+  justify-self: center;
+}
+
+.pujar_arxius_carpetes {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between
+}
+
+.explorador {
+  justify-content: left;
+  margin-top: 50px;
+  display: flex;
+  flex-direction: column;
+  width: 75%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.llista_fitxers {
+  background-color: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0px 0px 10px rgb(219, 219, 219);
+  justify-content: center;
+  display: flex;
+  flex-wrap: wrap;
+
+  flex-direction: row;
+  padding: 20px;
+  width: 100%;
+  justify-self: center;
+  margin-bottom: 10px;
+  justify-content: space-between;
+}

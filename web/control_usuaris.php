@@ -32,6 +32,8 @@
         $sql_validar = 'update USUARIS set validat = 1 where id_usu ='.$_REQUEST["id"].';';
 
         mysqli_query($conexion,$sql_validar);
+
+        shell_exec('mkdir /var/www/html/fitxers/fitxers_usuaris/fitxers_'.$_REQUEST["id"]);
     }
 
     if(isset($_REQUEST['eliminar'])) {
@@ -118,9 +120,9 @@
     
         $sql = "insert into USUARIS(usuari,correu,contrasenya,validat) values('".$usuari."','".$correu."','".$pass."','1')";
     
+
+        $buscar_id_usu_creat = "select id_usu from USUARIS where usuari = '$usuari'";
     }
-
-
 
 ?>
 
@@ -317,6 +319,13 @@
                             if ($num_files_usuari == 0) {
                                 if (mysqli_query($conexion,$sql)) {
                                     echo "<p class='msg_comprovacio'>Usuari creat correctament.</p>";
+
+                                    $ids_usuari = mysqli_query($conexion,$buscar_id_usu_creat);
+                                    while($id_usuari_creat = $ids_usuari->fetch_assoc()) {
+                                    
+                                        shell_exec('mkdir /var/www/html/fitxers/fitxers_usuaris/fitxers_'.$id_usuari_creat["id_usu"]);
+
+                                    }
                                 }
                                 else {
                                     echo "<p class='msg_comprovacio'>No hem pogut crear l'usuari en aquests moments.</p>";
