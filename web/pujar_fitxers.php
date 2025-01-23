@@ -50,6 +50,69 @@
 ?>
 
 
+
+
+<?php
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (isset($_FILES['archivo']) || isset($_FILES['carpeta'])) {
+        $base_dir = '/var/www/html/fitxers/fitxers_usuaris/fitxers_' . $_SESSION['id_usu'];
+        $current_dir = isset($_POST['current_dir']) ? $_POST['current_dir'] : $base_dir;
+
+        // Prevenir accesos fuera del directorio base
+        $real_current_dir = realpath($current_dir);
+        if (strpos($real_current_dir, realpath($base_dir)) !== 0) {
+            die("Accés no permés.");
+        }
+
+        // Procesar archivos sueltos
+        if (isset($_FILES['archivo']) && $_POST['upload_type'] === 'file') {
+            foreach ($_FILES['archivo']['name'] as $key => $name) {
+                $tmp_name = $_FILES['archivo']['tmp_name'][$key];
+                $error = $_FILES['archivo']['error'][$key];
+
+                if ($error === UPLOAD_ERR_OK) {
+                    $target_path = $current_dir . DIRECTORY_SEPARATOR . $name;
+                    move_uploaded_file($tmp_name, $target_path);
+                }
+            }
+            echo "Arxius individuals pujats correctament.";
+        }
+
+        // Procesar carpetas
+        if (isset($_FILES['carpeta']) && $_POST['upload_type'] === 'folder') {
+            foreach ($_FILES['carpeta']['name'] as $key => $name) {
+                $tmp_name = $_FILES['carpeta']['tmp_name'][$key];
+                $error = $_FILES['carpeta']['error'][$key];
+
+                if ($error === UPLOAD_ERR_OK) {
+                    $relative_path = $_FILES['carpeta']['full_path'][$key]; // Ruta relativa completa
+                    $target_path = $current_dir . DIRECTORY_SEPARATOR . $relative_path;
+
+                    // Crear directorios si no existen
+                    $target_dir = dirname($target_path);
+                    if (!file_exists($target_dir)) {
+                        mkdir($target_dir, 0777, true); // Crear directorios recursivamente
+                    }
+
+                    // Mover el archivo o carpeta
+                    if (is_dir($tmp_name)) {
+                        if (!file_exists($target_path)) {
+                            mkdir($target_path, 0777, true);
+                        }
+                    } else {
+                        move_uploaded_file($tmp_name, $target_path);
+                    }
+                }
+            }
+            echo "Carpeta pujada correctament.";
+        }
+    } else {
+        echo "No s'ha seleccionat cap fitxer o carpeta.";
+    }
+}
+?>
+
+
 <!doctype html>
 <html lang="en">
 
@@ -115,18 +178,95 @@
                     <h2>Pujar fitxers</h2>
 
                     <div class="pujar_arxius">
-                        <form enctype="multipart/form-data" method="post" action="pujar_fitxers" class="pujar_arxius_carpetes">
-                            <input type="hidden" name="max_file_size" value="5000000">
-
-                            <label for="archivo" class="custom-file-upload"><i class="uil uil-file-alt"></i>Selecciona l'arxiu...</label>
-                            <input type="file" name="archivo" class="input_arxiu" id="archivo" onchange="mostrarNombreArchivo()">
                         
-                            <input type="submit" value="Pujar arxiu" class="pujar_arxiu_submit" name="arxiu">
+                        <form id="upload-form" enctype="multipart/form-data" method="post" action="pujar_fitxers" class="pujar_arxius_carpetes">
+                            <input type="hidden" name="max_file_size" value="5000000">
+                            <input type="hidden" name="current_dir" value="<?php echo htmlspecialchars($current_dir); ?>">
+
+                            <!-- Selector para elegir entre archivos sueltos o carpetas -->
+                            <label>
+                                <input type="radio" name="upload_type" value="file" checked> Pujar arxius individuals
+                            </label>
+                            <label>
+                                <input type="radio" name="upload_type" value="folder"> Pujar carpeta
+                            </label>
+                            <br><br>
+
+                            <!-- Campo para archivos sueltos -->
+                            <div id="file-upload-section">
+                                <label for="archivo" class="custom-file-upload">
+                                    <i class="uil uil-file-alt"></i>Selecciona l'arxiu que vols pujar...
+                                </label>
+                                <input type="file" name="archivo[]" class="input_arxiu" id="archivo" multiple>
+                            </div>
+
+                            <!-- Campo para carpetas -->
+                            <div id="folder-upload-section" style="display: none;">
+                                <label for="carpeta" class="custom-file-upload">
+                                    <i class="uil uil-folder"></i>Selecciona la carpeta que vols pujar...
+                                </label>
+                                <input type="file" name="carpeta[]" class="input_arxiu" id="carpeta" webkitdirectory>
+                            </div>
+
+                            <!-- Mensaje de estado -->
+                            <div id="upload-status"></div>
                         </form>
-                        <span id="file-name"></span>
+
+                        <!-- Script para mostrar/ocultar campos y enviar automáticamente -->
+                        <script>
+                            // Mostrar/ocultar campos según la selección
+                            document.querySelectorAll('input[name="upload_type"]').forEach((radio) => {
+                                radio.addEventListener('change', (event) => {
+                                    if (event.target.value === 'file') {
+                                        document.getElementById('file-upload-section').style.display = 'block';
+                                        document.getElementById('folder-upload-section').style.display = 'none';
+                                    } else {
+                                        document.getElementById('file-upload-section').style.display = 'none';
+                                        document.getElementById('folder-upload-section').style.display = 'block';
+                                    }
+                                });
+                            });
+
+                            // Enviar el formulario automáticamente al seleccionar archivos o carpetas
+                            document.getElementById('archivo').addEventListener('change', () => {
+                                uploadFiles();
+                            });
+
+                            document.getElementById('carpeta').addEventListener('change', () => {
+                                uploadFiles();
+                            });
+
+                            // Función para enviar el formulario automáticamente
+                            // Función para enviar el formulario automáticamente
+                            function uploadFiles() {
+                                const form = document.getElementById('upload-form');
+                                const status = document.getElementById('upload-status');
+
+                                // Mostrar mensaje de "Subiendo..."
+                                status.innerHTML = 'Pujant fitxers...';
+
+                                // Enviar el formulario usando Fetch API
+                                const formData = new FormData(form);
+                                fetch(form.action, {
+                                    method: 'POST',
+                                    body: formData,
+                                })
+                                .then(response => response.text())
+                                .then(data => {
+                                    // Mostrar el resultado de la subida
+                                    status.innerHTML = data;
+
+                                    // Recargar la página para actualizar el explorador de archivos
+                                    window.location.reload(); // Recargar inmediatamente
+                                })
+                                .catch(error => {
+                                    status.innerHTML = 'Error en la pujada: ' + error.message;
+                                });
+                            }
+                        </script>
+
                     </div>
-                    
-   
+
                 </div>
             </div>
 
@@ -155,10 +295,17 @@
 
                         if (is_dir($item_path)) {
                             // Mostrar carpetas con enlace
-                            echo '<a href="?dir='.urlencode($item_path).'" class="carpeta"><div class="llista_fitxers"><div><i class="uil uil-folder"></i> '.htmlspecialchars($item).'</div></div></a>';
+                            // echo '<a href="?dir='.urlencode($item_path).'" class="carpeta"><div class="llista_fitxers"><div><i class="uil uil-folder"></i> '.htmlspecialchars($item).'</div></div></a>';
+                            echo '<a href="?dir='.urlencode($item_path).'" class="carpeta"><div class="llista_fitxers"><div><i class="uil uil-folder"></i> '.htmlspecialchars($item).'</div></div></a>
+      <a href="eliminar.php?folder=' . urlencode($item_path) . '&dir=' . urlencode($base_dir) . '" onclick="return confirm(\'¿Estás seguro de que deseas eliminar esta carpeta?\')">eliminar <i class="uil uil-trash-alt"></i></a>';
                         } else {
                             // Mostrar archivos
-                            echo '<div class="llista_fitxers"><span>'.htmlspecialchars($item).'</span>   <a href="descargar.php?file=' . urlencode($item_path) . '&dir=' . urlencode($base_dir) . '">descarregar <i class="uil uil-arrow-down"></i></a>  </div>';
+                            // echo '<div class="llista_fitxers"><span>'.htmlspecialchars($item).'</span>   <a href="descargar.php?file=' . urlencode($item_path) . '&dir=' . urlencode($base_dir) . '">descarregar <i class="uil uil-arrow-down"></i></a>  </div>';
+                            echo '<div class="llista_fitxers">';
+                                echo '<span>'.htmlspecialchars($item).'</span>';
+                                echo '<a href="descargar.php?file=' . urlencode($item_path) . '&dir=' . urlencode($base_dir) . '">descarregar <i class="uil uil-arrow-down"></i></a>  
+      <a href="eliminar.php?file=' . urlencode($item_path) . '&dir=' . urlencode($base_dir) . '" onclick="return confirm(\'¿Estás seguro de que deseas eliminar este archivo?\')">eliminar <i class="uil uil-trash-alt"></i></a>  
+      </div>';
                         }
 
                         
