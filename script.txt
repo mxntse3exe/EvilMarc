@@ -99,7 +99,8 @@ coses a tenir en compte:
 
 
 - hem de donar permisos a la carpeta on guardarem els arxius pujats:
-
+	
+	sudo mkdir /var/www/html/fitxers/fitxers_temp
 	sudo chown www-data:www-data /var/www/html/fitxers/fitxers_temp
 	sudo chmod 755 /var/www/html/fitxers/fitxers_temp
 
