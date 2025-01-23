@@ -21,6 +21,9 @@
     <!-- MAIN STYLE -->
     <link rel="stylesheet" href="css/tooplate-style.css">
 
+    <link rel="icon" type="image/png" href="images/favicon.ico"/>
+
+
 </head>
 
 <body>
