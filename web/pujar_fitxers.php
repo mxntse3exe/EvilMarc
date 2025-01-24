@@ -132,6 +132,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <!-- MAIN STYLE -->
     <link rel="stylesheet" href="css/tooplate-style.css">
 
+    <link rel="icon" type="image/png" href="images/favicon.ico"/>
 </head>
 
 <body>
@@ -185,12 +186,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                             <!-- Selector para elegir entre archivos sueltos o carpetas -->
                             <label>
-                                <input type="radio" name="upload_type" value="file" checked> Pujar arxius individuals
+                                <input type="radio" name="upload_type" value="file" checked><span class="escollir">Pujar arxius individuals</span>
                             </label>
                             <label>
-                                <input type="radio" name="upload_type" value="folder"> Pujar carpeta
+                                <input type="radio" name="upload_type" value="folder"><span class="escollir">Pujar carpeta</span>
                             </label>
-                            <br><br>
+                            
 
                             <!-- Campo para archivos sueltos -->
                             <div id="file-upload-section">
@@ -296,16 +297,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         if (is_dir($item_path)) {
                             // Mostrar carpetas con enlace
                             // echo '<a href="?dir='.urlencode($item_path).'" class="carpeta"><div class="llista_fitxers"><div><i class="uil uil-folder"></i> '.htmlspecialchars($item).'</div></div></a>';
-                            echo '<a href="?dir='.urlencode($item_path).'" class="carpeta"><div class="llista_fitxers"><div><i class="uil uil-folder"></i> '.htmlspecialchars($item).'</div></div></a>
-      <a href="eliminar.php?folder=' . urlencode($item_path) . '&dir=' . urlencode($base_dir) . '" onclick="return confirm(\'¿Estás seguro de que deseas eliminar esta carpeta?\')">eliminar <i class="uil uil-trash-alt"></i></a>';
+                            echo '<a href="?dir='.urlencode($item_path).'" class="carpeta">';
+                                echo '<div class="llista_fitxers">';
+                                    echo '<div><i class="uil uil-folder"></i> '.htmlspecialchars($item);
+                                    echo '</div>';
+                                    echo '<a href="eliminar.php?folder=' . urlencode($item_path) . '&dir=' . urlencode($base_dir) . '" onclick="return confirm(\'Estàs segur que vols eliminar aquesta carpeta?\')">eliminar <i class="uil uil-trash-alt"></i></a>';
+                                echo '</div>';
+                            echo '</a>';
                         } else {
                             // Mostrar archivos
                             // echo '<div class="llista_fitxers"><span>'.htmlspecialchars($item).'</span>   <a href="descargar.php?file=' . urlencode($item_path) . '&dir=' . urlencode($base_dir) . '">descarregar <i class="uil uil-arrow-down"></i></a>  </div>';
                             echo '<div class="llista_fitxers">';
                                 echo '<span>'.htmlspecialchars($item).'</span>';
-                                echo '<a href="descargar.php?file=' . urlencode($item_path) . '&dir=' . urlencode($base_dir) . '">descarregar <i class="uil uil-arrow-down"></i></a>  
-      <a href="eliminar.php?file=' . urlencode($item_path) . '&dir=' . urlencode($base_dir) . '" onclick="return confirm(\'¿Estás seguro de que deseas eliminar este archivo?\')">eliminar <i class="uil uil-trash-alt"></i></a>  
-      </div>';
+                                echo '<div>';
+                                    echo '<a href="descargar.php?file=' . urlencode($item_path) . '&dir=' . urlencode($base_dir) . '">descarregar <i class="uil uil-arrow-down"></i></a>';
+                                    echo '<a href="eliminar.php?file=' . urlencode($item_path) . '&dir=' . urlencode($base_dir) . '" onclick="return confirm(\'Estàs segur que vols eliminar aquest arxiu?\')">eliminar <i class="uil uil-trash-alt"></i></a>';  
+                                echo '</div>';
+                            echo '</div>';
                         }
 
                         

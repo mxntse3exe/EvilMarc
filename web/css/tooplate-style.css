@@ -1161,3 +1161,13 @@ b, strong {
   margin-bottom: 10px;
   justify-content: space-between;
 }
+
+.escollir {
+  color: #00000080;
+  font-weight: bold;
+  margin-left: 10px;
+}
+
+.escollir:hover {
+  color: #2CB9FF;
+}

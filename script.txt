@@ -86,7 +86,7 @@ sudo cp -r * /var/www/html/
 
 
 coses a tenir en compte:
-- si fem el pull en el nostre Ubuntu i copiem tots els arxius de la web directament a la carpeta de l'Apache, hem de donar permisos i canviar l'usuari de la carpeta images/perfil. Ho fem amb la comanda següent:
+- hem de donar permisos a la carpeta on guardarem les fotos de perfil images/perfil:
 
 	sudo chown www-data:www-data /var/www/html/images/perfil
 	sudo chmod 755 /var/www/html/images/perfil
@@ -106,7 +106,8 @@ coses a tenir en compte:
 
 - hem de donar permisos a la carpeta on guardarem els arxius dels usuaris:
 
-	sudo chown www-data:www-data fitxers_usuaris/
+	sudo chown www-data:www-data /var/www/html/fitxers/fitxers_usuaris
+	sudo chmod 755 /var/www/html/fitxers/fitxers_usuaris
 
 - hem d'editar l'arxiu /etc/php/8.1/apache2/php.ini:
 
