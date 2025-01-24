@@ -1,4 +1,4 @@
-# PER POSAR EN MARXA EL PROJECTE *EVILMARC*
+# Per posar en marxa el projecte *EvilMarc*
 
 ## Instal·lació del servei d'Apache
 
