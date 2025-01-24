@@ -1,6 +1,8 @@
-# PER POSAR EL PROJECTE EVILMARC EN MARXA
+# PER POSAR EN MARXA EL PROJECTE *EVILMARC*
 
 ## Instal·lació del servei d'Apache
+
+Instal·larem l'Apache per muntar el nostre servidor web:
 
 ``` bash
 sudo apt update
@@ -9,6 +11,8 @@ sudo service apache2 start
 ```
 
 ## Instal·lació de MariaDB
+
+Instal·larem el SGBD MariaDB:
 
 ``` bash
 sudo apt-get install mariadb-server
@@ -42,6 +46,7 @@ sudo mysql_secure_installation
 - Reload privilege tables --> Yes 
 
 Ara accedirem dins la base de dades:
+
 ``` bash
 sudo mysql
 ```
@@ -52,6 +57,8 @@ ALTER USER 'root'@'localhost'IDENTIFIED BY 'Stucom1234';
 FLUSH PRIVILEGES;
 exit
 ```
+
+Entrem dins la BD amb l'usuari root i la contrasenya que acabem de crear:
 
 ``` bash
 sudo mysql -u root -p
@@ -71,13 +78,13 @@ FLUSH PRIVILEGES;
 exit
 ```
 
-Entrem dins MariaDB amb l'usuari que acabem de Crearem
+Entrem dins MariaDB amb l'usuari que acabem de crear i la seva contrasenya:
 
 ``` bash
 sudo mysql -u web -p 
 ```
 
-Farem servir la base de dades **evilmarc**.
+Farem servir la base de dades **evilmarc**:
 
 ``` sql
 use evilmarc
@@ -139,6 +146,8 @@ CREATE TABLE ARXIUS_COMPARTITS (
 
 ## Instal·lació PHP
 
+Instal·larem el PHP i el connector PHP amb MySQL:
+
 ``` bash
 sudo apt-get install php
 sudo apt-get install php-mysql
@@ -164,13 +173,15 @@ Dins d'aquest arxiu afegirem les següents línies:
 </Directory>
 ```
 
-Reiniciem el servei d'Apache
+Reiniciem el servei d'Apache:
 
 ``` bash
 sudo service apache2 restart
 ```
 
 ## Instal·lació Python i connector Python amb mysql
+
+Instal·larem el Python i el connector de Python amb MySQL:
 
 ``` bash
 sudo apt install python3-pip
@@ -181,27 +192,27 @@ sudo pip3 install mysql-connector-python
 ## Clonació repositori GitHub
 
 Haurem de clonar el repositori de GitHub **EvilMarc**.
-Un cop el tinguem al nostre equip, haurem de copiar tots els arxius de dins el directori web a la ruta **/var/www/html**.
+Un cop el tinguem al nostre equip, haurem de copiar tots els arxius de dins el directori web a la ruta del nostre servidor **/var/www/html**.
 
 ## Gestió de permisos
 
 Per tal que la web funcioni correctament, haurem de donar permisos a les següents carpetes:
 
-- hem de donar permisos a la carpeta on guardarem les fotos de perfil images/perfil:
+- Hem de donar permisos a la carpeta on guardarem les fotos de perfil dels usuaris */var/www/html/images/perfil*:
 
 ``` bash
 sudo chown www-data:www-data /var/www/html/images/perfil
 sudo chmod 755 /var/www/html/images/perfil
 ```
 
-- hem de donar permisos d'execució al programa de Python:
+- Hem de donar permisos d'execució al programa de Python *evilmarc_web.py*:
 
 ``` bash
 sudo chown www-data:www-data /var/www/html/evilmarc_web.py
 sudo chmod 755 /var/www/html/evilmarc_web.py
 ```
 
-- hem de crear i donar permisos a la carpeta on guardarem els arxius pujats temporalment:
+- Hem de crear i donar permisos a la carpeta on guardarem els arxius pujats temporalment */var/www/html/fitxers/fitxers_temp*:
 
 ``` bash
 sudo mkdir /var/www/html/fitxers/fitxers_temp
@@ -209,7 +220,7 @@ sudo chown www-data:www-data /var/www/html/fitxers/fitxers_temp
 sudo chmod 755 /var/www/html/fitxers/fitxers_temp
 ```
 
-- hem de donar permisos a la carpeta on guardarem els arxius dels usuaris:
+- Hem de donar permisos a la carpeta on guardarem els arxius dels usuaris */var/www/html/fitxers/fitxers_usuaris*:
 
 ``` bash
 sudo chown www-data:www-data /var/www/html/fitxers/fitxers_usuaris
@@ -227,3 +238,5 @@ Canviarem els dos paràmetres següents:
 - upload_max_filesize = 650M 
 - post_max_size = 650M
 
+
+## END
