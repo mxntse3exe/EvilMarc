@@ -84,7 +84,7 @@
                     <h3 class="text_analitzar">Analitza el teu arxiu</h3>
                     
                     <form enctype="multipart/form-data" method="post" action="index" class="form_pujar_arxius">
-                        <input type="hidden" name="max_file_size" value="5000000">
+                        <input type="hidden" name="max_file_size" value="681574400">
 
 
 

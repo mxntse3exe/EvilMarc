@@ -114,6 +114,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     if (!file_exists($target_dir)) {
                         mkdir($target_dir, 0777, true); // Crear directorios recursivamente
                     }
+                    
 
                     // Mover el archivo o carpeta
                     if (is_dir($tmp_name)) {
@@ -125,7 +126,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     }
                 }
                 
+                
             }
+            
             echo "Carpeta pujada correctament.";
         }
     } else {

@@ -1,25 +1,35 @@
 <?php
 session_start();
 
+// Verificar si el usuario está autenticado
 if (!isset($_SESSION['usuari'])) {
     die("Accés no permés.");
 }
 
+// Directorio base del usuario
 $base_dir = '/var/www/html/fitxers/fitxers_usuaris/fitxers_' . $_SESSION['id_usu'];
+
+// Obtener el archivo o carpeta a eliminar
 $file = isset($_GET['file']) ? $_GET['file'] : null;
 $folder = isset($_GET['folder']) ? $_GET['folder'] : null;
 
-if ($file) {
-    $file_path = realpath($file);
-    if (strpos($file_path, realpath($base_dir)) === 0 && file_exists($file_path)) {
-        unlink($file_path);
-        echo "Arxiu eliminat correctament.";
-    } else {
+// Verificar si se proporcionó un archivo o carpeta
+if ($file || $folder) {
+    // Obtener la ruta real del archivo o carpeta
+    $target_path = realpath($file ? $file : $folder);
+
+    // Verificar que la ruta esté dentro del directorio base permitido
+    if (strpos($target_path, realpath($base_dir)) !== 0) {
         die("Accés no permés.");
     }
-} elseif ($folder) {
-    $folder_path = realpath($folder);
-    if (strpos($folder_path, realpath($base_dir)) === 0 && is_dir($folder_path)) {
+
+    // Eliminar archivo
+    if ($file && file_exists($target_path)) {
+        unlink($target_path);
+        echo "Arxiu eliminat correctament.";
+    }
+    // Eliminar carpeta
+    elseif ($folder && is_dir($target_path)) {
         // Función recursiva para eliminar una carpeta y su contenido
         function deleteDirectory($dir) {
             if (!file_exists($dir)) {
@@ -38,16 +48,23 @@ if ($file) {
             }
             return rmdir($dir);
         }
-        deleteDirectory($folder_path);
+        deleteDirectory($target_path);
         echo "Carpeta eliminada correctament.";
     } else {
-        die("Accés no permés.");
+        die("El fitxer o carpeta no existeix.");
     }
 } else {
     die("No s'ha especificat cap arxiu o carpeta.");
 }
 
 // Redirigir de vuelta al explorador de archivos
-header("Location: pujar_fitxers.php?dir=" . urlencode($_GET['dir']));
-exit();
+if (isset($_GET['dir'])) {
+    $redirect_url = 'pujar_fitxers.php?dir=' . urlencode($_GET['dir']);
+    header("Location: $redirect_url");
+    exit();
+} else {
+    // Si no se proporciona el parámetro 'dir', redirigir a la página principal
+    header("Location: pujar_fitxers.php");
+    exit();
+}
 ?>

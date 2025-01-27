@@ -421,6 +421,9 @@ b, strong {
   .index_pujar_arxius {
     width: 100%;
   }
+  .pujar_arxius {
+    align-content: center;
+  }
 
 }
 @media (max-width: 767px) {
@@ -479,6 +482,9 @@ b, strong {
   }
   .index_pujar_arxius {
     width: 100%;
+  }
+  .pujar_arxius {
+    align-content: center;
   }
 
 }
@@ -539,6 +545,9 @@ b, strong {
   }
   .index_pujar_arxius {
     width: 100%;
+  }
+  .pujar_arxius {
+    align-content: center;
   }
 
 }
@@ -604,6 +613,10 @@ b, strong {
   }
   .index_pujar_arxius {
     width: 100%;
+  }
+
+  .pujar_arxius {
+    align-content: center;
   }
 }
 
@@ -1128,6 +1141,8 @@ b, strong {
 
   width: 80%;
   justify-self: center;
+
+
 }
 
 .pujar_arxius_carpetes {
@@ -1162,12 +1177,9 @@ b, strong {
   justify-content: space-between;
 }
 
-.escollir {
-  color: #00000080;
-  font-weight: bold;
-  margin-left: 10px;
-}
 
-.escollir:hover {
-  color: #2CB9FF;
+.botons_pujar {
+  display: flex;
+  gap: 10px;
+  justify-content: space-around;
 }
