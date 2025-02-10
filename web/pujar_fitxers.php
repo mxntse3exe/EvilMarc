@@ -47,6 +47,7 @@
 
     $relative_dir = str_replace(realpath($base_dir), '', $real_current_dir);
     $relative_dir = $relative_dir === '' ? '/' : $relative_dir;
+
 ?>
 
 
@@ -81,12 +82,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             die("Accés no permés.");
         }
 
+
+        
         // Procesar archivos sueltos
         if (isset($_FILES['archivo']) && $_POST['upload_type'] === 'file') {
+            $_SESSION['missatge_pujada'] = "";
             foreach ($_FILES['archivo']['name'] as $key => $name) {
                 $tmp_name = $_FILES['archivo']['tmp_name'][$key];
                 $error = $_FILES['archivo']['error'][$key];
         
+
+
                 if ($error === UPLOAD_ERR_OK) {
                     // Genera un nom únic per al fitxer
                     $nomUnic = generarNomUnic($current_dir, $name);
@@ -94,9 +100,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
                     // Mou el fitxer pujat
                     move_uploaded_file($tmp_name, $target_path);
+
+
+                    $command = escapeshellcmd("python3 /var/www/html/evilmarc_fitxers.py ".escapeshellarg($nomUnic) . " " . escapeshellarg($current_dir));
+                    $output = shell_exec($command);
+                    
                 }
+                
+                $_SESSION['missatge_pujada'] = $_SESSION['missatge_pujada']." ".$output;
             }
-            echo "Arxius individuals pujats correctament.";
+
+            if (empty(trim($_SESSION['missatge_pujada']))) {
+                $_SESSION['missatge_pujada'] = "Arxius pujats correctament!";
+            }
+
         }
 
         // Procesar carpetas
@@ -261,6 +278,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                                 // Recargar la página para actualizar el explorador de archivos
                                 window.location.reload(); // Recargar inmediatamente
+
+                            
+
                             })
                             .catch(error => {
                                 status.innerHTML = 'Error en la pujada: ' + error.message;
@@ -286,6 +306,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
             <div class="explorador">
+
+            <?php
+            // Mostrar mensaje si existe en la sesión
+            if (isset($_SESSION['missatge_pujada'])) {
+                echo "<div class='info_pujada'>" . $_SESSION['missatge_pujada'] . "</div>";
+                
+            }
+            ?>
+
                 <p>Directori actual: <?php echo htmlspecialchars($relative_dir); ?></p>
 
                 <div>
@@ -302,8 +331,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                         $item_path = $current_dir . DIRECTORY_SEPARATOR . $item;
 
-
-                        
 
 
                         if (is_dir($item_path)) {

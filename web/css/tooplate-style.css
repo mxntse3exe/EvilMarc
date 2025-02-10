@@ -1139,7 +1139,7 @@ b, strong {
   flex-direction: column;
   padding: 20px;
 
-  width: 80%;
+  width: 81%;
   justify-self: center;
 
 
@@ -1182,4 +1182,19 @@ b, strong {
   display: flex;
   gap: 10px;
   justify-content: space-around;
+}
+
+
+.info_pujada {
+  background-color: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0px 0px 10px rgb(219, 219, 219);
+  padding: 10px 20px 10px 20px;
+  margin-bottom: 15px;
+  margin-top: -10px;
+}
+
+.info_pujada p {
+  font-size: 12pt;
+  margin-bottom: 7px;
 }

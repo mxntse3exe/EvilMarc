@@ -29,6 +29,14 @@
 
 
     }
+
+
+
+    // Mostrar mensaje si existe en la sesión
+    if (isset($_SESSION['missatge_pujada'])) {
+        unset($_SESSION['missatge_pujada']); // Eliminarlo para que no aparezca en futuras recargas
+    }
+            
 ?>
 
 <!doctype html>
