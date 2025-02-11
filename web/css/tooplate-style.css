@@ -1198,3 +1198,9 @@ b, strong {
   font-size: 12pt;
   margin-bottom: 7px;
 }
+
+.info_ruta {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}

@@ -86,13 +86,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         // Procesar archivos sueltos
         if (isset($_FILES['archivo']) && $_POST['upload_type'] === 'file') {
+
+
             $_SESSION['missatge_pujada'] = "";
+            $diccionari_json = '{"nets":[],"infectats":[]}';
+
+            
+
             foreach ($_FILES['archivo']['name'] as $key => $name) {
                 $tmp_name = $_FILES['archivo']['tmp_name'][$key];
                 $error = $_FILES['archivo']['error'][$key];
         
-
-
                 if ($error === UPLOAD_ERR_OK) {
                     // Genera un nom únic per al fitxer
                     $nomUnic = generarNomUnic($current_dir, $name);
@@ -102,22 +106,65 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     move_uploaded_file($tmp_name, $target_path);
 
 
-                    $command = escapeshellcmd("python3 /var/www/html/evilmarc_fitxers.py ".escapeshellarg($nomUnic) . " " . escapeshellarg($current_dir));
+                    $command = "echo " . escapeshellarg($diccionari_json) . " | python3 /var/www/html/evilmarc_fitxers.py " . escapeshellarg($nomUnic) . " " . escapeshellarg($current_dir);
                     $output = shell_exec($command);
                     
                 }
-                
-                $_SESSION['missatge_pujada'] = $_SESSION['missatge_pujada']." ".$output;
+                $diccionari_json = $output;
+                // $_SESSION['missatge_pujada'] = $_SESSION['missatge_pujada']." ".$output;
             }
 
-            if (empty(trim($_SESSION['missatge_pujada']))) {
-                $_SESSION['missatge_pujada'] = "Arxius pujats correctament!";
+            $diccionari = json_decode($diccionari_json, true);
+
+            $nets = count($diccionari["nets"]);
+            $infectats = count($diccionari["infectats"]);
+
+            // Construir el missatge segons els fitxers pujats: lògica singulars i plurals
+            if ($nets > 0 && $infectats === 0) {
+                if ($nets === 1) {
+                    $_SESSION['missatge_pujada'] = "S'ha pujat correctament $nets arxiu!";
+                }
+                else {
+                    $_SESSION['missatge_pujada'] = "S'han pujat correctament $nets arxius!";
+                }
+            } elseif ($nets === 0 && $infectats > 0) {
+                if ($infectats === 1) {
+                    $_SESSION['missatge_pujada'] = "<i class='uil uil-exclamation-triangle'></i> L'arxiu <b>" . implode(", ", $diccionari["infectats"]) . "</b> no s'ha pogut pujar, està infectat.";
+                }
+                else {
+                    $_SESSION['missatge_pujada'] = "<i class='uil uil-exclamation-triangle'></i> Els arxius <b>" . implode(", ", $diccionari["infectats"]) . "</b> no s'han pogut pujar, estan infectats.";
+                }
+            } elseif ($nets > 0 && $infectats > 0) {
+                if ($nets === 1) {
+                    if ($infectats === 1) {
+                        $_SESSION['missatge_pujada'] = "S'ha pujat correctament $nets arxiu. <br><i class='uil uil-exclamation-triangle'></i> L'arxiu <b>" . implode(", ", $diccionari["infectats"]) . "</b> no s'ha pogut pujar, està infectat.";
+                    }
+                    else {
+                        $_SESSION['missatge_pujada'] = "S'ha pujat correctament $nets arxiu. <br><i class='uil uil-exclamation-triangle'></i> Els arxius <b>" . implode(", ", $diccionari["infectats"]) . "</b> no s'han pogut pujar, estan infectats.";
+                    }
+                }
+                else {
+                    if ($infectats === 1) {
+                        $_SESSION['missatge_pujada'] = "S'han pujat correctament $nets arxius. <br><i class='uil uil-exclamation-triangle'></i> L'arxiu <b>" . implode(", ", $diccionari["infectats"]) . "</b> no s'ha pogut pujar, està infectat.";
+                    }
+                    else {
+                        $_SESSION['missatge_pujada'] = "S'han pujat correctament $nets arxius. <br><i class='uil uil-exclamation-triangle'></i> Els arxius <b>" . implode(", ", $diccionari["infectats"]) . "</b> no s'han pogut pujar, estan infectats.";
+                    }
+                }
+            
+            
             }
 
         }
 
         // Procesar carpetas
         if (isset($_FILES['carpeta']) && $_POST['upload_type'] === 'folder') {
+
+
+            $_SESSION['missatge_pujada'] = "";
+            $diccionari_json = '{"nets":[],"infectats":[]}';
+
+
             foreach ($_FILES['carpeta']['name'] as $key => $name) {
                 $tmp_name = $_FILES['carpeta']['tmp_name'][$key];
                 $error = $_FILES['carpeta']['error'][$key];
@@ -125,6 +172,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 if ($error === UPLOAD_ERR_OK) {
                     $relative_path = $_FILES['carpeta']['full_path'][$key]; // Ruta relativa completa
                     $target_path = $current_dir . DIRECTORY_SEPARATOR . $relative_path;
+
+                    $carpeta_principal = explode('/', $relative_path)[0];
+
+
+                    $ruta_carpeta_principal = $current_dir . DIRECTORY_SEPARATOR . $carpeta_principal;
+
 
                     // Crear directorios si no existen
                     $target_dir = dirname($target_path);
@@ -141,9 +194,53 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         move_uploaded_file($tmp_name, $target_path);
                     }
                 }
-                
             }
-            echo "Carpeta pujada correctament.";
+
+            $command = "echo " . escapeshellarg($diccionari_json) . " | python3 /var/www/html/evilmarc_carpetes.py " . " " . escapeshellarg($ruta_carpeta_principal);
+            $output = shell_exec($command);
+
+
+
+            $diccionari_json = $output;
+            $diccionari = json_decode($diccionari_json, true);
+
+            $nets = count($diccionari["nets"]);
+            $infectats = count($diccionari["infectats"]);
+
+            //Construir el missatge segons els fitxers pujats: lògica singulars i plurals
+            if ($nets > 0 && $infectats === 0) {
+                if ($nets === 1) {
+                    $_SESSION['missatge_pujada'] = "S'ha pujat correctament $nets arxiu!";
+                }
+                else {
+                    $_SESSION['missatge_pujada'] = "S'han pujat correctament $nets arxius!";
+                }
+            } elseif ($nets === 0 && $infectats > 0) {
+                if ($infectats === 1) {
+                    $_SESSION['missatge_pujada'] = "<i class='uil uil-exclamation-triangle'></i> L'arxiu <b>" . implode(", ", $diccionari["infectats"]) . "</b> no s'ha pogut pujar, està infectat.";
+                }
+                else {
+                    $_SESSION['missatge_pujada'] = "<i class='uil uil-exclamation-triangle'></i> Els arxius <b>" . implode(", ", $diccionari["infectats"]) . "</b> no s'han pogut pujar, estan infectats.";
+                }
+            } elseif ($nets > 0 && $infectats > 0) {
+                if ($nets === 1) {
+                    if ($infectats === 1) {
+                        $_SESSION['missatge_pujada'] = "S'ha pujat correctament $nets arxiu. <br><i class='uil uil-exclamation-triangle'></i> L'arxiu <b>" . implode(", ", $diccionari["infectats"]) . "</b> no s'ha pogut pujar, està infectat.";
+                    }
+                    else {
+                        $_SESSION['missatge_pujada'] = "S'ha pujat correctament $nets arxiu. <br><i class='uil uil-exclamation-triangle'></i> Els arxius <b>" . implode(", ", $diccionari["infectats"]) . "</b> no s'han pogut pujar, estan infectats.";
+                    }
+                }
+                else {
+                    if ($infectats === 1) {
+                        $_SESSION['missatge_pujada'] = "S'han pujat correctament $nets arxius. <br><i class='uil uil-exclamation-triangle'></i> L'arxiu <b>" . implode(", ", $diccionari["infectats"]) . "</b> no s'ha pogut pujar, està infectat.";
+                    }
+                    else {
+                        $_SESSION['missatge_pujada'] = "S'han pujat correctament $nets arxius. <br><i class='uil uil-exclamation-triangle'></i> Els arxius <b>" . implode(", ", $diccionari["infectats"]) . "</b> no s'han pogut pujar, estan infectats.";
+                    }
+                }
+            }
+            
         }
     } else {
         echo "No s'ha seleccionat cap fitxer o carpeta.";
@@ -315,7 +412,49 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
             ?>
 
-                <p>Directori actual: <?php echo htmlspecialchars($relative_dir); ?></p>
+
+                <div class="info_ruta">
+                    <p>Directori actual: <?php echo htmlspecialchars($relative_dir); ?></p>
+    
+                    <button id="crear-carpeta" class="btn">Crear carpeta</button>
+                </div>
+
+                <!-- script per poder crear noves carpetes -->
+                <script>
+                document.getElementById('crear-carpeta').addEventListener('click', function() {
+                    // Demanar el nom de la carpeta mitjançant una alerta
+                    const nomCarpeta = prompt('Introdueix el nom de la carpeta:');
+
+                    if (nomCarpeta) {
+                        // Enviar el nom de la carpeta al servidor mitjançant AJAX
+                        const currentDir = "<?php echo htmlspecialchars($current_dir); ?>";
+                        const formData = new FormData();
+                        formData.append('nom_carpeta', nomCarpeta);
+                        formData.append('current_dir', currentDir);
+
+                        fetch('crear_carpeta.php', {
+                            method: 'POST',
+                            body: formData
+                        })
+                        .then(response => response.text())
+                        .then(data => {
+                            alert(data); // Mostrar el missatge de resposta del servidor
+                            window.location.reload(); // Recarregar la pàgina per veure els canvis
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                        });
+                    }
+                });
+                </script>
+
+
+
+
+
+
+
+                
 
                 <div>
                     <?php

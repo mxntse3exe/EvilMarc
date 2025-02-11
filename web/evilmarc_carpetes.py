@@ -155,14 +155,14 @@ user = "web"
 password = "T5Dk!xq"
 
 
-if len(sys.argv) != 3:
+if len(sys.argv) != 2:
     exit()
 
-nom_arxiu = sys.argv[1]
+
 
 creacio_bd(host, user, password)
 
-ruta_carpeta = sys.argv[2]
+ruta_carpeta = sys.argv[1]
 
 diccionari_json = sys.stdin.read()
 diccionari = json.loads(diccionari_json)
@@ -175,58 +175,55 @@ if os.path.exists(ruta_carpeta) and os.path.isdir(ruta_carpeta):
         for arxiu in arxius:
 
             # Obtenir ruta i hash de l'arxiu 
-            if arxiu == nom_arxiu:
+            
+            ruta_arxiu = os.path.join(ruta_actual, arxiu)    
+            hash_arxiu = obtenir_hash(ruta_arxiu)
+    
+            if hash_in_bd(host, user, password, hash_arxiu):
 
-                ruta_arxiu = os.path.join(ruta_actual, arxiu)    
-                hash_arxiu = obtenir_hash(ruta_arxiu)
-        
-                if hash_in_bd(host, user, password, hash_arxiu):
-
-                    arxiu_infectat = info_arxiu_bd(host, user, password, hash_arxiu)
-                    
-                else:
-                    # Obtenir tamany de fitxer en MB
-                    tamany_arxiu = os.path.getsize(ruta_arxiu) / (1024 * 1024)
+                arxiu_infectat = info_arxiu_bd(host, user, password, hash_arxiu)
                 
-                    if tamany_arxiu < 650:
-                        if tamany_arxiu < 32:
-                            url = "https://www.virustotal.com/api/v3/files"
-
-                        else:
-                            url = obtenir_url_arxiu_gran()
-
-
-                        ####################
-                        escanejat = False
-                        while not escanejat:
-                            try:
-                                id_scan = pujar_arxiu(arxiu, ruta_arxiu, url)
-                                arxiu_infectat = obtenir_escaneig_arxiu(id_scan, host, user, password, hash_arxiu)
-                                escanejat = True
-                            except:
-                                time.sleep(1)
-                        ####################
+            else:
+                # Obtenir tamany de fitxer en MB
+                tamany_arxiu = os.path.getsize(ruta_arxiu) / (1024 * 1024)
+            
+                if tamany_arxiu < 650:
+                    if tamany_arxiu < 32:
+                        url = "https://www.virustotal.com/api/v3/files"
 
                     else:
-                        print(f"L'arxiu {arxiu} pesa massa! No podem escanejar arxius tan grans.")
+                        url = obtenir_url_arxiu_gran()
 
 
+                    ####################
+                    escanejat = False
+                    while not escanejat:
+                        try:
+                            id_scan = pujar_arxiu(arxiu, ruta_arxiu, url)
+                            arxiu_infectat = obtenir_escaneig_arxiu(id_scan, host, user, password, hash_arxiu)
+                            escanejat = True
+                        except:
+                            time.sleep(1)
+                    ####################
 
-
-                if arxiu_infectat:
-                    # print(f"<p><i class='uil uil-exclamation-triangle'></i> L'arxiu <b>{nom_arxiu}</b> està infectat, no s'ha pogut pujar!</p>")
-          
-                    diccionari['infectats'].append(f'{nom_arxiu}')
-                    print(json.dumps(diccionari))
-
-                    if os.path.exists(ruta_arxiu):
-                        os.remove(ruta_arxiu)
-                        
-
-                
                 else:
-                    diccionari['nets'].append(f'{nom_arxiu}')
-                    print(json.dumps(diccionari))
-                    # print(f"L'arxiu <b>{nom_arxiu}</b> s'ha pujat correctament.")
-              
-                
+                    print(f"L'arxiu {arxiu} pesa massa! No podem escanejar arxius tan grans.")
+
+
+            if arxiu_infectat:
+
+                parts = ruta_arxiu.split("/")
+                ruta_relativa = "/" + "/".join(parts[7:])
+
+
+
+                diccionari['infectats'].append(ruta_relativa)
+                if os.path.exists(ruta_arxiu):
+                    os.remove(ruta_arxiu)
+  
+            else:
+
+                diccionari['nets'].append(arxiu)
+
+
+print(json.dumps(diccionari))
