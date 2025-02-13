@@ -149,6 +149,28 @@ def info_arxiu_bd(host, user, password, hash_arxiu):
         mariadb_conn.close()
         return True
 
+# Funció per guardar la informació de l'arxiu pujat dins la BD
+def guardar_arxiu_pujat_bd (host, user, password, nom, ruta, hash):
+
+    parts_ruta = ruta.split('/')
+    id_usuari = parts_ruta[6].split('_')[1]
+
+
+    mariadb_conn = mysql.connector.connect(
+        host=host, 
+        user=user, 
+        password=password)
+    mariadb_cursor = mariadb_conn.cursor()
+    mariadb_cursor.execute("USE evilmarc")
+
+    mariadb_cursor.execute("INSERT INTO ARXIUS_PUJATS (nom_arxiu, ruta, hash, id_usu) VALUES (%s, %s, %s, %s)", (nom, ruta, hash, id_usuari))
+    mariadb_conn.commit()
+
+
+    mariadb_cursor.close()
+    mariadb_conn.close()
+
+
 
 host = "localhost"
 user = "web"
@@ -214,7 +236,6 @@ if os.path.exists(ruta_carpeta) and os.path.isdir(ruta_carpeta):
 
 
                 if arxiu_infectat:
-                    # print(f"<p><i class='uil uil-exclamation-triangle'></i> L'arxiu <b>{nom_arxiu}</b> està infectat, no s'ha pogut pujar!</p>")
           
                     diccionari['infectats'].append(f'{nom_arxiu}')
                     print(json.dumps(diccionari))
@@ -225,8 +246,9 @@ if os.path.exists(ruta_carpeta) and os.path.isdir(ruta_carpeta):
 
                 
                 else:
+
                     diccionari['nets'].append(f'{nom_arxiu}')
+
+                    guardar_arxiu_pujat_bd(host, user, password, arxiu, ruta_arxiu, hash_arxiu)
+
                     print(json.dumps(diccionari))
-                    # print(f"L'arxiu <b>{nom_arxiu}</b> s'ha pujat correctament.")
-              
-                
