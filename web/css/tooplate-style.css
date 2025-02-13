@@ -1204,3 +1204,8 @@ b, strong {
   justify-content: space-between;
   align-items: baseline;
 }
+
+.botons_arxius {
+  gap: 10px;
+  display: flex;
+}

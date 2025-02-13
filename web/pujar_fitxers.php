@@ -50,9 +50,6 @@
 
 ?>
 
-
-
-
 <?php
 
 function generarNomUnic($directori, $nomFitxer) {
@@ -484,10 +481,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             echo '</a>';
                         } else {
                             // Mostrar archivos
-                            // echo '<div class="llista_fitxers"><span>'.htmlspecialchars($item).'</span>   <a href="descargar.php?file=' . urlencode($item_path) . '&dir=' . urlencode($base_dir) . '">descarregar <i class="uil uil-arrow-down"></i></a>  </div>';
                             echo '<div class="llista_fitxers">';
                                 echo '<span>'.htmlspecialchars($item).'</span>';
-                                echo '<div>';
+                                echo '<div class="botons_arxius">';
+                                    echo '<a href="descargar.php?file=' . urlencode($item_path) . '&dir=' . urlencode($current_dir) . '">compartir <i class="uil uil-users-alt"></i></a>';
                                     echo '<a href="descargar.php?file=' . urlencode($item_path) . '&dir=' . urlencode($current_dir) . '">descarregar <i class="uil uil-arrow-down"></i></a>';
                                     echo '<a href="eliminar.php?file=' . urlencode($item_path) . '&dir=' . urlencode($current_dir) . '" onclick="return confirm(\'Estàs segur que vols eliminar aquest arxiu?\')">eliminar <i class="uil uil-trash-alt"></i></a>';  
                                 echo '</div>';

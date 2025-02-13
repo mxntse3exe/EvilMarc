@@ -6,6 +6,14 @@ if (!isset($_SESSION['usuari'])) {
     die("Accés no permés.");
 }
 
+$servidor = "localhost";
+$usuario = "web";
+$password = "T5Dk!xq";
+$db = "evilmarc";
+
+$conexion = mysqli_connect($servidor,$usuario,$password,$db);
+
+
 // Directorio base del usuario
 $base_dir = '/var/www/html/fitxers/fitxers_usuaris/fitxers_' . $_SESSION['id_usu'];
 
@@ -27,28 +35,38 @@ if ($file || $folder) {
     if ($file && file_exists($target_path)) {
         unlink($target_path);
         echo "Arxiu eliminat correctament.";
+
+        $sql = "delete from ARXIUS_PUJATS where ruta = '$target_path'";
+        mysqli_query($conexion,$sql);
+
     }
     // Eliminar carpeta
     elseif ($folder && is_dir($target_path)) {
         // Función recursiva para eliminar una carpeta y su contenido
-        function deleteDirectory($dir) {
+        function deleteDirectory($dir,$conexion) {
             if (!file_exists($dir)) {
                 return true;
             }
             if (!is_dir($dir)) {
+
+                $sql = "delete from ARXIUS_PUJATS where ruta = '$dir'";
+                mysqli_query($conexion, $sql);
+
+
                 return unlink($dir);
+
             }
             foreach (scandir($dir) as $item) {
                 if ($item == '.' || $item == '..') {
                     continue;
                 }
-                if (!deleteDirectory($dir . DIRECTORY_SEPARATOR . $item)) {
+                if (!deleteDirectory($dir . DIRECTORY_SEPARATOR . $item,$conexion)) {
                     return false;
                 }
             }
             return rmdir($dir);
         }
-        deleteDirectory($target_path);
+        deleteDirectory($target_path,$conexion);
         echo "Carpeta eliminada correctament.";
     } else {
         die("El fitxer o carpeta no existeix.");
