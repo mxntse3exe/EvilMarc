@@ -1,0 +1,84 @@
+<?php
+session_start();
+
+// Verificar que l'usuari està autenticat
+if (!isset($_SESSION['usuari'])) {
+    die("Usuari no autenticat.");
+}
+
+// Connexió a la base de dades
+$servidor = "localhost";
+$usuario = "web";
+$password = "T5Dk!xq";
+$db = "evilmarc";
+
+$conexion = mysqli_connect($servidor, $usuario, $password, $db);
+
+if (!$conexion) {
+    die("Error al connectar amb la base de dades: " . mysqli_connect_error());
+}
+
+// Obtenir dades del formulari
+$ruta = $_POST['ruta_arxiu'];
+$departaments_seleccionats = $_POST['departaments'] ?? [];
+
+// Obtenir l'ID de l'usuari
+if (!isset($_SESSION['id_usu'])) {
+    die("ID d'usuari no definit.");
+}
+$usuari = $_SESSION['id_usu'];
+
+// Obtenir l'ID de l'arxiu
+$sql_id_arxiu = "select id_arxiu from ARXIUS_PUJATS where ruta = '$ruta'";
+$result_id_arxiu = mysqli_query($conexion, $sql_id_arxiu);
+
+if (!$result_id_arxiu) {
+    die("Error en la consulta: " . mysqli_error($conexion));
+}
+
+if (mysqli_num_rows($result_id_arxiu) == 0) {
+    die("No s'ha trobat cap arxiu amb la ruta proporcionada.");
+}
+
+$row = mysqli_fetch_assoc($result_id_arxiu);
+$id_arxiu = $row['id_arxiu'];
+
+// Obtenir departaments que ja tenen accés
+$sql_departaments_compartits = "select id_dep from ARXIUS_COMPARTITS_DEPARTAMENTS where id_arxiu = '$id_arxiu'";
+$result_departaments_compartits = mysqli_query($conexion, $sql_departaments_compartits);
+
+if (!$result_departaments_compartits) {
+    die("Error en la consulta: " . mysqli_error($conexion));
+}
+
+$departaments_compartits = [];
+while ($row = mysqli_fetch_assoc($result_departaments_compartits)) {
+    $departaments_compartits[] = $row['id_dep'];
+}
+
+// Afegir noves comparticions
+foreach ($departaments_seleccionats as $id_dep) {
+    if (!in_array($id_dep, $departaments_compartits)) {
+        $sql_insert = "INSERT INTO ARXIUS_COMPARTITS_DEPARTAMENTS (id_propietari, id_dep, id_arxiu) 
+                       VALUES ('$usuari', '$id_dep', '$id_arxiu')";
+        if (!mysqli_query($conexion, $sql_insert)) {
+            die("Error en la inserció: " . mysqli_error($conexion));
+        }
+    }
+}
+
+// Eliminar comparticions que ja no estan seleccionades
+foreach ($departaments_compartits as $id_dep) {
+    if (!in_array($id_dep, $departaments_seleccionats)) {
+        $sql_delete = "DELETE FROM ARXIUS_COMPARTITS_DEPARTAMENTS 
+                       WHERE id_arxiu = '$id_arxiu' AND id_dep = '$id_dep'";
+        if (!mysqli_query($conexion, $sql_delete)) {
+            die("Error en l'eliminació: " . mysqli_error($conexion));
+        }
+    }
+}
+
+// Redireccionar amb missatge d'èxit
+header("Location: pujar_fitxers.php");
+exit();
+?>

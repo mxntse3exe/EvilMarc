@@ -476,7 +476,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 echo '<div class="llista_fitxers">';
                                     echo '<div><i class="uil uil-folder"></i> '.htmlspecialchars($item);
                                     echo '</div>';
+                                    
+                                    echo '<div class="botons_arxius">';
+                                    // Botó per compartir arxius
+                                    echo '<a href="javascript:void(0)" onclick="abrirPopup_compartir()">compartir <i class="uil uil-users-alt"></i></a>';
+
+                                    ?>
+
+                                    <!-- Això s'ha d'acabar de mirar i canviar el codi -->
+                                    <div class="overlay" id="overlay_compartir" onclick="cerrarPopup_compartir()"></div>
+                                    <div class="popup" id="popup_compartir">
+                                        <h4>Compartir</h4>
+
+                                        <?php
+                                        
+                                        
+                                        ?>
+                                        <span class="close-icon" onclick="cerrarPopup_compartir()">×</span>
+                                    </div>
+
+
+                                    <?php
+
                                     echo '<a href="eliminar.php?folder=' . urlencode($item_path) . '&dir=' . urlencode($base_dir) . '" onclick="return confirm(\'Estàs segur que vols eliminar aquesta carpeta?\')">eliminar <i class="uil uil-trash-alt"></i></a>';
+                                    echo '</div>';
                                 echo '</div>';
                             echo '</a>';
                         } else {
@@ -484,8 +507,115 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             echo '<div class="llista_fitxers">';
                                 echo '<span>'.htmlspecialchars($item).'</span>';
                                 echo '<div class="botons_arxius">';
-                                    echo '<a href="descargar.php?file=' . urlencode($item_path) . '&dir=' . urlencode($current_dir) . '">compartir <i class="uil uil-users-alt"></i></a>';
+
                                     echo '<a href="descargar.php?file=' . urlencode($item_path) . '&dir=' . urlencode($current_dir) . '">descarregar <i class="uil uil-arrow-down"></i></a>';
+
+
+                                    $popup_id = 'popup_' . md5($item_path); // Genera un ID únic per cada popup
+
+                                    // Botó per compartir arxius
+                                    echo '<a href="javascript:void(0)" onclick="abrirPopup_compartir(\''.$popup_id.'\')">compartir <i class="uil uil-users-alt"></i></a>';
+                                    
+
+                                    ?>
+
+                                    
+                                    <div class="overlay" id="overlay_<?php echo $popup_id; ?>" onclick="cerrarPopup_compartir('<?php echo $popup_id; ?>')"></div>
+                                    <div class="popup_comp" id="<?php echo $popup_id; ?>">
+                                        <h4>Compartir</h4>
+
+                                        <div class="compartir_arxius">
+
+                                            <!-- Formulari per gestionar la compartició de fitxers amb diferents usuaris -->
+                                            <div>
+                                                <h6>Compartir amb usuaris</h3>
+                                                <form class="contact-form" action="compartir_arxiu_usu.php" method="POST">
+                                                <?php
+                                                
+
+                                                // Obtenir els usuaris que ja tenen accés a l'arxiu
+                                                $sql_usuaris_compartits = "select id_destinatari from ARXIUS_COMPARTITS_USUARIS where id_arxiu = (select id_arxiu from ARXIUS_PUJATS where ruta = '$item_path')";
+
+                                                $result_usuaris_compartits = mysqli_query($conexion, $sql_usuaris_compartits);
+                                                $usuaris_compartits = [];
+                                                while ($row = mysqli_fetch_assoc($result_usuaris_compartits)) {
+                                                    $usuaris_compartits[] = $row['id_destinatari'];
+                                                }
+
+                                                // Obtenir tots els usuaris
+                                                $sql_usuaris = "select * from USUARIS where validat = 1";
+                                                $usuaris = mysqli_query($conexion, $sql_usuaris);
+
+                                                while ($usuari = $usuaris->fetch_assoc()) {
+                                                    // Verificar si l'usuari està a la llista de compartits
+                                                    $checked = in_array($usuari['id_usu'], $usuaris_compartits) ? 'checked' : '';
+                                        
+                                                    echo "<label>";
+                                                    echo "<input type='checkbox' name='usuaris[]' value='" . $usuari['id_usu'] . "' $checked> ";
+                                                    echo "<img src='".$usuari['imatge']."' class='foto_usuari_dep'>";
+                                                    echo $usuari['usuari'];
+                                                    echo "</label><br>";
+                                                }
+                                                ?>
+                                                <!-- Input ocult per enviar l'ID de l'arxiu -->
+                                                    
+                                                    <input type="hidden" name="ruta_arxiu" value="<?php echo $item_path; ?>">
+
+                                                    <button type="submit" class="form-control submit-btn">Compartir amb els usuaris seleccionats</button>
+                                                </form>
+                                            </div>
+
+
+
+
+                                            <!-- Formulari per gestionar la compartició de fitxers amb diferents departaments -->
+                                            <div>
+                                                <h6>Compartir amb departaments</h3>
+                                                <form class="contact-form" action="compartir_arxiu_dep.php" method="POST">
+                                                <?php
+                                                
+
+                                                // Obtenir els departaments que ja tenen accés a l'arxiu
+                                                $sql_departaments_compartits = "select id_dep from ARXIUS_COMPARTITS_DEPARTAMENTS where id_arxiu = (select id_arxiu from ARXIUS_PUJATS where ruta = '$item_path')";
+
+                                                $result_departaments_compartits = mysqli_query($conexion, $sql_departaments_compartits);
+                                                $departaments_compartits = [];
+                                                while ($row = mysqli_fetch_assoc($result_departaments_compartits)) {
+                                                    $departaments_compartits[] = $row['id_dep'];
+                                                }
+
+                                                // Obtenir tots els departaments
+                                                $sql_departaments = "select * from DEPARTAMENTS";
+                                                $departaments = mysqli_query($conexion, $sql_departaments);
+
+                                                while ($departament = $departaments->fetch_assoc()) {
+                                                    // Verificar si el departament està a la llista de compartits
+                                                    $checked = in_array($departament['id_dep'], $departaments_compartits) ? 'checked' : '';
+                                        
+                                                    echo "<label>";
+                                                    echo "<input type='checkbox' name='departaments[]' value='" . $departament['id_dep'] . "' $checked> ";
+                                                    echo $departament['nom'];
+                                                    echo "</label><br>";
+                                                }
+                                                ?>
+                                                <!-- Input ocult per enviar l'ID de l'arxiu -->
+                                                    
+                                                    <input type="hidden" name="ruta_arxiu" value="<?php echo $item_path; ?>">
+
+                                                    <button type="submit" class="form-control submit-btn">Compartir amb els departaments seleccionats</button>
+                                                </form>
+                                            </div>
+
+                                        </div>
+
+                                        <span class="close-icon" onclick="cerrarPopup_compartir('<?php echo $popup_id; ?>')">×</span>
+                                    </div>
+
+
+
+
+                                    <?php
+                                    
                                     echo '<a href="eliminar.php?file=' . urlencode($item_path) . '&dir=' . urlencode($current_dir) . '" onclick="return confirm(\'Estàs segur que vols eliminar aquest arxiu?\')">eliminar <i class="uil uil-trash-alt"></i></a>';  
                                 echo '</div>';
                             echo '</div>';
@@ -537,6 +667,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <script src="js/owl.carousel.min.js"></script>
     <script src="js/smoothscroll.js"></script>
     <script src="js/custom.js"></script>
+
+    <script>
+        // popup per crear departaments
+        function abrirPopup_compartir(popupid) {
+            document.getElementById("overlay_"+popupid).style.display = "block";
+            document.getElementById(popupid).style.display = "block";
+        }
+        function cerrarPopup_compartir(popupid) {
+            document.getElementById("overlay_"+popupid).style.display = "none";
+            document.getElementById(popupid).style.display = "none";
+        }
+    </script>
 
 
     <script>

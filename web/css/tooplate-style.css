@@ -1209,3 +1209,25 @@ b, strong {
   gap: 10px;
   display: flex;
 }
+
+.compartir_arxius {
+  display: flex;
+  gap: 60px;
+}
+
+.popup_comp {
+  display: none;
+  position: fixed;
+  top: 45%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 35px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border-radius: 20px;
+  z-index: 1001;
+  width: fit-content;
+  height: 70%;
+  overflow-y: auto;
+  justify-items: left;
+}
