@@ -1,0 +1,2 @@
+-> Registre de tots els fitxers pujats i eliminats pels usuaris. (Crear base de dades no relacional on es guardin les dades de cada vegada que pugem o eliminem un fitxer.)
+Registre de fitxers pujats per l'usuari i eliminats per contenir programari maliciós. (Base de dades no relacional.)
