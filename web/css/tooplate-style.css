@@ -1218,7 +1218,7 @@ b, strong {
 .popup_comp {
   display: none;
   position: fixed;
-  top: 45%;
+  top: 48%;
   left: 50%;
   transform: translate(-50%, -50%);
   background-color: white;
@@ -1227,7 +1227,19 @@ b, strong {
   border-radius: 20px;
   z-index: 1001;
   width: fit-content;
-  height: 70%;
+
   overflow-y: auto;
   justify-items: left;
+}
+
+.boto_compartir {
+  background: #2CB9FF;
+  border-radius: 15px;
+  color: #ffffff;
+  font-weight: bold;
+  border: 0;
+  cursor: pointer;
+  transition: all 0.4s ease;
+  padding: 10px 20px;
+  margin-top: 10px;
 }
