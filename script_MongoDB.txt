@@ -1,2 +1,30 @@
 -> Registre de tots els fitxers pujats i eliminats pels usuaris. (Crear base de dades no relacional on es guardin les dades de cada vegada que pugem o eliminem un fitxer.)
 Registre de fitxers pujats per l'usuari i eliminats per contenir programari maliciós. (Base de dades no relacional.)
+
+sudo apt update 
+sudo apt upgrade
+
+
+
+
+
+si da error:
+sudo apt install gnupg2
+wget -nc https://www.mongodb.org/static/pgp/server-6.0.asc
+cat server-6.0.asc | gpg --dearmor | sudo tee /etc/apt/keyrings/mongodb.gpg >/dev/null
+sudo sh -c 'echo "deb [ arch=amd64,arm64 signed-by=/etc/apt/keyrings/mongodb.gpg] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/6.0 multiverse" >> /etc/apt/sources.list.d/mongo.list'
+sudo apt update
+sudo apt install mongodb-org
+sudo systemctl start mongod
+
+
+
+
+mongosh
+
+
+
+
+un docker hub de mongoDB
+
+Mongo Express
