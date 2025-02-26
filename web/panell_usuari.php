@@ -114,9 +114,9 @@
                     </div>
 
                     <div class="contingut_panell">
-                        <a href="pujar_fitxers" class="link_panell"><div class="botons_panell"><span>Pujar i escanejar arxius</span></div></a>
-                        <a href="" class="link_panell"><div class="botons_panell"><span>Els meus arxius</span></div></a>
-                        <a href="" class="link_panell"><div class="botons_panell"><span>Arxius compartits amb mi</span></div></a>
+                        <a href="pujar_fitxers" class="link_panell"><div class="botons_panell"><span>Els meus arxius</span></div></a>
+                        <a href="compartits" class="link_panell"><div class="botons_panell"><span>Arxius compartits amb mi</span></div></a>
+                        <a href="" class="link_panell"><div class="botons_panell"><span>Missatges</span></div></a>
                         <a href="" class="link_panell"><div class="botons_panell"><span>Registre d'arxius pujats</span></div></a>
                         <a href="compte" class="link_panell">
                             <div class="botons_panell">
