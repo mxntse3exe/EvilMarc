@@ -1,30 +1,153 @@
--> Registre de tots els fitxers pujats i eliminats pels usuaris. (Crear base de dades no relacional on es guardin les dades de cada vegada que pugem o eliminem un fitxer.)
-Registre de fitxers pujats per l'usuari i eliminats per contenir programari maliciós. (Base de dades no relacional.)
+DOCKER
 
-sudo apt update 
-sudo apt upgrade
+#Desinstalar paquetes conflictivos:
 
-
-
-
-
-si da error:
-sudo apt install gnupg2
-wget -nc https://www.mongodb.org/static/pgp/server-6.0.asc
-cat server-6.0.asc | gpg --dearmor | sudo tee /etc/apt/keyrings/mongodb.gpg >/dev/null
-sudo sh -c 'echo "deb [ arch=amd64,arm64 signed-by=/etc/apt/keyrings/mongodb.gpg] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/6.0 multiverse" >> /etc/apt/sources.list.d/mongo.list'
-sudo apt update
-sudo apt install mongodb-org
-sudo systemctl start mongod
+for pkg in docker.io docker-doc docker-compose docker-compose-v2 podman-
+docker containerd runc; do sudo apt-get remove $pkg; done
 
 
 
 
-mongosh
+# Añade la clave GPG oficial de Docker:
+
+sudo apt-get update
+
+sudo apt-get install ca-certificates curl
+
+sudo install -m 0755 -d /etc/apt/keyrings
+
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+
+sudo chmod a+r /etc/apt/keyrings/docker.asc
 
 
 
 
-un docker hub de mongoDB
 
-Mongo Express
+# Añadir el repositorio a las fuentes APT:
+
+echo \ "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+
+$(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+
+sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+sudo apt-get update
+
+
+
+
+
+#Instalar la última versión:
+
+sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin
+
+docker-compose-plugin
+
+
+
+
+
+#Verifica que la instalación de Docker Engine es correcta:
+
+sudo docker run hello-world
+
+
+
+
+# Configura Docker para iniciarse en el arranque del sistema:
+
+
+sudo systemctl enable docker.service
+
+sudo systemctl enable containerd.service
+
+
+
+
+
+
+Container Docker de MongoDB
+
+#Descargar imagen de MongoDB V.4:
+
+sudo docker pull mongo:4
+
+
+
+#Ejecutar el contenedor de MongoDB:
+
+sudo docker run --name my-mongo -d -p 27017:27017 mongo:4
+
+
+
+#Verificar si el contenedor se está ejecutando:
+
+sudo docker ps
+
+
+
+
+#Abrir shell de MongoDB:
+
+sudo docker exec -it my-mongo mongo
+
+
+
+
+#Ejemplo crear DB y colección
+
+use productos
+
+db.createCollection("ordenadores")
+
+
+
+
+#Insertar datos en la colección:
+
+db.ordenadores.insertOne({
+
+modelo: "Acer Aspire",
+
+tipo: "Portátil",
+
+ram: "16GB"
+
+})
+
+
+
+
+
+
+#Verificar inserción de datos:
+
+db.ordenadores.find().pretty()
+
+
+
+
+
+
+#Detener el contenedor:
+
+sudo docker stop my-mongo
+
+S.O.: Ubuntu Server 22.04 LTS (Jammy)
+
+
+
+
+
+Webs:
+
+Ubuntu | Docker Docs
+
+Post-installation steps | Docker Docs
+
+mongo - Official Image | Docker Hub
+
+
+
+
