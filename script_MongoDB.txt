@@ -67,7 +67,7 @@ sudo systemctl enable containerd.service
 
 
 
-Container Docker de MongoDB
+#Container Docker de MongoDB
 
 #Descargar imagen de MongoDB V.4:
 
@@ -150,4 +150,34 @@ mongo - Official Image | Docker Hub
 
 
 
+#Integracio al fitxer python escriptura coses a la BD.
 
+
+pip install pymongo
+
+sudo docker exec -it my-mongo mongo
+
+use logs
+
+db.createCollection("fitxers_pujats")
+
+
+# Exemple:
+
+#	db.fitxers_pujats.insertOne({
+#	    nom_arxiu: "ejemplo.txt",
+#	    ruta: "/uploads/ejemplo.txt",
+#	    hash: "abc123hash",
+#	    infectat: false,
+#	    usuari: "victor",
+#	    data_pujada: new Date()
+#	})
+
+
+
+
+
+
+
+# Inicar servei
+ sudo docker start my-mongo
