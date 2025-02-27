@@ -7,6 +7,8 @@ import mimetypes
 import time
 import sys
 import json
+from pymongo import MongoClient
+import datetime
 
 
 
@@ -171,10 +173,88 @@ def guardar_arxiu_pujat_bd (host, user, password, nom, ruta, hash):
     mariadb_conn.close()
 
 
+# Funció MongoDB registrar arxiu no infectat:
+# def registrar_fitxers(nom_arxiu):
+#     try:
+#         # Intentar conectar al servidor de MongoDB
+#         client = MongoClient("mongodb://localhost:27017/", serverSelectionTimeoutMS=5000)
+        
+#         # Seleccionar la base de datos y colección
+#         db = client["logs"]
+#         collection = db["fitxers_pujats"]
+        
+#         # Crear un diccionario con los datos a insertar
+#         archivo = {
+#             "nom_arxiu": nom_arxiu,
+#             "infectat": False  # Asumimos que el archivo no está infectado
+#         }
+        
+#         # Insertar el documento en la colección
+#         collection.insert_one(archivo)
+#         print("Archivo registrado correctamente")
+    
+#     except Exception as e:
+#         print(f"Ocurrió un error: {e}")
+#         exit()
+
+# Funció MongoDB registrar arxius infectat:
+def registrar_fitxers(nom_arxiu, ruta_arxiu):
+    parts_ruta = ruta_arxiu.split('/')
+    id_usuari = parts_ruta[6].split('_')[1]
+
+    # Conectar:
+    client = MongoClient("mongodb://localhost:27017/")
+    db = client["logs"]
+    collection = db["fitxers_infectats"]
+
+    # Data
+    data_actual = datetime.datetime.now()
+
+    # Creació log
+    log = {
+        "id_usuari" : id_usuari,
+        "nom_arxiu" : nom_arxiu,
+        "infectat" : True,
+        "ruta_arxiu" : ruta_arxiu,
+        "data" : data_actual
+    }
+
+    collection.insert_one(log)
+
+
+
+
+
+# # Funció MongoDB registrar arxius infectat:
+# def registrar_fitxers_infectats(nom_arxiu, ruta_arxiu):
+#     parts_ruta = ruta_arxiu.split('/')
+#     id_usuari = parts_ruta[6].split('_')[1]
+
+#     # Conectar:
+#     client = MongoClient("mongodb://localhost:27017/")
+#     db = client["logs"]
+#     collection = db["fitxers_infectats"]
+
+#     # Data
+#     data_actual = datetime.datetime.now()
+
+#     # Creació log
+#     log = {
+#         "id_usuari" : id_usuari,
+#         "nom_arxiu" : nom_arxiu,
+#         "infectat" : True,
+#         "ruta_arxiu" : ruta_arxiu,
+#         "data" : data_actual
+#     }
+
+#     collection.insert_one(log)
+
+
 
 host = "localhost"
 user = "web"
 password = "T5Dk!xq"
+
 
 
 if len(sys.argv) != 3:
@@ -243,12 +323,18 @@ if os.path.exists(ruta_carpeta) and os.path.isdir(ruta_carpeta):
                     if os.path.exists(ruta_arxiu):
                         os.remove(ruta_arxiu)
                         
-                        ## Afegir fitxers_pujats, fitxers_eliminats i fitxersa amb virus ++ registre horari i usuari. 
+                    # Registrar en MongoDB que el archivo esta infectat
+                    registrar_fitxers_infectats(nom_arxiu)
+
+                        
                 
                 else:
 
                     diccionari['nets'].append(f'{nom_arxiu}')
 
                     guardar_arxiu_pujat_bd(host, user, password, arxiu, ruta_arxiu, hash_arxiu)
+
+                    # Registrar a MongoDB que el arxiu esta infectat
+                    registrar_fitxers(nom_arxiu, ruta_arxiu)
 
                     print(json.dumps(diccionari))
