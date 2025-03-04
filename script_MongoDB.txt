@@ -180,15 +180,11 @@ db.createCollection("fitxers_pujats")
 
 
 # Inicar servei
- sudo docker start my-mongo
+sudo docker start my-mongo
 sudo docker exec -it my-mongo mongo
 
 
+# Instal·lar llibrerias per exdecutar python:
+sudo pip3 install pymongo
 
 
-
-
-A revisar 4 de març:
-
-- Permisos???
-- Autenticacio amb password???

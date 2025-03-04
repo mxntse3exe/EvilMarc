@@ -39,7 +39,11 @@ if ($file || $folder) {
         $sql = "delete from ARXIUS_PUJATS where ruta = '$target_path'";
         mysqli_query($conexion,$sql);
 
+
+        //Codi per registre de eliminar fitxers
     }
+
+    
     // Eliminar carpeta
     elseif ($folder && is_dir($target_path)) {
         // Función recursiva para eliminar una carpeta y su contenido
