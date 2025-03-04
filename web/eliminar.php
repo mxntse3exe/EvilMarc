@@ -13,7 +13,6 @@ $db = "evilmarc";
 
 $conexion = mysqli_connect($servidor,$usuario,$password,$db);
 
-
 // Directorio base del usuario
 $base_dir = '/var/www/html/fitxers/fitxers_usuaris/fitxers_' . $_SESSION['id_usu'];
 

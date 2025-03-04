@@ -1243,3 +1243,30 @@ b, strong {
   padding: 10px 20px;
   margin-top: 10px;
 }
+
+.llista_fitxers_comp {
+  background-color: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0px 0px 10px rgb(219, 219, 219);
+  justify-content: center;
+  display: flex;
+  flex-wrap: wrap;
+
+  flex-direction: column;
+  padding: 20px;
+  width: 100%;
+  justify-self: center;
+  margin-bottom: 10px;
+  justify-content: space-between;
+}
+
+.fitxers_compartits {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.compartit_per {
+  font-size: 10pt;
+  color: gray;
+}
