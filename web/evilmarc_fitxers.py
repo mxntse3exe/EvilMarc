@@ -256,47 +256,6 @@ def registrar_fitxers(nom_arxiu, ruta_arxiu):
 
 
 
-
-
-# def registrar_fitxer(nom_usuari, nom_arxiu, ruta_arxiu):
-#     try:
-#         # Connexió a MongoDB
-#         client = MongoClient("mongodb://localhost:27017/")
-#         db = client["logs"]  # Base de dades
-#         collection = db["fitxers_pujats"]  # Col·lecció
-
-#         # Crear el document amb les dades
-#         document = {
-#             "usuari": nom_usuari,
-#             "nom_arxiu": nom_arxiu,
-#             "ruta_arxiu": ruta_arxiu,
-#             "data_pujada": datetime.datetime.now()  # Data i hora actuals
-#         }
-
-#         # Inserir el document a la col·lecció
-#         result = collection.insert_one(document)
-
-#     except Exception as e:
-#         print(f"Error inesperat: {e}")
-
-
-
-# def provar_mongodb():
-#     # Connexió a MongoDB
-#     client = MongoClient("mongodb://localhost:27017/")
-#     db = client["logs"]  # Base de dades de prova
-#     collection = db["fitxers_pujats"]  # Col·lecció de prova
-
-#     # Document senzill
-#     document = {"missatge": "Hola, MongoDB!"}
-
-#     # Inserir el document
-#     result = collection.insert_one(document)
-
-
-
-
-
 host = "localhost"
 user = "web"
 password = "T5Dk!xq"

@@ -13,7 +13,6 @@ $db = "evilmarc";
 
 $conexion = mysqli_connect($servidor,$usuario,$password,$db);
 
-
 // Directorio base del usuario
 $base_dir = '/var/www/html/fitxers/fitxers_usuaris/fitxers_' . $_SESSION['id_usu'];
 
@@ -39,11 +38,23 @@ if ($file || $folder) {
         $sql = "delete from ARXIUS_PUJATS where ruta = '$target_path'";
         mysqli_query($conexion,$sql);
 
-
         //Codi per registre de eliminar fitxers
-    }
+        $client = new MongoDB\Client("mongodb://localhost:27017");
 
-    
+        //Selecció de BD i la colecció
+        $db_mongo = $client->logs;
+        $collection = $db_mongo->fitxers_eliminats;
+
+        // Document per a insertar
+        $document = [
+        'id_usu' => $_SESSION['id_usu'],
+        'target_path' => $target_path,
+        'fecha' => new MongoDB\BSON\UTCDateTime()
+        ];
+
+        // Insertar document en la colecció
+        $result = $collection->insertOne($document);
+    }
     // Eliminar carpeta
     elseif ($folder && is_dir($target_path)) {
         // Función recursiva para eliminar una carpeta y su contenido
