@@ -173,9 +173,12 @@ def guardar_arxiu_pujat_bd (host, user, password, nom, ruta, hash):
     mariadb_conn.close()
 
 
+
+
+
 # Funció MongoDB registrar arxiu no infectat:
 # def registrar_fitxers(nom_arxiu):
-#     try:
+#      try:
 #         # Intentar conectar al servidor de MongoDB
 #         client = MongoClient("mongodb://localhost:27017/", serverSelectionTimeoutMS=5000)
         
@@ -197,35 +200,12 @@ def guardar_arxiu_pujat_bd (host, user, password, nom, ruta, hash):
 #         print(f"Ocurrió un error: {e}")
 #         exit()
 
+
+
+
+
+
 # Funció MongoDB registrar arxius infectat:
-def registrar_fitxers(nom_arxiu, ruta_arxiu):
-    parts_ruta = ruta_arxiu.split('/')
-    id_usuari = parts_ruta[6].split('_')[1]
-
-    # Conectar:
-    client = MongoClient("mongodb://localhost:27017/")
-    db = client["logs"]
-    collection = db["fitxers_infectats"]
-
-    # Data
-    data_actual = datetime.datetime.now()
-
-    # Creació log
-    log = {
-        "id_usuari" : id_usuari,
-        "nom_arxiu" : nom_arxiu,
-        "infectat" : True,
-        "ruta_arxiu" : ruta_arxiu,
-        "data" : data_actual
-    }
-
-    collection.insert_one(log)
-
-
-
-
-
-# # Funció MongoDB registrar arxius infectat:
 # def registrar_fitxers_infectats(nom_arxiu, ruta_arxiu):
 #     parts_ruta = ruta_arxiu.split('/')
 #     id_usuari = parts_ruta[6].split('_')[1]
@@ -248,6 +228,38 @@ def registrar_fitxers(nom_arxiu, ruta_arxiu):
 #     }
 
 #     collection.insert_one(log)
+
+def registrar_fitxer(nom_usuari, nom_arxiu, ruta_arxiu):
+    try:
+        # Connexió a MongoDB
+        client = MongoClient("mongodb://localhost:27017/")
+        db = client["logs"]  # Base de dades
+        collection = db["fitxers_pujats"]  # Col·lecció
+
+        # Crear el document amb les dades
+        document = {
+            "usuari": nom_usuari,
+            "nom_arxiu": nom_arxiu,
+            "ruta_arxiu": ruta_arxiu,
+            "data_pujada": datetime.datetime.now()  # Data i hora actuals
+        }
+
+        # Inserir el document a la col·lecció
+        result = collection.insert_one(document)
+
+        # Verificar si s'ha inserit correctament
+        if result.inserted_id:
+            print(f"Document inserit correctament amb ID: {result.inserted_id}")
+        else:
+            print("Error: No s'ha pogut inserir el document.")
+
+    except Exception as e:
+        print(f"Error inesperat: {e}")
+
+
+
+
+
 
 
 
@@ -324,7 +336,7 @@ if os.path.exists(ruta_carpeta) and os.path.isdir(ruta_carpeta):
                         os.remove(ruta_arxiu)
                         
                     # Registrar en MongoDB que el archivo esta infectat
-                    registrar_fitxers_infectats(nom_arxiu)
+                    registrar_fitxer(nom_arxiu)
 
                         
                 
@@ -335,6 +347,6 @@ if os.path.exists(ruta_carpeta) and os.path.isdir(ruta_carpeta):
                     guardar_arxiu_pujat_bd(host, user, password, arxiu, ruta_arxiu, hash_arxiu)
 
                     # Registrar a MongoDB que el arxiu esta infectat
-                    registrar_fitxers(nom_arxiu, ruta_arxiu)
+                    registrar_fitxer(nom_arxiu, ruta_arxiu)
 
                     print(json.dumps(diccionari))
