@@ -222,7 +222,6 @@ def registrar_fitxers(nom_arxiu, ruta_arxiu):
 
 
 
-
 host = "localhost"
 user = "web"
 password = "T5Dk!xq"
