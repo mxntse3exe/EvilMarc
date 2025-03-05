@@ -98,7 +98,6 @@ CREATE TABLE DEPARTAMENTS (
     nom VARCHAR(100) NOT NULL
 );
 
-
 CREATE TABLE USUARIS (
     id_usu INT AUTO_INCREMENT PRIMARY KEY,
     usuari VARCHAR(50) NOT NULL,
@@ -114,7 +113,6 @@ CREATE TABLE USUARIS (
     FOREIGN KEY (id_dep) REFERENCES DEPARTAMENTS(id_dep)
 );
 
-
 CREATE TABLE ARXIUS_PUJATS (
     id_arxiu INT AUTO_INCREMENT PRIMARY KEY,
     nom_arxiu VARCHAR(255) NOT NULL,
@@ -124,8 +122,7 @@ CREATE TABLE ARXIUS_PUJATS (
     FOREIGN KEY (id_usu) REFERENCES USUARIS(id_usu) ON DELETE CASCADE
 );
 
-
-CREATE TABLE ARXIUS_COMPARTITS (
+CREATE TABLE ARXIUS_COMPARTITS_USUARIS (
     id_propietari INT NOT NULL,
     id_destinatari INT NOT NULL,
     id_arxiu INT NOT NULL,
@@ -133,6 +130,34 @@ CREATE TABLE ARXIUS_COMPARTITS (
     FOREIGN KEY (id_propietari) REFERENCES USUARIS(id_usu) ON DELETE CASCADE,
     FOREIGN KEY (id_destinatari) REFERENCES USUARIS(id_usu) ON DELETE CASCADE,
     FOREIGN KEY (id_arxiu) REFERENCES ARXIUS_PUJATS(id_arxiu) ON DELETE CASCADE
+);
+
+CREATE TABLE ARXIUS_COMPARTITS_DEPARTAMENTS (
+    id_propietari INT NOT NULL,
+    id_dep INT NOT NULL,
+    id_arxiu INT NOT NULL,
+    PRIMARY KEY (id_propietari, id_dep, id_arxiu),
+    FOREIGN KEY (id_propietari) REFERENCES USUARIS(id_usu) ON DELETE CASCADE,
+    FOREIGN KEY (id_dep) REFERENCES DEPARTAMENTS(id_dep) ON DELETE CASCADE,
+    FOREIGN KEY (id_arxiu) REFERENCES ARXIUS_PUJATS(id_arxiu) ON DELETE CASCADE
+);
+
+CREATE TABLE CARPETES_COMPARTIDES_USUARIS (
+    id_propietari INT NOT NULL,
+    id_destinatari INT NOT NULL,
+    ruta VARCHAR(500) NOT NULL,
+    PRIMARY KEY (id_propietari, id_destinatari, ruta),
+    FOREIGN KEY (id_propietari) REFERENCES USUARIS(id_usu) ON DELETE CASCADE,
+    FOREIGN KEY (id_destinatari) REFERENCES USUARIS(id_usu) ON DELETE CASCADE
+);
+
+CREATE TABLE CARPETES_COMPARTIDES_DEPARTAMENTS (
+    id_propietari INT NOT NULL,
+    id_dep INT NOT NULL,
+    ruta VARCHAR(500) NOT NULL,
+    PRIMARY KEY (id_propietari, id_dep, ruta),
+    FOREIGN KEY (id_propietari) REFERENCES USUARIS(id_usu) ON DELETE CASCADE,
+    FOREIGN KEY (id_dep) REFERENCES DEPARTAMENTS(id_dep) ON DELETE CASCADE
 );
 ```
 
@@ -171,7 +196,7 @@ Reiniciem el servei d'Apache:
 sudo service apache2 restart
 ```
 
-## Instal·lació Python i connector Python amb mysql
+## Instal·lació Python i connector Python amb MySQL
 
 Instal·larem el Python i el connector de Python amb MySQL:
 
@@ -179,6 +204,105 @@ Instal·larem el Python i el connector de Python amb MySQL:
 sudo apt install python3-pip
 sudo apt update && sudo apt install python3-pip
 sudo pip3 install mysql-connector-python
+```
+
+## Instal·lació de Docker per a fer servir MongoDB
+
+### Instal·lació Docker
+
+(Opcional) Desinstal·lar paquets conflictius:
+
+```bash
+for pkg in docker.io docker-doc docker-compose docker-compose-v2 podman-
+docker containerd runc; do sudo apt-get remove $pkg; done
+```
+
+Afegir la clau GPG oficial de Docker:
+
+```bash
+sudo apt-get update
+sudo apt-get install ca-certificates curl
+sudo install -m 0755 -d /etc/apt/keyrings
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+```
+
+Afegir el repositori a les fonts APT (hem de posar les comandes una per una):
+
+```bash
+echo \ "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+$(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt-get update
+```
+
+Instal·lar l'última versió de Docker:
+
+```bash
+sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+```
+
+Verificar que la instal·lació de Docker Engine és correcte:
+
+```bash
+sudo docker run hello-world
+```
+
+Configurar Docker per iniciar-se en l'arrancada del sistema:
+
+```bash
+sudo systemctl enable docker.service
+sudo systemctl enable containerd.service
+```
+
+### Docker Container de MongoDB
+
+Descargar imatge de MongoDB V.4:
+
+```bash
+sudo docker pull mongo:4
+```
+
+Crear ruta en el nostre sistema per poder guardar les dades del MongoDB:
+
+```bash
+sudo mkdir /mongodb
+```
+
+Executar el contenidor de MongoDB:
+
+```bash
+sudo docker run --name my-mongo -d -p 27017:27017 -v /mongodb:/data/db mongo:4
+```
+
+Verifiquem que el contenidor s'estigui executant:
+
+```bash
+sudo docker ps
+```
+
+Iniciem la shell de MongoDB:
+
+```bash
+sudo docker exec -it my-mongo mongo
+```
+
+### Integració de MongoDB amb Python per poder escriure coses a la BD no relacional
+
+Farem servir les següents comandes:
+
+```bash
+sudo pip3 install pymongo
+sudo docker exec -it my-mongo mongo
+use logs
+exit
+```
+
+### Iniciar servei de Docker
+
+```bash
+sudo docker start my-mongo
+sudo docker exec -it my-mongo mongo
 ```
 
 ## Clonació repositori GitHub
@@ -229,6 +353,5 @@ Canviarem els dos paràmetres següents:
 
 - upload_max_filesize = 650M 
 - post_max_size = 650M
-
 
 ## END

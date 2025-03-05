@@ -172,40 +172,7 @@ def guardar_arxiu_pujat_bd (host, user, password, nom, ruta, hash):
     mariadb_cursor.close()
     mariadb_conn.close()
 
-
-
-
-
-# Funció MongoDB registrar arxiu no infectat:
-# def registrar_fitxers(nom_arxiu):
-#      try:
-#         # Intentar conectar al servidor de MongoDB
-#         client = MongoClient("mongodb://localhost:27017/", serverSelectionTimeoutMS=5000)
-        
-#         # Seleccionar la base de datos y colección
-#         db = client["logs"]
-#         collection = db["fitxers_pujats"]
-        
-#         # Crear un diccionario con los datos a insertar
-#         archivo = {
-#             "nom_arxiu": nom_arxiu,
-#             "infectat": False  # Asumimos que el archivo no está infectado
-#         }
-        
-#         # Insertar el documento en la colección
-#         collection.insert_one(archivo)
-#         print("Archivo registrado correctamente")
-    
-#     except Exception as e:
-#         print(f"Ocurrió un error: {e}")
-#         exit()
-
-
-
-
-
-
-# Funció MongoDB registrar arxius infectat:
+# Funció MongoDB registrar arxius infectats:
 def registrar_fitxers_infectats(nom_arxiu, ruta_arxiu):
     parts_ruta = ruta_arxiu.split('/')
     id_usuari = parts_ruta[6].split('_')[1]
@@ -229,8 +196,7 @@ def registrar_fitxers_infectats(nom_arxiu, ruta_arxiu):
 
     collection.insert_one(log)
 
-
-# Funció MongoDB registrar arxius infectat:
+# Funció MongoDB registrar arxius pujats:
 def registrar_fitxers(nom_arxiu, ruta_arxiu):
     parts_ruta = ruta_arxiu.split('/')
     id_usuari = parts_ruta[6].split('_')[1]
@@ -253,46 +219,6 @@ def registrar_fitxers(nom_arxiu, ruta_arxiu):
     }
 
     collection.insert_one(log)
-
-
-
-
-
-# def registrar_fitxer(nom_usuari, nom_arxiu, ruta_arxiu):
-#     try:
-#         # Connexió a MongoDB
-#         client = MongoClient("mongodb://localhost:27017/")
-#         db = client["logs"]  # Base de dades
-#         collection = db["fitxers_pujats"]  # Col·lecció
-
-#         # Crear el document amb les dades
-#         document = {
-#             "usuari": nom_usuari,
-#             "nom_arxiu": nom_arxiu,
-#             "ruta_arxiu": ruta_arxiu,
-#             "data_pujada": datetime.datetime.now()  # Data i hora actuals
-#         }
-
-#         # Inserir el document a la col·lecció
-#         result = collection.insert_one(document)
-
-#     except Exception as e:
-#         print(f"Error inesperat: {e}")
-
-
-
-# def provar_mongodb():
-#     # Connexió a MongoDB
-#     client = MongoClient("mongodb://localhost:27017/")
-#     db = client["logs"]  # Base de dades de prova
-#     collection = db["fitxers_pujats"]  # Col·lecció de prova
-
-#     # Document senzill
-#     document = {"missatge": "Hola, MongoDB!"}
-
-#     # Inserir el document
-#     result = collection.insert_one(document)
-
 
 
 

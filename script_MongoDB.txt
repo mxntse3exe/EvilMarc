@@ -1,14 +1,13 @@
 DOCKER
 
-#Desinstalar paquetes conflictivos:
+# Desinstal·lar paquets conflictius (no cal fer-ho):
 
 for pkg in docker.io docker-doc docker-compose docker-compose-v2 podman-
 docker containerd runc; do sudo apt-get remove $pkg; done
 
 
 
-
-# Añade la clave GPG oficial de Docker:
+# Afegir la clau GPG oficial de Docker:
 
 sudo apt-get update
 
@@ -22,9 +21,7 @@ sudo chmod a+r /etc/apt/keyrings/docker.asc
 
 
 
-
-
-# Añadir el repositorio a las fuentes APT:
+# Afegir el repositori a les fonts APT (hem de posar les comandes una per una):
 
 echo \ "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
 
@@ -36,27 +33,19 @@ sudo apt-get update
 
 
 
+#Instal·lar l'última versió de Docker:
 
-
-#Instalar la última versión:
-
-sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin
-
-docker-compose-plugin
+sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
 
 
-
-
-#Verifica que la instalación de Docker Engine es correcta:
+#Verificar que la instal·lació de Docker Engine és correcte:
 
 sudo docker run hello-world
 
 
 
-
-# Configura Docker para iniciarse en el arranque del sistema:
-
+# Configurar Docker per iniciar-se en l'arrancada del sistema:
 
 sudo systemctl enable docker.service
 
@@ -64,47 +53,44 @@ sudo systemctl enable containerd.service
 
 
 
+# Container Docker de MongoDB:
 
-
-
-#Container Docker de MongoDB
-
-#Descargar imagen de MongoDB V.4:
+# Descargar imatge de MongoDB V.4:
 
 sudo docker pull mongo:4
 
 
 
-#Ejecutar el contenedor de MongoDB:
+# Executar el contenidor de MongoDB (s'ha de crear abans la ruta local de les dades):
 
-sudo docker run --name my-mongo -d -p 27017:27017 mongo:4
+sudo mkdir /mongodb
+
+sudo docker run --name my-mongo -d -p 27017:27017 -v /mongodb:/data/db mongo:4
 
 
 
-#Verificar si el contenedor se está ejecutando:
+# Verificar si el contenidor s'està executan:
 
 sudo docker ps
 
 
 
-
-#Abrir shell de MongoDB:
+# Obrir la shell de MongoDB:
 
 sudo docker exec -it my-mongo mongo
 
 
 
+----------------------------------
 
-#Ejemplo crear DB y colección
+# Exemple crear DB i col·lecció
 
 use productos
 
 db.createCollection("ordenadores")
 
 
-
-
-#Insertar datos en la colección:
+#Insertar dades a la col·lecció:
 
 db.ordenadores.insertOne({
 
@@ -117,43 +103,24 @@ ram: "16GB"
 })
 
 
+#Verificar la inserció de dades:
+
+db.ordenadores.find()
+
+----------------------------------
 
 
-
-
-#Verificar inserción de datos:
-
-db.ordenadores.find().pretty()
-
-
-
-
-
-
-#Detener el contenedor:
+#Detenir el contenidor:
 
 sudo docker stop my-mongo
 
-S.O.: Ubuntu Server 22.04 LTS (Jammy)
 
 
 
 
+# Integració de MongoDB al codi de Python per poder escriure coses a la BD
 
-Webs:
-
-Ubuntu | Docker Docs
-
-Post-installation steps | Docker Docs
-
-mongo - Official Image | Docker Hub
-
-
-
-#Integracio al fitxer python escriptura coses a la BD.
-
-
-pip install pymongo
+sudo pip3 install pymongo
 
 sudo docker exec -it my-mongo mongo
 
@@ -176,15 +143,11 @@ db.createCollection("fitxers_pujats")
 
 
 
-
-
-
 # Inicar servei
 sudo docker start my-mongo
 sudo docker exec -it my-mongo mongo
 
 
-# Instal·lar llibrerias per exdecutar python:
-sudo pip3 install pymongo
+
 
 
