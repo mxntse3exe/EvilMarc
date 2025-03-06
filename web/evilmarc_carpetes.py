@@ -7,7 +7,8 @@ import mimetypes
 import time
 import sys
 import json
-
+from pymongo import MongoClient
+import datetime
 
 
 # Connexió i creació BD
@@ -170,6 +171,54 @@ def guardar_arxiu_pujat_bd (host, user, password, nom, ruta, hash):
     mariadb_cursor.close()
     mariadb_conn.close()
 
+# Funció MongoDB registrar arxius infectats:
+def registrar_fitxers_infectats(nom_arxiu, ruta_arxiu):
+    parts_ruta = ruta_arxiu.split('/')
+    id_usuari = parts_ruta[6].split('_')[1]
+
+    # Conectar:
+    client = MongoClient("mongodb://localhost:27017/")
+    db = client["logs"]
+    collection = db["fitxers_infectats"]
+
+    # Data
+    data_actual = datetime.datetime.now()
+
+    # Creació log
+    log = {
+        "id_usuari" : id_usuari,
+        "nom_arxiu" : nom_arxiu,
+        "infectat" : True,
+        "ruta_arxiu" : ruta_arxiu,
+        "data" : data_actual
+    }
+
+    collection.insert_one(log)
+
+# Funció MongoDB registrar arxius pujats:
+def registrar_fitxers(nom_arxiu, ruta_arxiu):
+    parts_ruta = ruta_arxiu.split('/')
+    id_usuari = parts_ruta[6].split('_')[1]
+
+    # Conectar:
+    client = MongoClient("mongodb://localhost:27017/")
+    db = client["logs"]
+    collection = db["fitxers_pujats"]
+
+    # Data
+    data_actual = datetime.datetime.now()
+
+    # Creació log
+    log = {
+        "id_usuari" : id_usuari,
+        "nom_arxiu" : nom_arxiu,
+        "infectat" : False,
+        "ruta_arxiu" : ruta_arxiu,
+        "data" : data_actual
+    }
+
+    collection.insert_one(log)
+
 
 
 host = "localhost"
@@ -242,10 +291,14 @@ if os.path.exists(ruta_carpeta) and os.path.isdir(ruta_carpeta):
                 diccionari['infectats'].append(ruta_relativa)
                 if os.path.exists(ruta_arxiu):
                     os.remove(ruta_arxiu)
+
+                registrar_fitxers_infectats(arxiu, ruta_arxiu)
   
             else:
 
                 guardar_arxiu_pujat_bd(host, user, password, arxiu, ruta_arxiu, hash_arxiu)
+
+                registrar_fitxers(arxiu, ruta_arxiu)
 
                 diccionari['nets'].append(arxiu)
 
