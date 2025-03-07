@@ -305,6 +305,37 @@ sudo docker start my-mongo
 sudo docker exec -it my-mongo mongo
 ```
 
+### Connectar MongoDB amb PHP
+
+Primer ens dirigirem a la nostra carpeta *home* i instal·larem les diferents dependències que farem servir per enllaçar el MongoDB amb el PHP.
+
+```bash
+cd ~
+
+sudo apt update
+sudo apt install php-pear php-dev libmongoc-dev libbson-dev
+sudo pecl install mongodb
+echo "extension=mongodb.so" | sudo tee /etc/php/8.1/mods-available/mongodb.ini
+```
+
+Habilitarem l'extensió que acabem d'instal·lar i reiniciarem el servei d'Apache.
+
+```bash
+sudo phpenmod mongodb
+sudo systemctl restart apache2
+php -m | grep mongodb
+```
+
+Ara, per tal de poder fer servir aquesta extensió, ens instal·larem el Composer.
+
+```bash
+sudo apt install php-cli unzip
+sudo curl -sS https://getcomposer.org/installer | php
+sudo mv composer.phar /usr/local/bin/composer
+cd /var/www/html
+sudo composer require mongodb/mongodb
+```
+
 ## Clonació repositori GitHub
 
 Haurem de clonar el repositori de GitHub **EvilMarc**.

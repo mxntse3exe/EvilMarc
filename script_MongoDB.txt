@@ -151,3 +151,32 @@ sudo docker exec -it my-mongo mongo
 
 
 
+# php mongo
+
+cd ~
+
+sudo apt update
+
+sudo apt install php-pear php-dev libmongoc-dev libbson-dev
+
+sudo pecl install mongodb
+
+echo "extension=mongodb.so" | sudo tee /etc/php/8.1/mods-available/mongodb.ini
+
+sudo phpenmod mongodb
+
+sudo systemctl restart apache2
+
+php -m | grep mongodb
+
+
+sudo apt install php-cli unzip
+
+sudo curl -sS https://getcomposer.org/installer | php
+
+sudo mv composer.phar /usr/local/bin/composer
+
+cd /var/www/html
+
+sudo composer require mongodb/mongodb
+

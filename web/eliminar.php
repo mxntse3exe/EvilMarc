@@ -1,6 +1,10 @@
 <?php
 session_start();
 
+require 'vendor/autoload.php';
+
+use MongoDB\Client;
+
 // Verificar si el usuario está autenticado
 if (!isset($_SESSION['usuari'])) {
     die("Accés no permés.");
@@ -38,6 +42,36 @@ if ($file || $folder) {
         $sql = "delete from ARXIUS_PUJATS where ruta = '$target_path'";
         mysqli_query($conexion,$sql);
 
+        // Afegir logs a MongoDB
+
+        try {
+            // Conectar a MongoDB
+            $client = new Client("mongodb://localhost:27017");
+        
+            // Seleccionar la base de datos y la colección
+            $database = $client->logs; 
+            $collection = $database->fitxers_eliminats; 
+        
+            $nom_arxiu = basename($target_path);
+            $data_actual = date('Y-m-d H:i:s');
+
+            // Crear un nuevo documento
+            $log = [
+                "id_usuari" => $_SESSION['id_usu'],
+                "nom_arxiu" => $nom_arxiu,
+                "ruta_arxiu" => $target_path,
+                "data" => $data_actual
+            ];
+        
+            // Insertar el documento
+            $result = $collection->insertOne($log);
+        
+        
+        } catch (Exception $e) {
+            echo "Error: " . $e->getMessage();
+        }
+
+
     }
     // Eliminar carpeta
     elseif ($folder && is_dir($target_path)) {
@@ -51,6 +85,32 @@ if ($file || $folder) {
                 $sql = "delete from ARXIUS_PUJATS where ruta = '$dir'";
                 mysqli_query($conexion, $sql);
 
+                try {
+                    // Conectar a MongoDB
+                    $client = new Client("mongodb://localhost:27017");
+                
+                    // Seleccionar la base de datos y la colección
+                    $database = $client->logs; 
+                    $collection = $database->fitxers_eliminats; 
+                
+                    $nom_arxiu = basename($dir);
+                    $data_actual = date('Y-m-d H:i:s');
+        
+                    // Crear un nuevo documento
+                    $log = [
+                        "id_usuari" => $_SESSION['id_usu'],
+                        "nom_arxiu" => $nom_arxiu,
+                        "ruta_arxiu" => $dir,
+                        "data" => $data_actual
+                    ];
+                
+                    // Insertar el documento
+                    $result = $collection->insertOne($log);
+                
+                
+                } catch (Exception $e) {
+                    echo "Error: " . $e->getMessage();
+                }
 
                 return unlink($dir);
 
