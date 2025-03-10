@@ -160,6 +160,8 @@ sudo apt update
 sudo apt install php-pear php-dev libmongoc-dev libbson-dev
 
 sudo pecl install mongodb
+##### (opcions per defecte) #####
+
 
 echo "extension=mongodb.so" | sudo tee /etc/php/8.1/mods-available/mongodb.ini
 
