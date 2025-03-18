@@ -1270,3 +1270,61 @@ b, strong {
   font-size: 10pt;
   color: gray;
 }
+
+/* registre.php */
+
+.columnes_logs {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 5px;
+  margin-top: 20px;
+  width: 80%;
+  justify-self: center;
+}
+
+.logs {
+  background-color: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0px 0px 10px rgb(219, 219, 219);
+
+  padding: 20px;
+  width: 31%;
+  justify-self: center;
+
+  font-size: 10pt;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  overflow-x: overlay;
+}
+
+
+.linia {
+  width: 100%;
+  height: 0.3px;
+  background-color: rgb(137 137 137 / 23%);
+  margin: 7px 0;
+}
+
+.text_logs {
+  text-align: left;
+}
+
+.admin_logs {
+  justify-self: center;
+  display: flex;
+  justify-content: right;
+  width: 80%;
+  
+}
+
+.admin_logs a {
+  color: rgba(0, 0, 0, 0.5);
+  font-weight: bold;
+  margin-top: 15px;
+}
+
+.nom {
+  color: #495057e0;
+}

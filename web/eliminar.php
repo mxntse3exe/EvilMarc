@@ -53,7 +53,7 @@ if ($file || $folder) {
             $collection = $database->fitxers_eliminats; 
         
             $nom_arxiu = basename($target_path);
-            $data_actual = date('Y-m-d H:i:s');
+            $data_actual = new MongoDB\BSON\UTCDateTime();
 
             // Crear un nuevo documento
             $log = [
@@ -94,7 +94,7 @@ if ($file || $folder) {
                     $collection = $database->fitxers_eliminats; 
                 
                     $nom_arxiu = basename($dir);
-                    $data_actual = date('Y-m-d H:i:s');
+                    $data_actual = new MongoDB\BSON\UTCDateTime();
         
                     // Crear un nuevo documento
                     $log = [
