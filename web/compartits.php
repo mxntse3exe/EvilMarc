@@ -27,7 +27,8 @@
         $cognoms = $fila['cognoms'];
         $direccio = $fila['direccio'];
         $num_usu = $_SESSION['id_usu'];
-        $dep = $fila["id_dep"];
+        $dep = isset($fila["id_dep"]) ? $fila["id_dep"] : "NULL";
+
     }
 
     unset($_SESSION['ruta_carpeta_base']);
