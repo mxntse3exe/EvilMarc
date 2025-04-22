@@ -1487,10 +1487,19 @@ b, strong {
   border-radius: 17px;
 }
 
-.missatge .temps {
-  display: block;
+
+.data-missatge {
   font-size: 0.75rem;
   color: #888;
-  margin-top: 4px;
+  margin: 2px 10px 10px 10px;
+}
+
+.data-missatge.dreta {
   text-align: right;
+  margin-right: 0px;
+}
+
+.data-missatge.esquerra {
+  text-align: left;
+  margin-left: 0px;
 }

@@ -20,7 +20,7 @@ if ($receptor && $text) {
         'emissor' => $emissor,
         'receptor' => $receptor,
         'text' => $text,
-        'timestamp' => new MongoDB\BSON\UTCDateTime()
+        'timestamp' => new MongoDB\BSON\UTCDateTime((new DateTime('+2 hours'))->getTimestamp() * 1000)
     ]);
 
     echo json_encode(['status' => 'ok']);

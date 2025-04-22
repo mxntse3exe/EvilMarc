@@ -29,6 +29,8 @@
         $num_usu = $_SESSION['id_usu'];
     }
 
+    date_default_timezone_set('Europe/Madrid');
+
     require 'vendor/autoload.php';
 
     use MongoDB\Client;
@@ -224,8 +226,12 @@
                 .then(res => res.json())
                 .then(missatges => {
                     const cont = document.getElementById('missatges');
+
+                    // Comprova si l'usuari ja estava a baix
+                    const estavaAbaix = cont.scrollTop + cont.clientHeight >= cont.scrollHeight - 10;
+
                     cont.innerHTML = '';
-                    
+
                     missatges.forEach(m => {
                         const div = document.createElement('div');
                         div.classList.add('missatge');
@@ -235,16 +241,29 @@
                             div.classList.add('rebut');
                         }
 
-                        div.textContent = m.text; // Només el text, sense emissor
+                        div.textContent = m.text;
                         cont.appendChild(div);
 
+                        const data = document.createElement('div');
+                        data.classList.add('data-missatge');
+                        data.textContent = m.data;
 
+                        if (m.emissor === "<?php echo $_SESSION['usuari']; ?>") {
+                            data.classList.add('dreta');
+                        } else {
+                            data.classList.add('esquerra');
+                        }
+
+                        cont.appendChild(data);
                     });
 
-
-                    
+                    // Si estava a baix abans de carregar, hi tornem
+                    if (estavaAbaix) {
+                        cont.scrollTop = cont.scrollHeight;
+                    }
                 });
         }
+
 
         function enviarMissatge() {
             const input = document.getElementById('missatge');
@@ -260,6 +279,17 @@
                 carregarMissatges();
             });
         }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const input = document.getElementById('missatge');
+            input.addEventListener('keydown', function(event) {
+                if (event.key === 'Enter') {
+                    event.preventDefault();
+                    enviarMissatge();
+                }
+            });
+        });
+
 
     </script>
 
