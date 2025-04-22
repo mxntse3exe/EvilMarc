@@ -347,6 +347,13 @@ b, strong {
   .index_pujar_arxius {
     width: 45%;
   }
+  #llista-usuaris {
+    width: 25%;
+  }
+  #finestra-xat {
+    width: 75%;
+  }
+  
 }
 
 @media (max-width: 1270px) {
@@ -372,6 +379,12 @@ b, strong {
   }
   .index_pujar_arxius {
     width: 45%;
+  }
+  #llista-usuaris {
+    width: 25%;
+  }
+  #finestra-xat {
+    width: 75%;
   }
 }
 
@@ -423,6 +436,12 @@ b, strong {
   }
   .pujar_arxius {
     align-content: center;
+  }
+  #llista-usuaris {
+    width: 25%;
+  }
+  #finestra-xat {
+    width: 75%;
   }
 
 }
@@ -486,6 +505,15 @@ b, strong {
   .pujar_arxius {
     align-content: center;
   }
+  .panell_missatges {
+    flex-direction: column;
+  }
+  #llista-usuaris {
+    width: 100%;
+  }
+  #finestra-xat {
+    width: 100%;
+  }
 
 }
 @media (max-width: 580px) {
@@ -548,6 +576,19 @@ b, strong {
   }
   .pujar_arxius {
     align-content: center;
+  }
+  .panell_missatges {
+    flex-direction: column;
+  }
+  #llista-usuaris {
+    width: 100%;
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+  #finestra-xat {
+    width: auto;
+    margin-left: 10px;
+    margin-right: 10px;
   }
 
 }
@@ -617,6 +658,20 @@ b, strong {
 
   .pujar_arxius {
     align-content: center;
+  }
+
+  .panell_missatges {
+    flex-direction: column;
+  }
+  #llista-usuaris {
+    width: 100%;
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+  #finestra-xat {
+    width: auto;
+    margin-left: 10px;
+    margin-right: 10px;
   }
 }
 
@@ -1327,4 +1382,115 @@ b, strong {
 
 .nom {
   color: #495057e0;
+}
+
+
+/* missatges.php */
+
+.panell_missatges {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+#llista-usuaris {
+  justify-items: left;
+}
+
+#finestra-xat {
+  margin-top: 8px;
+}
+
+.usuari {
+  margin-top: 15px;
+  margin-bottom: 15px;
+  cursor: pointer;
+  transition: all 0.4s ease;
+
+}
+
+.usuari:hover {
+  font-weight: bold;
+  color: #2CB9FF;
+}
+
+.usuari.actiu {
+  font-weight: bold;
+  border-left: 4px solid #2CB9FF;
+
+  color: #2CB9FF;
+
+  padding-left: 10px;
+}
+
+.titol_xat {
+  justify-self: left;
+  font-size: 10pt;
+
+  color: rgba(0, 0, 0, 0.5);
+}
+
+#missatges {
+  border-radius: 20px;
+  overflow-y:auto; 
+  padding:20px;
+  height:300px;
+  box-shadow: 0px 0px 10px rgb(219, 219, 219);
+}
+
+.enviar_text {
+  display: flex;
+}
+
+.boto_enviar {
+  align-self: center;
+  height: 40px;
+  border-radius: 17px;
+  color: #ffffff;
+  background-color: #2CB9FF;
+  font-weight: bolder;
+  box-shadow: 0px 0px 10px rgb(219, 219, 219);
+  border: 0px;
+  font-size: 10pt;
+  margin-left: 7px;
+  padding-left: 12px;
+  padding-right: 12px;
+  transition: all 0.4s ease;
+}
+
+.boto_enviar:hover {
+  background-color: #474559;
+}
+
+.missatge {
+  max-width: 70%;
+  padding: 8px 12px;
+  margin: 5px 0;
+  border-radius: 15px;
+  clear: both;
+}
+
+.missatge.enviat {
+  background-color: #d9f2ff;
+  text-align: right;
+  margin-left: auto;
+  width: fit-content;
+}
+
+.missatge.rebut {
+  background-color: #f1f0f0;
+  text-align: left;
+  margin-right: auto;
+  width: fit-content;
+}
+
+.text_place {
+  border-radius: 17px;
+}
+
+.missatge .temps {
+  display: block;
+  font-size: 0.75rem;
+  color: #888;
+  margin-top: 4px;
+  text-align: right;
 }
