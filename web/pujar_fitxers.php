@@ -52,6 +52,33 @@
 
 <?php
 
+$keyPath = '/etc/secrets/encryption.key';
+$key = base64_decode(trim(file_get_contents($keyPath)));
+
+define('ENCRYPTION_KEY', $key);
+
+function encryptFile($sourcePath, $destPath, $key) {
+    $iv = openssl_random_pseudo_bytes(16);
+    $cipher = "aes-256-cbc";
+    
+    if ($fpOut = fopen($destPath, 'w')) {
+        fwrite($fpOut, $iv); // Escriu l'IV al principi del fitxer
+        if ($fpIn = fopen($sourcePath, 'rb')) {
+            while (!feof($fpIn)) {
+                $plaintext = fread($fpIn, 16 * 10000);
+                $ciphertext = openssl_encrypt($plaintext, $cipher, $key, OPENSSL_RAW_DATA, $iv);
+                $iv = substr($ciphertext, -16); // Utilitza els últims 16 bytes com a IV per al següent bloc
+                fwrite($fpOut, $ciphertext);
+            }
+            fclose($fpIn);
+        }
+        fclose($fpOut);
+        return true;
+    }
+    return false;
+}
+
+
 function generarNomUnic($directori, $nomFitxer) {
     $nomSenseExtensio = pathinfo($nomFitxer, PATHINFO_FILENAME);
     $extensio = pathinfo($nomFitxer, PATHINFO_EXTENSION);
@@ -79,8 +106,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             die("Accés no permés.");
         }
 
-
-        
         // Procesar archivos sueltos
         if (isset($_FILES['archivo']) && $_POST['upload_type'] === 'file') {
 
@@ -100,7 +125,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $target_path = $current_dir . DIRECTORY_SEPARATOR . $nomUnic;
         
                     // Mou el fitxer pujat
-                    move_uploaded_file($tmp_name, $target_path);
+                    // move_uploaded_file($tmp_name, $target_path);
+
+                    move_uploaded_file($tmp_name, $target_path . '.tmp');
+                    encryptFile($target_path . '.tmp', $target_path, ENCRYPTION_KEY);
+                    unlink($target_path . '.tmp'); // Elimina el fitxer temporal no xifrat
 
 
                     $command = "echo " . escapeshellarg($diccionari_json) . " | python3 /var/www/html/evilmarc_fitxers.py " . escapeshellarg($nomUnic) . " " . escapeshellarg($current_dir);
@@ -188,7 +217,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             mkdir($target_path, 0777, true);
                         }
                     } else {
-                        move_uploaded_file($tmp_name, $target_path);
+                        move_uploaded_file($tmp_name, $target_path . '.tmp');
+                        encryptFile($target_path . '.tmp', $target_path, ENCRYPTION_KEY);
+                        unlink($target_path . '.tmp'); // Elimina el fitxer temporal no xifrat
                     }
                 }
             }
@@ -243,6 +274,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo "No s'ha seleccionat cap fitxer o carpeta.";
     }
 }
+
+
+
 ?>
 
 

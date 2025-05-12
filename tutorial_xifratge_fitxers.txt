@@ -1,0 +1,134 @@
+------ generar claus de xifratge ------
+
+Haurem d'executar aquest script una vegada, per tal de poder generar la clau que farem servir per xifrar els fitxers.
+
+generate_key.php
+
+<?php
+// Ruta fora de l'arrel web (assegura't que existeix i sigui segura)
+$path = '/etc/secrets/encryption.key';
+
+// Genera 32 bytes aleatoris i codifica en base64
+$key = base64_encode(random_bytes(32));
+
+// Desa la clau al fitxer
+if (!is_dir(dirname($path))) {
+    mkdir(dirname($path), 0700, true);
+}
+
+file_put_contents($path, $key);
+chmod($path, 0600); // Només llegible per l'usuari del sistema
+
+echo "Clau generada i desada a: $path\n";
+?>
+
+
+Canviarem la propietat del fitxer on hi ha la clau per l'usuari www-data:
+
+sudo chown www-data /etc/secrets/encryption.key
+
+
+
+A l'arxiu pujar_fitxers.php afegirem les següents línies per definir la ENCRYPTION_KEY.
+
+<?php
+$keyPath = '/etc/secrets/encryption.key';
+$key = base64_decode(trim(file_get_contents($keyPath)));
+
+define('ENCRYPTION_KEY', $key);
+
+
+Creem la funció per encriptar els fitxers en el moment de pujar-los:
+
+function encryptFile($sourcePath, $destPath, $key) {
+    $iv = openssl_random_pseudo_bytes(16);
+    $cipher = "aes-256-cbc";
+    
+    if ($fpOut = fopen($destPath, 'w')) {
+        fwrite($fpOut, $iv); // Escriu l'IV al principi del fitxer
+        if ($fpIn = fopen($sourcePath, 'rb')) {
+            while (!feof($fpIn)) {
+                $plaintext = fread($fpIn, 16 * 10000);
+                $ciphertext = openssl_encrypt($plaintext, $cipher, $key, OPENSSL_RAW_DATA, $iv);
+                $iv = substr($ciphertext, -16); // Utilitza els últims 16 bytes com a IV per al següent bloc
+                fwrite($fpOut, $ciphertext);
+            }
+            fclose($fpIn);
+        }
+        fclose($fpOut);
+        return true;
+    }
+    return false;
+}
+
+
+Canviem la següent línia:
+
+move_uploaded_file($tmp_name, $target_path);
+
+
+Per aquestes altres:
+
+move_uploaded_file($tmp_name, $target_path . '.tmp');
+encryptFile($target_path . '.tmp', $target_path, ENCRYPTION_KEY);
+unlink($target_path . '.tmp'); // Elimina el fitxer temporal no xifrat
+
+
+Modifiquem el fitxer per descarregar els arxius amb la següent funció per desxifrar-los:
+
+<?php
+// Ruta segura a la clau
+define('KEY_PATH', '/etc/secrets/encryption.key');
+$key = base64_decode(trim(file_get_contents(KEY_PATH)));
+
+function decryptFile($sourcePath, $destPath, $key) {
+    $cipher = "aes-256-cbc";
+
+    if ($fpIn = fopen($sourcePath, 'rb')) {
+        $iv = fread($fpIn, 16); // Llegeix l'IV del principi del fitxer
+        if ($fpOut = fopen($destPath, 'w')) {
+            while (!feof($fpIn)) {
+                $ciphertext = fread($fpIn, 16 * 10000 + 16);
+                $plaintext = openssl_decrypt($ciphertext, $cipher, $key, OPENSSL_RAW_DATA, $iv);
+                $iv = substr($ciphertext, -16);
+                fwrite($fpOut, $plaintext);
+            }
+            fclose($fpOut);
+        }
+        fclose($fpIn);
+        return true;
+    }
+    return false;
+}
+
+// Paràmetres d'entrada
+$file = $_GET['file'];
+$dir = $_GET['dir'];
+
+// Comprovació de seguretat
+if (file_exists($file) && strpos(realpath($file), realpath($dir)) === 0) {
+    $fileDir = dirname($file);
+    $tempFile = $fileDir . '/dec_' . uniqid() . '_' . basename($file);
+
+    if (decryptFile($file, $tempFile, $key)) {
+        // Envia el fitxer desxifrat
+        header('Content-Description: File Transfer');
+        header('Content-Type: application/octet-stream');
+        header('Content-Disposition: attachment; filename=' . basename($file));
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate');
+        header('Pragma: public');
+        header('Content-Length: ' . filesize($tempFile));
+
+        readfile($tempFile);
+
+        // Elimina el fitxer temporal després d'enviar-lo
+        unlink($tempFile);
+    } else {
+        echo "No s'ha pogut desxifrar el fitxer.";
+    }
+    exit;
+} else {
+    echo "Fitxer no trobat o accés no permès.";
+}
+?>

@@ -20,6 +20,7 @@ if ($receptor && $text) {
         'emissor' => $emissor,
         'receptor' => $receptor,
         'text' => $text,
+        'llegit' => false, // Nuevo mensaje no leído
         'timestamp' => new MongoDB\BSON\UTCDateTime((new DateTime('+2 hours'))->getTimestamp() * 1000)
     ]);
 
@@ -28,4 +29,3 @@ if ($receptor && $text) {
     echo json_encode(['status' => 'error']);
 }
 ?>
-

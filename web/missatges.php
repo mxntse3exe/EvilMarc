@@ -1,61 +1,36 @@
 <?php 
-	session_start();
+session_start();
 
-    $servidor = "localhost";
-    $usuario = "web";
-    $password = "T5Dk!xq";
-    $db = "evilmarc";
+require 'vendor/autoload.php';
+use MongoDB\Client;
 
-    $conexion = mysqli_connect($servidor,$usuario,$password,$db);
+// Configuració de MongoDB
+$mongoClient = new Client("mongodb://localhost:27017");
+$client = $mongoClient;
 
-    if (!$conexion) die ("Error al connectar amb la base de dades.");
+// Configuració de MySQL
+$servidor = "localhost";
+$usuario = "web";
+$password = "T5Dk!xq";
+$db = "evilmarc";
 
-    $usuari = $_SESSION['usuari'];
+$conexion = mysqli_connect($servidor, $usuario, $password, $db);
+if (!$conexion) die("Error al connectar amb la base de dades.");
 
-    $sql = "select * from USUARIS where usuari = '".$usuari."'";
+// Configuració de zona horària
+date_default_timezone_set('Europe/Madrid');
 
-    $files = mysqli_query($conexion,$sql);
+// Verificar si l'usuari és vàlid
+if (!isset($_SESSION['valido']) || $_SESSION['valido'] != 1) {
+    header("Location: inici");
+    exit();
+}
 
-    while($fila = $files->fetch_assoc()) {
-        $admin = $fila["admin"];
-
-        $_SESSION['admin'] = $admin;
-        $_SESSION['id_usu'] = $fila["id_usu"];
-        $_SESSION['imatge'] = $fila["imatge"];
-
-        $nom = $fila['nom'];
-        $cognoms = $fila['cognoms'];
-        $direccio = $fila['direccio'];
-        $num_usu = $_SESSION['id_usu'];
-    }
-
-    date_default_timezone_set('Europe/Madrid');
-
-    require 'vendor/autoload.php';
-
-    use MongoDB\Client;
-
-    // Connexió a la base de dades
-    $mongoClient = new Client("mongodb://localhost:27017");
-    $db = $mongoClient->logs;
-    $collection_pujats = $db->fitxers_pujats;
-    $collection_infectats = $db->fitxers_infectats;
-    $collection_eliminats = $db->fitxers_eliminats;
-
-    // Opcions de cerca
-    $filter = ['id_usuari' => $num_usu];  // Filtra per id_usuari
-    $options = ['sort' => ['data' => -1]];  // Ordena per data (descendent)
-
-    // Obtenir dades de la base de dades
-    $pujats = $collection_pujats->find($filter, $options);
-    $infectats = $collection_infectats->find($filter, $options);
-    $eliminats = $collection_eliminats->find($filter, $options);
-
+$usuari = $_SESSION['usuari'];
 ?>
 
 <!doctype html>
 <html lang="en">
-
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -68,30 +43,47 @@
     <link rel="stylesheet" href="css/unicons.css">
     <link rel="stylesheet" href="css/owl.carousel.min.css">
     <link rel="stylesheet" href="css/owl.theme.default.min.css">
-
-    <!-- MAIN STYLE -->
     <link rel="stylesheet" href="css/tooplate-style.css">
-
     <link rel="icon" type="image/png" href="images/favicon.ico"/>
 
     <style>
-    #finestra-xat {
-        display: none;
-        visibility: visible !important;
-        opacity: 1 !important;
+    .badge {
+        font-size: 0.75em;
+        vertical-align: middle;
+    }
+    .usuari {
+        position: relative;
+        padding: 5px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    #llista-usuaris {
+        max-height: 400px;
+        overflow-y: auto;
+    }
+    .panell_missatges {
+        display: flex;
+        gap: 20px;
+    }
+    /* #finestra-xat {
+        width: 70%;
+    } */
+    #missatges {
+        height: 300px;
+        overflow-y: auto;
+        margin-bottom: 15px;
+        border-bottom: 1px solid #ddd;
+        padding-bottom: 15px;
     }
     </style>
-
-
 </head>
 
 <body>
-
     <!-- MENU -->
     <nav class="navbar navbar-expand-sm navbar-light">
         <div class="container">
             <a class="navbar-brand" href="index"> EvilMarc</a>
-
             <div id="navbarNav">
                 <ul class="navbar-nav">
                     <li class="nav-item">
@@ -100,83 +92,66 @@
                     <li class="nav-item">
                         <a href="sortir" class="nav-link"><span data-hover="Sortir">Sortir</span></a>
                     </li>
-            
                 </ul>
             </div>
         </div>
     </nav>
 
-
-
-    <!-- FUNCIONAMENT -->
-    
+    <!-- CONTINGUT PRINCIPAL -->
     <section class="about full-screen d-lg-flex justify-content-center align-items-center">
         <div class="container">
-
             <div class="row seccio_panell">
                 <div style="width: 100%;">
-                    <?php
-                    if($_SESSION['valido'] == 1) {
-                    ?>
                     <h2>Xat intern</h2>
                     
                     <div class="panell_missatges">
                         <div id="llista-usuaris">
-                            
                             <?php
                             $sql = "SELECT usuari, nom, imatge FROM USUARIS WHERE usuari != '".$usuari."'";
                             $result = mysqli_query($conexion, $sql);
 
                             while ($row = mysqli_fetch_assoc($result)) {
+                                // Consulta per comptar missatges no llegits a MongoDB
+                                $mongoFilter = [
+                                    'emissor' => $row['usuari'],
+                                    'receptor' => $_SESSION['usuari'],
+                                    'llegit' => false
+                                ];
+                                $no_llegits = $client->chat->missatges->countDocuments($mongoFilter);
+                                
                                 echo "<div class='usuari' onclick=\"obrirXat('".$row['usuari']."')\">";
                                 echo "<img src='".$row['imatge']."' width='30' height='30' style='border-radius:50%; margin-right:10px;'>";
-                                echo $row['nom']." (".$row['usuari'].")</div>";
+                                echo $row['nom']." (".$row['usuari'].")";
+                                if ($no_llegits > 0) {
+                                    echo "<span class='badge badge-pill badge-danger ml-2' id='badge-".$row['usuari']."'>".$no_llegits."</span>";
+                                }
+                                echo "</div>";
                             }
                             ?>
                         </div>
-                        <div id="finestra-xat" style="display:block;">
+                        
+                        <div id="finestra-xat">
                             <h4 class="titol_xat">Xat amb: <span id="nom-receptor"></span></h4>
                             <div id="missatges"></div>
                             <div class="enviar_text">
                                 <input type="text" id="missatge" class="form-control my-2 text_place" placeholder="Escriu el teu missatge...">
                                 <button onclick="enviarMissatge()" class="boto_enviar">Enviar</button>
-
                             </div>
                         </div>
                     </div>
-
-
-
-
-
                 </div>
-                
-                
-                <?php
-                }
-                else {
-                    echo "Credencials incorrectes. Fes clic "."<a href='inici'>aquí</a>"." per iniciar sessió.";
-                }
-                ?>
-
-                
-                
             </div>
         </div>
     </section>
-
-
 
     <!-- FOOTER -->
     <footer class="footer py-5">
         <div class="container">
             <div class="row">
-
                 <div class="col-lg-12 col-12">
                     <p class="copyright-text text-center">Copyright &copy; 2025 EvilMarc . All rights reserved</p>
                     <p class="copyright-text text-center">Designed by EvilMarc Team</p>
                 </div>
-
             </div>
         </div>
     </footer>
@@ -191,21 +166,16 @@
     <script src="js/custom.js"></script>
 
     <script>
-
-
         let receptorActual = null;
+        let intervalRefrescar = null;
 
         function obrirXat(usuari) {
-            console.log(document.getElementById('finestra-xat'));
-
             receptorActual = usuari;
             document.getElementById('nom-receptor').textContent = usuari;
             document.getElementById('finestra-xat').style.display = 'block';
 
-             // Eliminar classe activa de tots
+            // Resaltar usuari actiu
             document.querySelectorAll('.usuari').forEach(u => u.classList.remove('actiu'));
-
-            // Afegir classe activa a l'usuari clicat
             const usuaris = document.querySelectorAll('.usuari');
             usuaris.forEach(u => {
                 if (u.textContent.includes(usuari)) {
@@ -214,9 +184,15 @@
             });
 
             carregarMissatges();
-            // Refresca automàticament cada 3 segons
-            if (window.refrescar) clearInterval(window.refrescar);
-            window.refrescar = setInterval(carregarMissatges, 3000);
+            
+            // Aturar qualsevol interval previ
+            if (intervalRefrescar) clearInterval(intervalRefrescar);
+            
+            // Refrescar cada 3 segons
+            intervalRefrescar = setInterval(() => {
+                carregarMissatges();
+                actualitzarBadges();
+            }, 3000);
         }
 
         function carregarMissatges() {
@@ -226,8 +202,6 @@
                 .then(res => res.json())
                 .then(missatges => {
                     const cont = document.getElementById('missatges');
-
-                    // Comprova si l'usuari ja estava a baix
                     const estavaAbaix = cont.scrollTop + cont.clientHeight >= cont.scrollHeight - 10;
 
                     cont.innerHTML = '';
@@ -240,7 +214,6 @@
                         } else {
                             div.classList.add('rebut');
                         }
-
                         div.textContent = m.text;
                         cont.appendChild(div);
 
@@ -257,13 +230,51 @@
                         cont.appendChild(data);
                     });
 
-                    // Si estava a baix abans de carregar, hi tornem
-                    if (estavaAbaix) {
-                        cont.scrollTop = cont.scrollHeight;
+                    if (estavaAbaix) cont.scrollTop = cont.scrollHeight;
+
+                    // Marcar com a llegits si hi ha missatges del receptor
+                    if (missatges.some(m => m.emissor === receptorActual)) {
+                        fetch('mark_as_read.php', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ emissor: receptorActual })
+                        }).then(() => {
+                            const badge = document.getElementById(`badge-${receptorActual}`);
+                            if (badge) badge.remove();
+                        });
                     }
                 });
         }
 
+        function actualitzarBadges() {
+            fetch('get_unread_counts.php')
+                .then(res => res.json())
+                .then(counts => {
+                    Object.entries(counts).forEach(([usuari, count]) => {
+                        let badge = document.getElementById(`badge-${usuari}`);
+                        if (count > 0) {
+                            if (!badge) {
+                                // Buscar element de l'usuari
+                                const userElements = Array.from(document.querySelectorAll('.usuari'));
+                                const userElement = userElements.find(el => 
+                                    el.textContent.includes(`(${usuari})`));
+                                
+                                if (userElement) {
+                                    badge = document.createElement('span');
+                                    badge.id = `badge-${usuari}`;
+                                    badge.className = 'badge badge-pill badge-danger ml-2';
+                                    badge.textContent = count;
+                                    userElement.appendChild(badge);
+                                }
+                            } else {
+                                badge.textContent = count;
+                            }
+                        } else if (badge) {
+                            badge.remove();
+                        }
+                    });
+                });
+        }
 
         function enviarMissatge() {
             const input = document.getElementById('missatge');
@@ -289,10 +300,6 @@
                 }
             });
         });
-
-
     </script>
-
 </body>
-
 </html>

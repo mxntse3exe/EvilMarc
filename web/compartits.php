@@ -276,7 +276,7 @@
                             echo '<div class="fitxers_compartits">';
                                 echo '<span>'.htmlspecialchars(basename($archivo)).'</span>';
                                 echo '<div class="botons_arxius">';
-                                    echo '<a href="descargar.php?file=' . urlencode($item_path) . '&dir=' . urlencode($current_dir) . '">descarregar <i class="uil uil-arrow-down"></i></a>';
+                                    echo '<a href="descargar.php?file=' . urlencode($archivo) . '&dir=' . urlencode($current_dir) . '">descarregar <i class="uil uil-arrow-down"></i></a>';
                                     // echo '<a href="eliminar.php?file=' . urlencode($item_path) . '&dir=' . urlencode($current_dir) . '" onclick="return confirm(\'Estàs segur que vols eliminar aquest arxiu?\')">eliminar <i class="uil uil-trash-alt"></i></a>';  
                                 echo '</div>';
                             echo '</div>';
