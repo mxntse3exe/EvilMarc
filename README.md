@@ -385,4 +385,32 @@ Canviarem els dos paràmetres següents:
 - upload_max_filesize = 650M 
 - post_max_size = 650M
 
+## Generem les claus per xifrar els fitxers del servidor
+
+Haurem d'executar aquest script anomenat `generate_key.php` una vegada, per tal de poder generar la clau que farem servir per xifrar els fitxers.
+
+```php
+<?php
+// Ruta fora de l'arrel web (assegura't que existeix i sigui segura)
+$path = '/etc/secrets/encryption.key';
+
+// Genera 32 bytes aleatoris i codifica en base64
+$key = base64_encode(random_bytes(32));
+
+// Desa la clau al fitxer
+if (!is_dir(dirname($path))) {
+    mkdir(dirname($path), 0700, true);
+}
+
+file_put_contents($path, $key);
+chmod($path, 0600); // Només llegible per l'usuari del sistema
+
+echo "Clau generada i desada a: $path\n";
+?>
+```
+
+Canviarem la propietat del fitxer on hi ha la clau per l'usuari www-data:
+
+`sudo chown www-data /etc/secrets/encryption.key`
+
 ## END
