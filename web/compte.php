@@ -163,6 +163,48 @@
                 }	
             }
 
+
+            if(isset($_REQUEST['modificarpass'])) {
+                
+                $pass_actual = $_REQUEST['contrasenya_actual'];
+                $pass_actual = str_replace("=","",$pass_actual);
+                $pass_actual = str_replace("'","\'",$pass_actual);
+                $pass_actual = str_replace('"','\"',$pass_actual);
+
+                $pass_nova = $_REQUEST['nova_contrasenya'];
+                $pass_nova = str_replace("=","",$pass_nova);
+                $pass_nova = str_replace("'","\'",$pass_nova);
+                $pass_nova = str_replace('"','\"',$pass_nova);
+                
+                $pass_actual_hash = hash('sha256', $pass_actual, false);
+				$pass_nova_hash = hash('sha256', $pass_nova, false);					
+
+                $sql_obtenir_pass = "select contrasenya from USUARIS where id_usu = '$id_usu'";
+
+                $contrasenya_bd = mysqli_query($conexion, $sql_obtenir_pass);
+
+                if ($fila = mysqli_fetch_assoc($contrasenya_bd)) {
+                    $contrasenya_bd_hash = $fila['contrasenya'];
+                
+                    if ($contrasenya_bd_hash === $pass_actual_hash) {
+                        // La contrasenya introduïda és correcta
+                        // Aquí s'actualitza la contrasenya nova
+                        $sql_actualitzar = "update USUARIS set contrasenya = '$pass_nova_hash' WHERE id_usu = '$id_usu'";
+                        if (mysqli_query($conexion, $sql_actualitzar)) {
+                            echo "Contrasenya actualitzada correctament.";
+                        } else {
+                            echo "Error en actualitzar la contrasenya.";
+                        }
+                    } else {
+                        echo "La contrasenya actual no és correcta.";
+                    }
+                } else {
+                    echo "Usuari no trobat.";
+                }
+
+            }
+
+
         ?>
 
                     <div class="contingut_panell_dades">
@@ -182,6 +224,19 @@
 
 
                                     <button type="button" class="form-control submit-btn" id="btnModificarFoto" name="foto">Modificar foto</button>
+
+                                </form>
+
+
+                                <form action="compte" method="post" enctype="multipart/form-data" id="formModificarPass">
+                                    <p>Canviar la contrasenya</p>
+                                    <p class="label_mod">Contrasenya actual</p>
+                                    <input class="form-control mod_dades_inp contra" type="password" id="contrasenya_actual" name="contrasenya_actual" required>
+                                    
+                                    <p class="label_mod">Nova contrasenya</p>
+                                    <input class="form-control mod_dades_inp contra" type="password" id="nova_contrasenya" name="nova_contrasenya" required>
+
+                                    <input class="form-control submit-btn" type="submit" value="Canviar contrasenya" name="modificarpass">
 
                                 </form>
 

@@ -929,6 +929,14 @@ b, strong {
   flex-direction: column
 }
 
+#formModificarPass {
+  margin-top: 50px;
+}
+
+.contra {
+  width: 100%;
+}
+
 
 /* CONTROL_USUARIS.PHP */
 
