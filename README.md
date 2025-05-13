@@ -343,9 +343,17 @@ Un cop el tinguem al nostre equip, haurem de copiar tots els arxius de dins el d
 
 
 **VERIFICAR que el fitxer `.httaccess` també es copïi !!**
+```bash
+sudo cp .htaccess /var/www/html/
+```
+
 **Eliminar el fitxer predeterminat `index.html`**
-
-
+```bash
+cd /var/www/html
+```
+```bash
+sudo rm index.html
+```
 
 ## Gestió de permisos
 
