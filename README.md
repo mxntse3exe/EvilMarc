@@ -341,6 +341,12 @@ sudo composer require mongodb/mongodb
 Haurem de clonar el repositori de GitHub **EvilMarc**.
 Un cop el tinguem al nostre equip, haurem de copiar tots els arxius de dins el directori web a la ruta del nostre servidor **/var/www/html**.
 
+
+**VERIFICAR que el fitxer `.httaccess` també es copïi !!**
+**Eliminar el fitxer predeterminat `index.html`**
+
+
+
 ## Gestió de permisos
 
 Per tal que la web funcioni correctament, haurem de donar permisos a les següents carpetes:
