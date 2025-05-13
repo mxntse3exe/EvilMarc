@@ -291,7 +291,11 @@ $usuari = $_SESSION['usuari'];
             });
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', function() {
+            actualitzarBadges(); // Nova línia
+            setInterval(actualitzarBadges, 3000); // Nova línia
+            
+            // Mantenim la funcionalitat original
             const input = document.getElementById('missatge');
             input.addEventListener('keydown', function(event) {
                 if (event.key === 'Enter') {
