@@ -1268,6 +1268,10 @@ b, strong {
   align-items: baseline;
 }
 
+#crear-carpeta {
+  height: calc(1.5em + 0.75rem + 2px);
+}
+
 .botons_arxius {
   gap: 10px;
   display: flex;
@@ -1333,6 +1337,14 @@ b, strong {
   font-size: 10pt;
   color: gray;
 }
+
+
+.contingut_explorador {
+  display: flex;
+  justify-content: space-between;
+}
+
+
 
 /* Estils per al buscador */
 .buscador-container {

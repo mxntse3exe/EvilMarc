@@ -220,10 +220,17 @@
             }
             ?>
 
+                <div class="contingut_explorador">
+                    <div class="info_ruta">
+                        <p>Directori actual: <?php echo "/"."$final_part".htmlspecialchars($relative_dir); ?></p>
+                    </div>
+                    
+                    <div class="buscador-container">
+                        <input type="text" id="buscador-fitxers" placeholder="Cerca fitxers o carpetes..." class="form-control">
+                        <i class="uil uil-search"></i>
+                    </div>
+                </div>
 
-                <div class="info_ruta">
-                    <p>Directori actual: <?php echo "/"."$final_part".htmlspecialchars($relative_dir); ?></p>
-                </div>            
 
                 <div>
                     <?php
@@ -312,6 +319,37 @@
     <script src="js/smoothscroll.js"></script>
     <script src="js/custom.js"></script>
 
+    <script>
+        // Funció per filtrar fitxers només pel títol
+        function filtrarFitxers() {
+            const cercador = document.getElementById('buscador-fitxers');
+            const terme = cercador.value.toLowerCase();
+            const elements = document.querySelectorAll('.llista_fitxers');
+            
+            elements.forEach(element => {
+                // Buscar específicament en el títol de l'arxiu/carpeta
+                const titolElement = element.querySelector('span, div:first-child'); // Selecciona el span o el primer div
+                const titol = titolElement ? titolElement.textContent.toLowerCase() : '';
+                
+                if (titol.includes(terme)) {
+                    element.classList.remove('filtrat');
+                } else {
+                    element.classList.add('filtrat');
+                }
+            });
+        }
+
+        // Escolta els canvis en el camp de cerca
+        document.getElementById('buscador-fitxers').addEventListener('input', filtrarFitxers);
+
+        // Funció per a la tecla Escape
+        document.getElementById('buscador-fitxers').addEventListener('keyup', function(e) {
+            if (e.key === 'Escape') {
+                this.value = '';
+                filtrarFitxers();
+            }
+        });
+    </script>
 
 </body>
 
