@@ -106,6 +106,14 @@ $usuari = $_SESSION['usuari'];
                     
                     <div class="panell_missatges">
                         <div id="llista-usuaris">
+
+                            <div class="buscador-container" style="width: 90%;">
+                                <input type="text" id="buscador-fitxers" placeholder="Cerca usuaris..." class="form-control">
+                                <i class="uil uil-search"></i>
+                            </div>
+
+
+
                             <?php
                             $sql = "SELECT usuari, nom, imatge FROM USUARIS WHERE usuari != '".$usuari."'";
                             $result = mysqli_query($conexion, $sql);
@@ -304,6 +312,40 @@ $usuari = $_SESSION['usuari'];
                 }
             });
         });
+
+
+
+
+
+        // Funció per filtrar fitxers
+        function filtrarFitxers() {
+            const cercador = document.getElementById('buscador-fitxers');
+            const terme = cercador.value.toLowerCase();
+            const elements = document.querySelectorAll('.usuari');
+            
+            elements.forEach(element => {
+                const text = element.textContent.toLowerCase();
+                if (text.includes(terme)) {
+                    element.classList.remove('filtrat');
+                } else {
+                    element.classList.add('filtrat');
+                }
+            });
+        }
+
+        // Escolta els canvis en el camp de cerca
+        document.getElementById('buscador-fitxers').addEventListener('input', filtrarFitxers);
+
+        // Funció per a la tecla Escape
+        document.getElementById('buscador-fitxers').addEventListener('keyup', function(e) {
+            if (e.key === 'Escape') {
+                this.value = '';
+                filtrarFitxers();
+            }
+        });
+
+
+
     </script>
 </body>
 </html>

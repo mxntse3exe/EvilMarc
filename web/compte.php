@@ -229,12 +229,25 @@
 
 
                                 <form action="compte" method="post" enctype="multipart/form-data" id="formModificarPass">
-                                    <p>Canviar la contrasenya</p>
+
+                                    <p>Canviar contrasenya</p>
+
                                     <p class="label_mod">Contrasenya actual</p>
-                                    <input class="form-control mod_dades_inp contra" type="password" id="contrasenya_actual" name="contrasenya_actual" required>
-                                    
+                                    <div class="password-container">
+                                        <input class="form-control mod_dades_inp contra" type="password" name="contrasenya_actual" id="passwordFieldActual" required>
+                                        <span class="toggle-password" onclick="togglePasswordVisibility('passwordFieldActual', 'toggleIconActual')">
+                                            <i class="unicon uil-eye" id="toggleIconActual"></i>
+                                        </span>
+                                    </div>
+
                                     <p class="label_mod">Nova contrasenya</p>
-                                    <input class="form-control mod_dades_inp contra" type="password" id="nova_contrasenya" name="nova_contrasenya" required>
+                                    <div class="password-container">
+                                        <input class="form-control mod_dades_inp contra" type="password" name="nova_contrasenya" id="passwordFieldNova" required>
+                                        <span class="toggle-password" onclick="togglePasswordVisibility('passwordFieldNova', 'toggleIconNova')">
+                                            <i class="unicon uil-eye" id="toggleIconNova"></i>
+                                        </span>
+                                    </div>
+
 
                                     <input class="form-control submit-btn" type="submit" value="Canviar contrasenya" name="modificarpass">
 
@@ -326,6 +339,21 @@
                 document.getElementById('formModificarFoto').submit();
             } else {
                 alert('Si us plau, selecciona una imatge.');
+            }
+        }
+
+        function togglePasswordVisibility(passwordFieldId, toggleIconId) {
+            const passwordField = document.getElementById(passwordFieldId);
+            const toggleIcon = document.getElementById(toggleIconId);
+            
+            if (passwordField.type === "password") {
+                passwordField.type = "text";
+                toggleIcon.classList.remove('uil-eye');
+                toggleIcon.classList.add('uil-eye-slash');
+            } else {
+                passwordField.type = "password";
+                toggleIcon.classList.remove('uil-eye-slash');
+                toggleIcon.classList.add('uil-eye');
             }
         }
 

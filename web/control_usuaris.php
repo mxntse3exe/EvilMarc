@@ -146,6 +146,18 @@
     <link rel="stylesheet" href="css/tooplate-style.css">
 
     <link rel="icon" type="image/png" href="images/favicon.ico"/>
+
+    <style>
+        .crear_usu_boto {
+            display: flex;
+            gap: 10px;
+        }
+        .buscador-container {
+            margin-bottom: 0px;
+            margin-top: 0px;
+            font-size: 14px;
+        }
+    </style>
 </head>
 
 <body>
@@ -191,11 +203,17 @@
                 <div style="width: 90%;">
                     <h2>Panell de control d'usuaris</h2>
 
+
                     <div class="botons_administracio">
 
                         <div class="crear_usu_boto">
                             <span class="btn" onclick="abrirPopup_crearusu()">Crear usuari</span>
                             
+                            <div class="buscador-container">
+                                <input type="text" id="buscador-fitxers" placeholder="Cerca usuaris..." class="form-control">
+                                <i class="uil uil-search"></i>
+                            </div>
+
                             <div class="overlay" id="overlay_crearusu" onclick="cerrarPopup_crearusu()"></div>
                             <div class="popup" id="popup_crearusu">
                                 <h4>Crear usuari</h4>
@@ -225,7 +243,6 @@
                                 <span class="close-icon" onclick="cerrarPopup_crearusu()">×</span>
                             </div>
                         </div>
-
 
 
                         <div class="gestionar_deps">
@@ -343,7 +360,7 @@
                     ?>
 
 
-                    <div class="contingut_panell" style="width: 90%;">
+                    <div class="contingut_panell" id="contingut_panell" style="width: 90%;">
                     
                     <?php
                     $consulta_usuaris = "select * from USUARIS;";
@@ -547,6 +564,36 @@
             document.getElementById("popup_crearusu").style.display = "none";
         }
 
+        
+        
+        
+        // Funció per filtrar fitxers
+        function filtrarFitxers() {
+            const cercador = document.getElementById('buscador-fitxers');
+            const terme = cercador.value.toLowerCase();
+            const elements = document.querySelectorAll('.boto_control_usu');
+            
+            elements.forEach(element => {
+                const text = element.textContent.toLowerCase();
+                if (text.includes(terme)) {
+                    element.classList.remove('filtrat');
+                } else {
+                    element.classList.add('filtrat');
+                }
+            });
+
+        }
+
+        // Escolta els canvis en el camp de cerca
+        document.getElementById('buscador-fitxers').addEventListener('input', filtrarFitxers);
+
+        // Funció per a la tecla Escape
+        document.getElementById('buscador-fitxers').addEventListener('keyup', function(e) {
+            if (e.key === 'Escape') {
+                this.value = '';
+                filtrarFitxers();
+            }
+        });
 
     </script>
 
