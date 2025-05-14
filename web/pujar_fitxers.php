@@ -447,8 +447,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="info_ruta">
                     <p>Directori actual: <?php echo htmlspecialchars($relative_dir); ?></p>
     
-                    <button id="crear-carpeta" class="btn">Crear carpeta</button>
+                    <div class="buscador_crear">
+                        <button id="crear-carpeta" class="btn">Crear carpeta</button>
+    
+    
+                        <div class="buscador-container">
+                            <input type="text" id="buscador-fitxers" placeholder="Cerca fitxers o carpetes..." class="form-control">
+                            <i class="uil uil-search"></i>
+                        </div>
+
+                    </div>
+
                 </div>
+
+                
 
                 <!-- script per poder crear noves carpetes -->
                 <script>
@@ -781,6 +793,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             nombreArchivo.textContent = "";
         }
     }
+
+
+        // Funció per filtrar fitxers
+        function filtrarFitxers() {
+            const cercador = document.getElementById('buscador-fitxers');
+            const terme = cercador.value.toLowerCase();
+            const elements = document.querySelectorAll('.llista_fitxers');
+            
+            elements.forEach(element => {
+                const text = element.textContent.toLowerCase();
+                if (text.includes(terme)) {
+                    element.classList.remove('filtrat');
+                } else {
+                    element.classList.add('filtrat');
+                }
+            });
+        }
+
+        // Escolta els canvis en el camp de cerca
+        document.getElementById('buscador-fitxers').addEventListener('input', filtrarFitxers);
+
+        // Funció per a la tecla Escape
+        document.getElementById('buscador-fitxers').addEventListener('keyup', function(e) {
+            if (e.key === 'Escape') {
+                this.value = '';
+                filtrarFitxers();
+            }
+        });
     </script>
 
 </body>

@@ -1334,6 +1334,36 @@ b, strong {
   color: gray;
 }
 
+/* Estils per al buscador */
+.buscador-container {
+  position: relative;
+  margin-bottom: 20px;
+  max-width: 500px;
+}
+
+.buscador-container input {
+  padding-left: 35px;
+  border-radius: 20px;
+}
+
+.buscador-container i {
+  position: absolute;
+  left: 12px;
+  top: 10px;
+  color: #777;
+}
+
+/* Estil per als elements filtrats */
+.filtrat {
+  display: none;
+}
+
+.buscador_crear {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
 /* registre.php */
 
 .columnes_logs {
