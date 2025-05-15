@@ -532,9 +532,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     <div class="popup_comp" id="<?php echo $popup_id; ?>">
                                         <h4>Compartir</h4>
 
+
+                                        <div class="buscador-container" style="width: 100%;">
+                                            <input type="text" id="buscador-usudep" placeholder="Cerca usuaris i departaments..." class="form-control">
+                                            <i class="uil uil-search"></i>
+                                        </div>
+
+
+
+
+
+
                                         <div class="compartir_arxius">
                                             
-                                            <form class="contact-form" action="compartir_carpeta.php" method="POST">
+                                            <form class="contact-form compartir" action="compartir_carpeta.php" method="POST">
                                                 <?php
                                                 // Obtenir els usuaris que ja tenen accés a l'arxiu
                                                 $sql_usuaris_compartits = "SELECT id_destinatari FROM CARPETES_COMPARTIDES_USUARIS WHERE ruta = '$item_path'";
@@ -551,11 +562,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                                 echo "<h6>Usuaris</h6>";
                                                 while ($usuari = $usuaris->fetch_assoc()) {
                                                     $checked = in_array($usuari['id_usu'], $usuaris_compartits) ? 'checked' : '';
-                                                    echo "<label>";
+                                                    echo "<label class='usudeps'>";
                                                     echo "<input type='checkbox' name='usuaris[]' value='" . $usuari['id_usu'] . "' $checked> ";
                                                     echo "<img src='" . $usuari['imatge'] . "' class='foto_usuari_dep'>";
                                                     echo $usuari['usuari'];
-                                                    echo "</label><br>";
+                                                    echo "</label>";
                                                 }
 
                                                 // Obtenir els departaments que ja tenen accés a l'arxiu
@@ -573,10 +584,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                                 echo "<h6>Departaments</h6>";
                                                 while ($departament = $departaments->fetch_assoc()) {
                                                     $checked = in_array($departament['id_dep'], $departaments_compartits) ? 'checked' : '';
-                                                    echo "<label>";
+                                                    echo "<label class='usudeps'>";
                                                     echo "<input type='checkbox' name='departaments[]' value='" . $departament['id_dep'] . "' $checked> ";
                                                     echo $departament['nom'];
-                                                    echo "</label><br>";
+                                                    echo "</label>";
                                                 }
                                                 ?>
 
@@ -629,9 +640,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     <div class="popup_comp" id="<?php echo $popup_id; ?>">
                                         <h4>Compartir</h4>
 
+
+                                        <div class="buscador-container" style="width: 100%;">
+                                            <input type="text" id="buscador-usudep" placeholder="Cerca usuaris i departaments..." class="form-control">
+                                            <i class="uil uil-search"></i>
+                                        </div>
+
+
                                         <div class="compartir_arxius">
 
-                                            <form class="contact-form" action="compartir_arxiu.php" method="POST">
+                                            <form class="contact-form compartir" action="compartir_arxiu.php" method="POST">
                                                 <?php
                                                 // Obtenir els usuaris que ja tenen accés a l'arxiu
                                                 $sql_usuaris_compartits = "select id_destinatari from ARXIUS_COMPARTITS_USUARIS where id_arxiu = (select id_arxiu from ARXIUS_PUJATS where ruta = '$item_path')";
@@ -648,11 +666,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                                 echo "<h6>Usuaris</h6>";
                                                 while ($usuari = $usuaris->fetch_assoc()) {
                                                     $checked = in_array($usuari['id_usu'], $usuaris_compartits) ? 'checked' : '';
-                                                    echo "<label>";
+                                                    echo "<label class='usudeps'>";
                                                     echo "<input type='checkbox' name='usuaris[]' value='" . $usuari['id_usu'] . "' $checked> ";
                                                     echo "<img src='" . $usuari['imatge'] . "' class='foto_usuari_dep'>";
                                                     echo $usuari['usuari'];
-                                                    echo "</label><br>";
+                                                    echo "</label>";
                                                 }
 
                                                 // Obtenir els departaments que ja tenen accés a l'arxiu
@@ -670,10 +688,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                                 echo "<h6>Departaments</h6>";
                                                 while ($departament = $departaments->fetch_assoc()) {
                                                     $checked = in_array($departament['id_dep'], $departaments_compartits) ? 'checked' : '';
-                                                    echo "<label>";
+                                                    echo "<label class='usudeps'>";
                                                     echo "<input type='checkbox' name='departaments[]' value='" . $departament['id_dep'] . "' $checked> ";
                                                     echo $departament['nom'];
-                                                    echo "</label><br>";
+                                                    echo "</label>";
                                                 }
                                                 ?>
 
@@ -819,6 +837,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (e.key === 'Escape') {
                 this.value = '';
                 filtrarFitxers();
+            }
+        });
+
+
+
+
+        // Funció per filtrar fitxers
+        function filtrarUsus() {
+            const cercador = document.getElementById('buscador-usudep');
+            const terme = cercador.value.toLowerCase();
+            const elements = document.querySelectorAll('.usudeps');
+            
+            elements.forEach(element => {
+                const text = element.textContent.toLowerCase();
+                if (text.includes(terme)) {
+                    element.classList.remove('filtrat');
+                } else {
+                    element.classList.add('filtrat');
+                }
+            });
+        }
+
+        // Escolta els canvis en el camp de cerca
+        document.getElementById('buscador-usudep').addEventListener('input', filtrarUsus);
+
+        // Funció per a la tecla Escape
+        document.getElementById('buscador-usudep').addEventListener('keyup', function(e) {
+            if (e.key === 'Escape') {
+                this.value = '';
+                filtrarUsus();
             }
         });
     </script>

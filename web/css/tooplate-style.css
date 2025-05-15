@@ -1208,8 +1208,6 @@ b, strong {
 
   width: 81%;
   justify-self: center;
-
-
 }
 
 .pujar_arxius_carpetes {
@@ -1382,6 +1380,15 @@ b, strong {
   align-items: baseline;
   gap: 10px;
 }
+
+.compartir {
+  display: flex;
+  flex-direction: column;
+}
+
+
+
+
 
 /* registre.php */
 
