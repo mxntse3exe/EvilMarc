@@ -70,7 +70,6 @@ $usuari = $_SESSION['usuari'];
         width: 70%;
     } */
     #missatges {
-        height: 300px;
         overflow-y: auto;
         margin-bottom: 15px;
         border-bottom: 1px solid #ddd;
@@ -115,7 +114,7 @@ $usuari = $_SESSION['usuari'];
 
 
                             <?php
-                            $sql = "SELECT usuari, nom, imatge FROM USUARIS WHERE usuari != '".$usuari."'";
+                            $sql = "SELECT usuari, nom, imatge FROM USUARIS WHERE usuari != '".$usuari."' and validat = 1";
                             $result = mysqli_query($conexion, $sql);
 
                             while ($row = mysqli_fetch_assoc($result)) {
@@ -140,7 +139,7 @@ $usuari = $_SESSION['usuari'];
                         
                         <div id="finestra-xat">
                             <h4 class="titol_xat">Xat amb: <span id="nom-receptor"></span></h4>
-                            <div id="missatges"></div>
+                            <div id="missatges"><img class="imatge_missatges" src="images/project/img_msgs.png"/></div>
                             <div class="enviar_text">
                                 <input type="text" id="missatge" class="form-control my-2 text_place" placeholder="Escriu el teu missatge...">
                                 <button onclick="enviarMissatge()" class="boto_enviar">Enviar</button>
