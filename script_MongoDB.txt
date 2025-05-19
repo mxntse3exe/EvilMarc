@@ -182,3 +182,7 @@ cd /var/www/html
 
 sudo composer require mongodb/mongodb
 
+
+# Inicar servei
+sudo docker start my-mongo
+sudo docker exec -it my-mongo mongo
