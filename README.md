@@ -366,11 +366,17 @@ sudo chown www-data:www-data /var/www/html/images/perfil
 sudo chmod 755 /var/www/html/images/perfil
 ```
 
-- Hem de donar permisos d'execució al programa de Python *evilmarc_web.py*:
+- Hem de donar permisos d'execució als programes de Python:
 
 ``` bash
 sudo chown www-data:www-data /var/www/html/evilmarc_web.py
 sudo chmod 755 /var/www/html/evilmarc_web.py
+
+sudo chown www-data:www-data /var/www/html/evilmarc_carpetes.py
+sudo chmod 755 /var/www/html/evilmarc_carpetes.py
+
+sudo chown www-data:www-data /var/www/html/evilmarc_fitxers.py
+sudo chmod 755 /var/www/html/evilmarc_fitxers.py
 ```
 
 - Hem de crear i donar permisos a la carpeta on guardarem els arxius pujats temporalment */var/www/html/fitxers/fitxers_temp*:
