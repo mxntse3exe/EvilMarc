@@ -1448,6 +1448,49 @@ b, strong {
   color: #495057e0;
 }
 
+.filtre-dates {
+  padding: 15px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+.filtre-dates label {
+  font-weight: 600;
+  margin-right: 5px;
+  margin-left: 10px;
+}
+.filtre-dates input[type="date"] {
+  padding: 5px;
+  border-radius: 10px;
+  border: 1px solid #ced4da;
+}
+.filtre-dates button {
+  margin-left: 10px;
+  padding: 5px 15px;
+  border: 0px;
+}
+
+.filtre-dates button:hover {
+  background-color: #474559;
+  border-color: #474559;
+  color: #fff;
+}
+
+
+.filtre-dates .reset-btn {
+  margin-left: 5px;
+  background-color: #2CB9FF;
+  border: 0px;
+  color: #fff;
+  padding: 5px 15px;
+}
+
+.filtre-dates .reset-btn:hover {
+  background-color: #474559;
+  border-color: #474559;
+  color: #fff;
+}
+
+
 
 /* missatges.php */
 

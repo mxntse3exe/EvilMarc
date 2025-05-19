@@ -814,14 +814,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
         // Funció per filtrar fitxers
+        //function filtrarFitxers() {
+        //     const cercador = document.getElementById('buscador-fitxers');
+        //     const terme = cercador.value.toLowerCase();
+        //     const elements = document.querySelectorAll('.llista_fitxers');
+            
+        //     elements.forEach(element => {
+            
+        //         const text = element.textContent.toLowerCase();
+        //         if (text.includes(terme)) {
+        //             element.classList.remove('filtrat');
+        //         } else {
+        //             element.classList.add('filtrat');
+        //         }
+        //     });
+        // }
+
         function filtrarFitxers() {
             const cercador = document.getElementById('buscador-fitxers');
             const terme = cercador.value.toLowerCase();
             const elements = document.querySelectorAll('.llista_fitxers');
             
             elements.forEach(element => {
-                const text = element.textContent.toLowerCase();
-                if (text.includes(terme)) {
+                // Buscar específicament en el títol de l'arxiu/carpeta
+                const titolElement = element.querySelector('span, div:first-child'); // Selecciona el span o el primer div
+                const titol = titolElement ? titolElement.textContent.toLowerCase() : '';
+                
+                if (titol.includes(terme)) {
                     element.classList.remove('filtrat');
                 } else {
                     element.classList.add('filtrat');

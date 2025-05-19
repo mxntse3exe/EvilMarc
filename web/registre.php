@@ -1,5 +1,5 @@
 <?php 
-	session_start();
+    session_start();
 
     $servidor = "localhost";
     $usuario = "web";
@@ -40,8 +40,25 @@
     $collection_infectats = $db->fitxers_infectats;
     $collection_eliminats = $db->fitxers_eliminats;
 
-    // Opcions de cerca
-    $filter = ['id_usuari' => $num_usu];  // Filtra per id_usuari
+    // Processar filtres de dates
+    $filtre_data_inici = isset($_GET['data_inici']) ? $_GET['data_inici'] : null;
+    $filtre_data_fi = isset($_GET['data_fi']) ? $_GET['data_fi'] : null;
+
+    // Crear filtre base per usuari
+    $filter = ['id_usuari' => $num_usu];
+    
+    // Afegir filtres de dates si s'han especificat
+    if ($filtre_data_inici) {
+        $filter['data'] = ['$gte' => new MongoDB\BSON\UTCDateTime(strtotime($filtre_data_inici) * 1000)];
+    }
+    if ($filtre_data_fi) {
+        if (isset($filter['data'])) {
+            $filter['data']['$lte'] = new MongoDB\BSON\UTCDateTime(strtotime($filtre_data_fi . ' 23:59:59') * 1000);
+        } else {
+            $filter['data'] = ['$lte' => new MongoDB\BSON\UTCDateTime(strtotime($filtre_data_fi . ' 23:59:59') * 1000)];
+        }
+    }
+
     $options = ['sort' => ['data' => -1]];  // Ordena per data (descendent)
 
     // Obtenir dades de la base de dades
@@ -72,6 +89,7 @@
 
     <link rel="icon" type="image/png" href="images/favicon.ico"/>
 
+    
 </head>
 
 <body>
@@ -95,8 +113,6 @@
         </div>
     </nav>
 
-
-
     <!-- FUNCIONAMENT -->
     
     <section class="about full-screen d-lg-flex justify-content-center align-items-center">
@@ -115,7 +131,19 @@
                     }
                     ?>
 
-
+                    <!-- Formulari de filtre per dates -->
+                    <div class="filtre-dates">
+                        <form method="get" action="">
+                            <label for="data_inici">Des de:</label>
+                            <input type="date" id="data_inici" name="data_inici" value="<?php echo $filtre_data_inici; ?>">
+                            
+                            <label for="data_fi">Fins a:</label>
+                            <input type="date" id="data_fi" name="data_fi" value="<?php echo $filtre_data_fi; ?>">
+                            
+                            <button type="submit" class="btn btn-primary">Filtrar</button>
+                            <a href="registre" class="btn btn-secondary reset-btn">Netejar</a>
+                        </form>
+                    </div>
 
                     <div class="columnes_logs">
                         <div class="logs">
@@ -174,8 +202,6 @@
         </div>
     </section>
 
-
-
     <!-- FOOTER -->
     <footer class="footer py-5">
         <div class="container">
@@ -200,21 +226,16 @@
     <script src="js/custom.js"></script>
 
     <script>
-        // Capturar clic en el botó "Modificar foto"
-        document.getElementById('btnModificarFoto').addEventListener('click', function () {
-            document.getElementById('files_up').click(); // Simular clic en el camp de fitxer
-        });
-
-        // Enviar formulari automàticament quan es selecciona un fitxer
-        function submitForm() {
-            var fileInput = document.getElementById('files_up');
-            if (fileInput.files.length > 0) { // Comprovar si s'ha seleccionat un fitxer
-                document.getElementById('formModificarFoto').submit();
-            } else {
-                alert('Si us plau, selecciona una imatge.');
+        // Validar que la data d'inici no sigui posterior a la data de fi
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const dataInici = document.getElementById('data_inici').value;
+            const dataFi = document.getElementById('data_fi').value;
+            
+            if (dataInici && dataFi && new Date(dataInici) > new Date(dataFi)) {
+                alert('La data d\'inici no pot ser posterior a la data de fi.');
+                e.preventDefault();
             }
-        }
-
+        });
     </script>
 
 </body>
