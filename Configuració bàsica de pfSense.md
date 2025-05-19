@@ -30,7 +30,7 @@
 ### 1. 🔐 Obertura del port SSH per accedir remotament
 
 - **Editar regla de _Firewall_**	- Edit Firewall rule
-		![[Pasted image 20250514191114.png]]
+		![[Pasted image fotos/20250514191114.png]]
 
 	- **Source (origen)**:
 		![[Pasted image 20250514191358.png]]
