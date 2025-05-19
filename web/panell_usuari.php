@@ -31,11 +31,24 @@
     }
 
 
-
     // Mostrar mensaje si existe en la sesión
     if (isset($_SESSION['missatge_pujada'])) {
         unset($_SESSION['missatge_pujada']); // Eliminarlo para que no aparezca en futuras recargas
     }
+
+    require 'vendor/autoload.php';
+    use MongoDB\Client;
+
+    // Configuració de MongoDB
+    $mongoClient = new Client("mongodb://localhost:27017");
+    $client = $mongoClient;
+
+    // Comprovar missatges no llegits
+    $mongoFilter = [
+        'receptor' => $_SESSION['usuari'],
+        'llegit' => false
+    ];
+    $no_llegits = $client->chat->missatges->countDocuments($mongoFilter);
             
 ?>
 
@@ -116,7 +129,21 @@
                     <div class="contingut_panell">
                         <a href="pujar_fitxers" class="link_panell"><div class="botons_panell"><span>Els meus arxius</span></div></a>
                         <a href="compartits" class="link_panell"><div class="botons_panell"><span>Arxius compartits amb mi</span></div></a>
-                        <a href="missatges" class="link_panell"><div class="botons_panell"><span>Missatges</span></div></a>
+
+
+                        <!-- <a href="missatges" class="link_panell"><div class="botons_panell"><span>Missatges</span></div></a> -->
+
+                        <a href="missatges" class="link_panell">
+                            <div class="botons_panell">
+                                <span>Missatges</span>
+                                <span id="badge-missatges" class='advertencia' <?php if ($no_llegits == 0) echo 'style="display: none;"'; ?>>
+                                    <?php echo $no_llegits; ?>
+                                </span>
+                            </div>
+                        </a>
+
+
+
                         <a href="registre" class="link_panell"><div class="botons_panell"><span>Registre d'arxius</span></div></a>
                         <a href="compte" class="link_panell">
                             <div class="botons_panell">
@@ -176,6 +203,29 @@
     <script src="js/owl.carousel.min.js"></script>
     <script src="js/smoothscroll.js"></script>
     <script src="js/custom.js"></script>
+
+    <script>
+        // Funció per comprovar missatges no llegits
+        function actualitzarNotificacions() {
+            fetch('get_unread_counts_panell.php')
+                .then(response => response.json())
+                .then(data => {
+                    const badge = document.getElementById('badge-missatges');
+                    if (data.total > 0) {
+                        badge.textContent = data.total;
+                        badge.style.display = 'inline-block';
+                    } else {
+                        badge.style.display = 'none';
+                    }
+                });
+        }
+
+        // Actualitzar cada 5 segons
+        setInterval(actualitzarNotificacions, 3000);
+
+        // Executar immediatament al carregar la pàgina
+        document.addEventListener('DOMContentLoaded', actualitzarNotificacions);
+    </script>
 
 </body>
 
