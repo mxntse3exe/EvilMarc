@@ -98,6 +98,15 @@ coses a tenir en compte:
 	sudo chmod 755 /var/www/html/evilmarc_web.py
 
 
+	sudo chown www-data:www-data /var/www/html/evilmarc_carpetes.py
+	sudo chmod 755 /var/www/html/evilmarc_carpetes.py
+
+
+	sudo chown www-data:www-data /var/www/html/evilmarc_fitxers.py
+	sudo chmod 755 /var/www/html/evilmarc_fitxers.py
+
+
+
 - hem de donar permisos a la carpeta on guardarem els arxius pujats:
 	
 	sudo mkdir /var/www/html/fitxers/fitxers_temp
