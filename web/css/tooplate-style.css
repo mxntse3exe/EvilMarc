@@ -443,6 +443,9 @@ b, strong {
   #finestra-xat {
     width: 75%;
   }
+  .videotext_funcionament {
+    flex-direction: column;
+  }  
 
 }
 @media (max-width: 767px) {
@@ -513,6 +516,9 @@ b, strong {
   }
   #finestra-xat {
     width: 100%;
+  }
+  .videotext_funcionament {
+    flex-direction: column;
   }
 
 }
@@ -589,6 +595,9 @@ b, strong {
     width: auto;
     margin-left: 10px;
     margin-right: 10px;
+  }
+  .videotext_funcionament {
+    flex-direction: column;
   }
 
 }
@@ -672,6 +681,9 @@ b, strong {
     width: auto;
     margin-left: 10px;
     margin-right: 10px;
+  }
+  .videotext_funcionament {
+    flex-direction: column;
   }
 }
 
@@ -759,6 +771,8 @@ b, strong {
 .videotext_funcionament {
   display: flex;
   margin-top: 15px;
+  margin-right: 15px;
+  gap: 25px;
 }
 
 
