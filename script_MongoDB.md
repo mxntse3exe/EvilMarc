@@ -167,8 +167,17 @@ WantedBy=multi-user.target
 ### ③ Activar el servei:
 ```bash
 sudo systemctl daemon-reexec
+```
+
+```bash
 sudo systemctl daemon-reload
+```
+
+```bash
 sudo systemctl enable mongodb-activador.service
+```
+
+```bash
 sudo systemctl start mongodb-activador.service
 ```
 
