@@ -131,7 +131,7 @@
                     <div class="videotext_funcionament">
 
                         <p>Per tal de poder analitzar el teu arxiu, hauras de pujar-lo a la nostra web seguint els passos del vídeo que trobaràs a continuació.</p>
-                        <video width="420" height="270" controls autoplay muted loop>
+                        <video width="427" controls autoplay muted loop class="video_funcionament">
                             <source src="images/project/video_projecte.mp4" type="video/mp4">
                         </video>
 

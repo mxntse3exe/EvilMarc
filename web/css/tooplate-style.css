@@ -775,6 +775,11 @@ b, strong {
   gap: 25px;
 }
 
+.video_funcionament {
+  border-radius: 20px;
+  box-shadow: 0px 0px 10px rgb(219, 219, 219);
+}
+
 
 /* INDEX.PHP secció contacte */
 
