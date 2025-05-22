@@ -26,14 +26,11 @@
         $nom = $fila['nom'];
         $cognoms = $fila['cognoms'];
         $direccio = $fila['direccio'];
-
-
     }
 
-
-    // Mostrar mensaje si existe en la sesión
+    // Eliminar mensaje si existe en la sesión
     if (isset($_SESSION['missatge_pujada'])) {
-        unset($_SESSION['missatge_pujada']); // Eliminarlo para que no aparezca en futuras recargas
+        unset($_SESSION['missatge_pujada']);
     }
 
     require 'vendor/autoload.php';
@@ -70,22 +67,17 @@
 
     <!-- MAIN STYLE -->
     <link rel="stylesheet" href="css/tooplate-style.css">
-
     <link rel="icon" type="image/png" href="images/favicon.ico"/>
-
-
 </head>
 
 <body>
-
     <!-- MENU -->
     <nav class="navbar navbar-expand-sm navbar-light">
         <div class="container">
-            <a class="navbar-brand" href="index"> EvilMarc</a>
+            <a class="navbar-brand" href="index">EvilMarc</a>
 
             <div id="navbarNav">
                 <ul class="navbar-nav">
-                    
                     <?php
                     if($_SESSION['valido'] == 1) {
                         $usuari = $_SESSION['usuari'];
@@ -96,32 +88,25 @@
                         echo '<li class="nav-item"><a href="registrar" class="nav-link"><span data-hover="Registrar-se">Registrar-se</span></a></li>';
                     }
                     ?>
-
                 </ul>
             </div>
         </div>
     </nav>
 
-    
-
     <!-- FUNCIONAMENT -->
-    
     <section class="about full-screen d-lg-flex justify-content-center align-items-center">
         <div class="container">
-
 
         <?php
         if($_SESSION['valido'] == 1) {
             $usuari = $_SESSION['usuari']
         ?>
-
             <div class="row seccio_panell">
                 <div>
                     <h2>Panell d'usuari</h2>
                     <div class="text_foto">
                         <?php
                         echo "<p>Benvingut/da, ".$usuari."!</p>";
-
                         echo "<img src='".$_SESSION['imatge']."'>";
                         ?>
                     </div>
@@ -129,9 +114,6 @@
                     <div class="contingut_panell">
                         <a href="pujar_fitxers" class="link_panell"><div class="botons_panell"><span>Els meus arxius</span></div></a>
                         <a href="compartits" class="link_panell"><div class="botons_panell"><span>Arxius compartits amb mi</span></div></a>
-
-
-                        <!-- <a href="missatges" class="link_panell"><div class="botons_panell"><span>Missatges</span></div></a> -->
 
                         <a href="missatges" class="link_panell">
                             <div class="botons_panell">
@@ -141,8 +123,6 @@
                                 </span>
                             </div>
                         </a>
-
-
 
                         <a href="registre" class="link_panell"><div class="botons_panell"><span>Registre d'arxius</span></div></a>
                         <a href="compte" class="link_panell">
@@ -157,28 +137,22 @@
                         </a>
 
                         <?php
-                            
                             if ($admin == 1) {
                                 echo '<a href="control_usuaris" class="link_panell"><div class="botons_panell"><span>Panell de control d\'usuaris i departaments</span></div></a>';
                             }
                         ?>
-
                     </div>
-
         <?php
         }
         else {
             echo "Credencials incorrectes. Fes clic "."<a href='inici'>aquí</a>"." per iniciar sessió.";
         }
         ?>
-
                 </div>
                 
             </div>
         </div>
     </section>
-
-
 
     <!-- FOOTER -->
     <footer class="footer py-5">

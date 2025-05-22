@@ -129,32 +129,34 @@
                 <div class="contents">
                     <h2>Com analitzar un arxiu?</h2>
                     <div class="videotext_funcionament">
+                        <p>
+                            EvilMarc és molt més que una eina per analitzar arxius! Mira el vídeo que tens a continuació per descobrir totes les funcionalitats que t’oferim: <br><br>
+                            - Pujada segura de fitxers <br>
+                            - Compartició de fitxers i carpetes <br>
+                            - Xat en temps real amb els altres companys <br>
+                            - Configuració del teu compte
+                        </p>
 
-                        <p>Per tal de poder analitzar el teu arxiu, hauras de pujar-lo a la nostra web seguint els passos del vídeo que trobaràs a continuació.</p>
                         <video width="427" controls autoplay muted loop class="video_funcionament">
                             <source src="images/project/video_projecte.mp4" type="video/mp4">
                         </video>
-
                     </div>
                 </div>
             </div>
 
             <div class="row seccio_panell_index" id="Contacte">
                 <div class="contents">
-                <h2>Formulari de contacte</h2>
+                <h2>Contacta'ns</h2>
                     <div class="contact_contents">
                         
-
-                        <div class="contact-form">    
-                            <div class="contact_formulari">
-                                <form method="post" action="contacte">
-                                    <input class="form-control" type="text" name="assumpte" placeholder="Assumpte">
-                                    <input class="form-control" type="text" name="correu" placeholder="El teu correu">
-                                    <textarea class="form-control" name="mensaje" cols="30" rows="7" placeholder="Missatge"></textarea>
-                                    <input class="form-control submit-btn" type="submit" value="Enviar" name="enviar">
-                                </form>
-                            </div>        
-                        </div>
+                        <p>
+                            Si necessites posar-te en contacte amb nosaltres, pots escriure'ns a l’adreça següent: <br>
+                            <i class='uil uil-envelope'></i> <a href="mailto:evilmarc@evilmarc.com">evilmarc@evilmarc.com</a> <br><br>
+                            També ens pots trucar al telèfon: <br>
+                            <i class='uil uil-phone'></i> <a href="tel:+34600123456">+34 600 123 456</a> <br><br>
+                            Horari d’atenció: de dilluns a divendres, de 15:00h a 20:00h. <br>
+                        </p>
+                        
 
 
                     </div>
