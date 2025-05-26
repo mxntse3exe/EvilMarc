@@ -32,11 +32,6 @@ Options -Indexes
     Deny from all
 </FilesMatch>
 
-# Bloquejar l'accés a fitxers específics
-<FilesMatch "^(compartir_arxiu\.php|compartir_carpeta\.php|crear_carpeta\.php|descargar\.php|eliminar\.php|get_messages\.php|get_unread_counts_panell\.php|get_unread_counts\.php|mark_as_read\.php|send_message\.php|sortir\.php)$">
-    Order Allow,Deny
-    Deny from all
-</FilesMatch>
 
 # Redirecció a una pàgina personalitzada per a errors
 ErrorDocument 403 /forbidden.html
