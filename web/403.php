@@ -55,11 +55,12 @@
         <div class="container">
             <div class="row seccio_reg_log">
                 <div>
-                    <h2>403</h2>
+                    <h2>Error 403</h2>                 
+                    <h2>No segueixis per aquí!</h2>
+
                         
-
-
-
+                        <img src="images/403.gif" alt="404 Not Found" style="margin-top: 50px; height: 70%">
+    
 
 
 
