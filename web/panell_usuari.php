@@ -14,7 +14,7 @@
         header("Location: inici.php"); // Redireccio a inici si no esta validat
         exit;
     }
-    
+    $usuari = $_SESSION['usuari'];
 
     $sql = "select * from USUARIS where usuari = '".$usuari."'";
 
