@@ -20,7 +20,11 @@ if(isset($_REQUEST['registre'])) {
     $usuari = str_replace("'","",$usuari);
 
     $pass = $_REQUEST['contrasenya'];
-    $pass = hash('sha256', $pass, false);
+
+    
+
+
+    
 
 
     $sql_comprovar_correu = "select * from USUARIS where correu = '".$correu."'";
@@ -107,21 +111,29 @@ if(isset($_REQUEST['registre'])) {
                                             $files_usuari = mysqli_query($conexion,$sql_comprovar_usuari);
                                             $num_files_usuari = mysqli_num_rows($files_usuari);
 
-                                            if ($num_files_correu == 0) {
-                                                if ($num_files_usuari == 0) {
-                                                    if (mysqli_query($conexion,$sql)) {
-                                                        echo "<p class='adverts'>Usuari creat correctament, esperi que l'administrador verifiqui el seu compte.</p>";
+
+                                            if ((strlen($pass) < 8 || strlen($pass) > 50) || (!preg_match('/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\W_]).{8,50}$/u', $pass))) {
+                                                echo "<p class='adverts'>La contrasenya ha de contenir almenys una majúscula, una minúscula, un número i un caràcter especial. Ha de tenir entre 8 i 50 caràcters.</p>";
+                                            }
+                                            else {
+                                                $pass = hash('sha256', $pass, false);
+                                                if ($num_files_correu == 0) {
+                                                    if ($num_files_usuari == 0) {
+                                                        if (mysqli_query($conexion,$sql)) {
+                                                            echo "<p class='adverts'>Usuari creat correctament, esperi que l'administrador verifiqui el seu compte.</p>";
+                                                        }
+                                                        else {
+                                                            echo "<p class='adverts'>No hem pogut crear el seu usuari en aquests moments.</p>";
+                                                        }
                                                     }
                                                     else {
-                                                        echo "<p class='adverts'>No hem pogut crear el seu usuari en aquests moments.</p>";
+                                                        echo "<p class='adverts'>Ja existeix un compte amb aquest correu o usuari.</p>";
                                                     }
                                                 }
                                                 else {
                                                     echo "<p class='adverts'>Ja existeix un compte amb aquest correu o usuari.</p>";
                                                 }
-                                            }
-                                            else {
-                                                echo "<p class='adverts'>Ja existeix un compte amb aquest correu o usuari.</p>";
+
                                             }
                                         }
                                         ?>

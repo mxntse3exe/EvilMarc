@@ -253,24 +253,14 @@
                     $stmt->close();
                     $contrasenya_correcta = false;
 
-                    // Primer, intenta password_verify (hash segur)
-                    if (password_verify($pass_actual, $contrasenya_bd_hash)) {
+                    if ($contrasenya_bd_hash === hash('sha256', $pass_actual, false)) {
                         $contrasenya_correcta = true;
-                    } elseif ($contrasenya_bd_hash === hash('sha256', $pass_actual, false)) {
-                        $contrasenya_correcta = true;
-                        // MIGRACIÓ: actualitza la contrasenya a password_hash()
-                        $pass_nova_hash = password_hash($pass_nova, PASSWORD_DEFAULT);
-                        $stmt_update = $conexion->prepare("UPDATE USUARIS SET contrasenya = ? WHERE id_usu = ?");
-                        $stmt_update->bind_param("si", $pass_nova_hash, $id_usu);
-                        $stmt_update->execute();
-                        $stmt_update->close();
-                        header("Location: compte?contrasenya=ok");
-                        exit;
                     }
 
                     if ($contrasenya_correcta) {
                         // Genera el hash de la nova contrasenya
-                        $pass_nova_hash = password_hash($pass_nova, PASSWORD_DEFAULT);
+                        $pass_nova_hash = hash('sha256', $pass_nova, false);
+
 
                         // Actualitza la contrasenya nova (consulta preparada)
                         $stmt_update = $conexion->prepare("UPDATE USUARIS SET contrasenya = ? WHERE id_usu = ?");

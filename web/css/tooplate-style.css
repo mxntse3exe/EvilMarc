@@ -813,6 +813,7 @@ b, strong {
   padding: 20px;
   width: max-content;
   display: flex;
+  max-width: 400px;
 }
 .password-container {
   position: relative;
