@@ -1,5 +1,16 @@
 <?php 
-    session_start(); 
+session_start(); 
+
+// Generar token CSRF
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+
+// Funció per sanititzar l'entrada
+function sanitizeInput($data) {
+    return htmlspecialchars(trim($data), ENT_QUOTES, 'UTF-8');
+}
+
 ?>
 
 <!doctype html>
@@ -84,39 +95,62 @@
                     <h3 class="text_analitzar">Analitza el teu arxiu</h3>
                     
                     <form enctype="multipart/form-data" method="post" action="index" class="form_pujar_arxius">
-                        <input type="hidden" name="max_file_size" value="681574400">
+                    <input type="hidden" name="max_file_size" value="681574400">
+                    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
 
-
-
-                        <label for="archivo" class="custom-file-upload"><i class="uil uil-file-alt"></i>Selecciona l'arxiu que vols analitzar...</label>
-                        
-
-
-                        <input type="file" name="archivo" class="input_arxiu" id="archivo">
-                        
-                        <input type="submit" value="Pujar arxiu" class="pujar_arxiu_submit" name="arxiu">
+                    <label for="archivo" class="custom-file-upload"><i class="uil uil-file-alt"></i>Selecciona l'arxiu que vols analitzar...</label>
+                    <input type="file" name="archivo" class="input_arxiu" id="archivo">
+                    <input type="submit" value="Pujar arxiu" class="pujar_arxiu_submit" name="arxiu">
                     </form>
 
 
                     <?php 
-                        if(isset($_POST['arxiu'])){
-                            
-                            if (is_uploaded_file ($_FILES['archivo']['tmp_name'])) {
-                                $nombreDirectorio = "/var/www/html/fitxers/fitxers_temp/";
 
-                                $uniqid = uniqid();
+                    // Comprovar si s'ha enviat el formulari 
+                    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                        // Validar token CSRF
+                        if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+                            die('CSRF token invàlid');
+                        }
 
-                                $nombreFichero = $uniqid."_".$_FILES['archivo']['name'];
+                        // Comprovar si s'ha pujat un arxiu
+                        if (isset($_POST['arxiu'])) {
+                            // Comprovar si l'arxiu s'ha pujat correctament
+                            if (is_uploaded_file($_FILES['archivo']['tmp_name'])) {
 
-                                move_uploaded_file ($_FILES['archivo']['tmp_name'], $nombreDirectorio.$nombreFichero);
-                                
-                                $command = escapeshellcmd("python3 /var/www/html/evilmarc_web.py ".escapeshellarg($nombreFichero));
+                                // sanejament del nom fitxer
+                                $originalName = basename($_FILES['archivo']['name']);
+                                $sanitizedName = preg_replace("/[^a-zA-Z0-9\\.\\-\\_]/", "_", $originalName);
+                                $nombreOriginal = $sanitizedName;
 
-                                $output = shell_exec($command);
-                                echo "<p class='sortida_analisi'>".$output."</p>";
+                                // Comprovar longitud del nom del fitxer (màxim 40 caràcters)
+                                if (strlen($nombreOriginal) > 40) {
+                                    echo "<p class='error'>Error: El nom del fitxer no pot superar els 40 caràcters.</p>";
+                                } else {
+                                    $nombreDirectorio = "/var/www/html/fitxers/fitxers_temp/";
+                                    $uniqid = uniqid();
+                                    $nombreFichero = $uniqid . "_" . $nombreOriginal;
+
+                                    // Comprovar si el fitxer ja existeix
+                                    if (move_uploaded_file($_FILES['archivo']['tmp_name'], $nombreDirectorio . $nombreFichero)) {
+                                        // Mostrar missatge de confirmació
+                                        $command = escapeshellcmd("python3 /var/www/html/evilmarc_web.py " . escapeshellarg($nombreFichero));
+                                        $output = shell_exec($command);
+
+                                        // Sanititzar la sortida
+                                        $output = strip_tags($output, '<b>'); 
+                                        echo "<p class='sortida_analisi'>" . strip_tags($output, '<b>') . "</p>";
+                                    } else {
+                                        echo "<p class='error'>Error en pujar el fitxer.</p>";
+                                    }
+                                }
+                            } else {
+                                echo "<p class='error'>No s'ha pogut pujar el fitxer.</p>";
                             }
                         }
+                    }
                     ?>
+
 
                 </div>
 

@@ -30,8 +30,17 @@ if (!isset($_SESSION['id_usu'])) {
 $usuari = $_SESSION['id_usu'];
 
 // Obtenir l'ID de l'arxiu
-$sql_id_arxiu = "select id_arxiu from ARXIUS_PUJATS where ruta = '$ruta'";
-$result_id_arxiu = mysqli_query($conexion, $sql_id_arxiu);
+$sql_id_arxiu =  "SELECT id_arxiu FROM ARXIUS_PUJATS WHERE ruta = ?";
+$stmt = mysqli_prepare($conexion, $sql_id_arxiu);
+if (!$stmt) {
+    die("Error al preparar la consulta: " . mysqli_error($conexion));
+}
+
+// Vincular el parámetro i executar la consulta
+mysqli_stmt_bind_param($stmt, "s", $ruta);
+mysqli_stmt_execute($stmt);
+$result_id_arxiu = mysqli_stmt_get_result($stmt);
+
 
 if (!$result_id_arxiu) {
     die("Error en la consulta: " . mysqli_error($conexion));

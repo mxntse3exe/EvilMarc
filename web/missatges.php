@@ -114,26 +114,36 @@ $usuari = $_SESSION['usuari'];
 
 
                             <?php
-                            $sql = "SELECT usuari, nom, imatge FROM USUARIS WHERE usuari != '".$usuari."' and validat = 1";
-                            $result = mysqli_query($conexion, $sql);
+                            // Consulta per obtenir usuaris diferents de l'usuari actual i que estiguin validats
+                            $sql = "SELECT usuari, nom, imatge FROM USUARIS WHERE usuari != ? and validat = 1";
+                            $stmt = $conexion->prepare($sql); // Preparem la consulta
+                            $stmt->bind_param("s", $usuari); // Vinculem el paràmetre (usuari actual)
+                            $stmt->execute(); // Executem la consulta
+                            $result = $stmt->get_result(); // Obtenim el resultat
 
-                            while ($row = mysqli_fetch_assoc($result)) {
-                                // Consulta per comptar missatges no llegits a MongoDB
+                            // Recorrem cada usuari trobat
+                            while ($row = $result->fetch_assoc()) {
+                                // Comptem missatges no llegits d'aquest usuari a MongoDB
                                 $mongoFilter = [
                                     'emissor' => $row['usuari'],
                                     'receptor' => $_SESSION['usuari'],
                                     'llegit' => false
                                 ];
                                 $no_llegits = $client->chat->missatges->countDocuments($mongoFilter);
-                                
-                                echo "<div class='usuari' onclick=\"obrirXat('".$row['usuari']."')\">";
-                                echo "<img src='".$row['imatge']."' width='30' height='30' style='border-radius:50%; margin-right:10px;'>";
-                                echo $row['nom']." (".$row['usuari'].")";
+
+                                // Mostrem l'usuari amb la seva imatge i nom
+                                echo "<div class='usuari' onclick=\"obrirXat('".htmlspecialchars($row['usuari'], ENT_QUOTES, 'UTF-8')."')\">";
+                                // Imatge de perfil rodona
+                                echo "<img src='".htmlspecialchars($row['imatge'], ENT_QUOTES, 'UTF-8')."' width='30' height='30' style='border-radius:50%; margin-right:10px;'>";
+                                // Nom i usuari
+                                echo htmlspecialchars($row['nom'], ENT_QUOTES, 'UTF-8')." (".htmlspecialchars($row['usuari'], ENT_QUOTES, 'UTF-8').")";
+                                // Si hi ha missatges no llegits, mostrem badge
                                 if ($no_llegits > 0) {
-                                    echo "<span class='badge badge-pill badge-danger ml-2' id='badge-".$row['usuari']."'>".$no_llegits."</span>";
+                                    echo "<span class='badge badge-pill badge-danger ml-2' id='badge-".htmlspecialchars($row['usuari'], ENT_QUOTES, 'UTF-8')."'>".$no_llegits."</span>";
                                 }
                                 echo "</div>";
                             }
+                            $stmt->close(); // Tanquem el statement
                             ?>
                         </div>
                         
@@ -343,8 +353,30 @@ $usuari = $_SESSION['usuari'];
             }
         });
 
+        // ...existing code...
 
+        // Funció per deseleccionar el xat i mostrar la imatge per defecte
+        function deseleccionarXat() {
+            receptorActual = null;
+            document.getElementById('nom-receptor').textContent = '';
+            const missatgesDiv = document.getElementById('missatges');
+            missatgesDiv.innerHTML = '<img class="imatge_missatges" src="images/project/img_msgs.png"/>';
+            // Treu la classe 'actiu' de tots els usuaris
+            document.querySelectorAll('.usuari').forEach(u => u.classList.remove('actiu'));
+            // Atura el refresc automàtic
+            if (intervalRefrescar) clearInterval(intervalRefrescar);
+        }
 
+        // Escolta la tecla Escape a tot el document
+        document.addEventListener('keydown', function(e) {
+            // Si el focus NO és al buscador, desselecciona el xat
+            if (e.key === 'Escape' && document.activeElement.id !== 'buscador-fitxers') {
+                deseleccionarXat();
+            }
+        });
+        
     </script>
+
+
 </body>
 </html>

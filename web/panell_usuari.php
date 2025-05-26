@@ -10,7 +10,11 @@
 
     if (!$conexion) die ("Error al connectar amb la base de dades.");
 
-    $usuari = $_SESSION['usuari'];
+    if (!isset($_SESSION['usuari'])) {
+        header("Location: inici.php"); // Redireccio a inici si no esta validat
+        exit;
+    }
+    
 
     $sql = "select * from USUARIS where usuari = '".$usuari."'";
 
@@ -99,7 +103,7 @@
 
         <?php
         if($_SESSION['valido'] == 1) {
-            $usuari = $_SESSION['usuari']
+            $usuari = $_SESSION['usuari'];
         ?>
             <div class="row seccio_panell">
                 <div>
