@@ -34,5 +34,5 @@ Options -Indexes
 
 
 # Redirecció a una pàgina personalitzada per a errors
-ErrorDocument 403 /forbidden.html
-ErrorDocument 404 /not-found.html
+ErrorDocument 403 /403.php
+ErrorDocument 404 /404.php
