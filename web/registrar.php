@@ -31,7 +31,6 @@ if(isset($_REQUEST['registre'])) {
     $sql_comprovar_usuari = "select * from USUARIS where usuari = '".$usuari."'";
 
 
-    $sql = "insert into USUARIS(usuari,correu,contrasenya) values('".$usuari."','".$correu."','".$pass."')";
 
 }
 ?>
@@ -117,6 +116,8 @@ if(isset($_REQUEST['registre'])) {
                                             }
                                             else {
                                                 $pass = hash('sha256', $pass, false);
+                                                $sql = "insert into USUARIS(usuari,correu,contrasenya) values('".$usuari."','".$correu."','".$pass."')";
+
                                                 if ($num_files_correu == 0) {
                                                     if ($num_files_usuari == 0) {
                                                         if (mysqli_query($conexion,$sql)) {
