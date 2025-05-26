@@ -237,46 +237,52 @@
                 $pass_nova = $_REQUEST['nova_contrasenya'];
 
                 // Validació de la nova contrasenya
-                if (strlen($pass_nova) < 8 || strlen($pass_nova) > 50) {
-                    die("La nova contrasenya ha de tenir entre 8 i 50 caràcters.");
+                // if (strlen($pass_nova) < 8 || strlen($pass_nova) > 50) {
+                //     die("La nova contrasenya ha de tenir entre 8 i 50 caràcters.");
+                // }
+                // if (!preg_match('/^[a-zA-ZÀ-ÿ0-9!@#$%^&*()_+={}\[\]:;"\'<>,.?\/\\|-]{8,50}$/u', $pass_nova)) {
+                //     die("La nova contrasenya no és vàlida.");
+                // }
+                if ((strlen($pass_nova) < 8 || strlen($pass_nova) > 50) || (!preg_match('/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\W_]).{8,50}$/u', $pass_nova))) {
+                    echo "<p class='adverts'>La contrasenya ha de contenir almenys una majúscula, una minúscula, un número i un caràcter especial. Ha de tenir entre 8 i 50 caràcters.</p>";
                 }
-                if (!preg_match('/^[a-zA-ZÀ-ÿ0-9!@#$%^&*()_+={}\[\]:;"\'<>,.?\/\\|-]{8,50}$/u', $pass_nova)) {
-                    die("La nova contrasenya no és vàlida.");
-                }
+                else {
 
-                // Consulta la contrasenya actual de la base de dades (amb consulta preparada)
-                $stmt = $conexion->prepare("SELECT contrasenya FROM USUARIS WHERE id_usu = ?");
-                $stmt->bind_param("i", $id_usu);
-                $stmt->execute();
-                $stmt->bind_result($contrasenya_bd_hash);
-                if ($stmt->fetch()) {
-                    $stmt->close();
-                    $contrasenya_correcta = false;
-
-                    if ($contrasenya_bd_hash === hash('sha256', $pass_actual, false)) {
-                        $contrasenya_correcta = true;
-                    }
-
-                    if ($contrasenya_correcta) {
-                        // Genera el hash de la nova contrasenya
-                        $pass_nova_hash = hash('sha256', $pass_nova, false);
-
-
-                        // Actualitza la contrasenya nova (consulta preparada)
-                        $stmt_update = $conexion->prepare("UPDATE USUARIS SET contrasenya = ? WHERE id_usu = ?");
-                        $stmt_update->bind_param("si", $pass_nova_hash, $id_usu);
-                        if ($stmt_update->execute()) {
-                            echo "Contrasenya actualitzada correctament.";
-                        } else {
-                            echo "Error en actualitzar la contrasenya.";
+                    // Consulta la contrasenya actual de la base de dades (amb consulta preparada)
+                    $stmt = $conexion->prepare("SELECT contrasenya FROM USUARIS WHERE id_usu = ?");
+                    $stmt->bind_param("i", $id_usu);
+                    $stmt->execute();
+                    $stmt->bind_result($contrasenya_bd_hash);
+                    if ($stmt->fetch()) {
+                        $stmt->close();
+                        $contrasenya_correcta = false;
+    
+                        if ($contrasenya_bd_hash === hash('sha256', $pass_actual, false)) {
+                            $contrasenya_correcta = true;
                         }
-                        $stmt_update->close();
+    
+                        if ($contrasenya_correcta) {
+                            // Genera el hash de la nova contrasenya
+                            $pass_nova_hash = hash('sha256', $pass_nova, false);
+    
+    
+                            // Actualitza la contrasenya nova (consulta preparada)
+                            $stmt_update = $conexion->prepare("UPDATE USUARIS SET contrasenya = ? WHERE id_usu = ?");
+                            $stmt_update->bind_param("si", $pass_nova_hash, $id_usu);
+                            if ($stmt_update->execute()) {
+                                echo "Contrasenya actualitzada correctament.";
+                            } else {
+                                echo "Error en actualitzar la contrasenya.";
+                            }
+                            $stmt_update->close();
+                        } else {
+                            echo "La contrasenya actual no és correcta.";
+                        }
                     } else {
-                        echo "La contrasenya actual no és correcta.";
+                        echo "Usuari no trobat.";
                     }
-                } else {
-                    echo "Usuari no trobat.";
                 }
+
             }
 
 
