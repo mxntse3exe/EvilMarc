@@ -55,18 +55,10 @@
         <div class="container">
             <div class="row seccio_reg_log">
                 <div>
-                    <h2>403</h2>
+                    <h2>La pàgina que busques no existeix!</h2>
                         
 
-
-
-
-
-
-
-
-
-
+                    <img src="images/404.jpg" alt="404 Not Found" style="margin-top: 50px; height: 70%">
 
 
                 </div>
