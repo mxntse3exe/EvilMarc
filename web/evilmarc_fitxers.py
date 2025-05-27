@@ -303,8 +303,8 @@ if os.path.exists(ruta_carpeta) and os.path.isdir(ruta_carpeta):
 
                     diccionari['nets'].append(f'{nom_arxiu}')
 
-                    guardar_arxiu_pujat_bd(host, user, password, arxiu, ruta_arxiu, hash_arxiu)
+                    guardar_arxiu_pujat_bd(host, user, password, arxiu, ruta_arxiu.replace(".tmp", ""), hash_arxiu)
 
-                    registrar_fitxers(nom_arxiu, ruta_arxiu)
+                    registrar_fitxers(nom_arxiu, ruta_arxiu.replace(".tmp", ""))
 
                     print(json.dumps(diccionari))
