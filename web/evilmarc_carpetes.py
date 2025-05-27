@@ -300,7 +300,7 @@ if os.path.exists(ruta_carpeta) and os.path.isdir(ruta_carpeta):
 
                 registrar_fitxers(arxiu, ruta_arxiu)
 
-                diccionari['nets'].append(arxiu)
+                diccionari['nets'].append(ruta_arxiu)
 
 
 
