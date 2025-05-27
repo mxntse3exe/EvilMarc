@@ -1,5 +1,17 @@
 <?php
+session_start();
+
+// Genera el token CSRF si no existeix
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+
 if(isset($_REQUEST['registre'])) {
+    // Comprova el token CSRF
+    if (!isset($_REQUEST['csrf_token']) || $_REQUEST['csrf_token'] !== $_SESSION['csrf_token']) {
+        die("Token CSRF invàlid.");
+    }
+
     $servidor = "localhost";
     $usuario = "web";
     $password = "T5Dk!xq";
@@ -7,31 +19,55 @@ if(isset($_REQUEST['registre'])) {
 
     $conexion = mysqli_connect($servidor,$usuario,$password,$db);
 
-    if (!$conexion) die ("Error al connectar amb la base de dades.");
+    if (!$conexion) {
+        error_log("Error de connexió a la BD: " . mysqli_connect_error());
+        die("Error al connectar amb la base de dades.");
+    }
 
-    $correu = $_REQUEST['correu'];
-    $correu = str_replace("=","",$correu);
-    $correu = str_replace(" ","",$correu);
-    $correu = str_replace("'","",$correu);
+    // Validació i neteja d'entrada
+    $correu = filter_var($_REQUEST['correu'], FILTER_SANITIZE_EMAIL);
+    if (!filter_var($correu, FILTER_VALIDATE_EMAIL)) {
+        die("L'adreça de correu electrònic no és vàlida.");
+    }
 
-    $usuari = $_REQUEST['usuari'];
-    $usuari = str_replace("=","",$usuari);
-    $usuari = str_replace(" ","",$usuari);
-    $usuari = str_replace("'","",$usuari);
+    $usuari = preg_replace('/[^a-zA-Z0-9_]/', '', $_REQUEST['usuari']);
+    if (strlen($usuari) < 4 || strlen($usuari) > 20) {
+        die("El nom d'usuari ha de tenir entre 4 i 20 caràcters alfanumèrics.");
+    }
 
     $pass = $_REQUEST['contrasenya'];
 
-    
-
-
-    
-
-
-    $sql_comprovar_correu = "select * from USUARIS where correu = '".$correu."'";
-    $sql_comprovar_usuari = "select * from USUARIS where usuari = '".$usuari."'";
-
-
-
+    // Validació de contrasenya
+    if ((strlen($pass) < 8 || strlen($pass) > 50) || (!preg_match('/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\W_]).{8,50}$/u', $pass))) {
+        $error_contrasenya = "<p class='adverts'>La contrasenya ha de contenir almenys una majúscula, una minúscula, un número i un caràcter especial. Ha de tenir entre 8 i 50 caràcters.</p>";
+    } else {
+        // Comprovem si l'usuari o correu ja existeixen amb prepared statements
+        $stmt = $conexion->prepare("SELECT id_usu FROM USUARIS WHERE correu = ? OR usuari = ?");
+        $stmt->bind_param("ss", $correu, $usuari);
+        $stmt->execute();
+        $stmt->store_result();
+        
+        if ($stmt->num_rows > 0) {
+            $error_existent = "Ja existeix un compte amb aquest correu o usuari.";
+        } else {
+            // Hash segur de la contrasenya
+            $pass_hash = hash('sha256', $pass, false);
+            
+            // Inserció amb prepared statement
+            $stmt_insert = $conexion->prepare("INSERT INTO USUARIS (usuari, correu, contrasenya) VALUES (?, ?, ?)");
+            $stmt_insert->bind_param("sss", $usuari, $correu, $pass_hash);
+            
+            if ($stmt_insert->execute()) {
+                $missatge_exit = "Usuari creat correctament, esperi que l'administrador verifiqui el seu compte.";
+            } else {
+                error_log("Error en registrar usuari: " . $stmt_insert->error);
+                $error_registre = "No hem pogut crear el seu usuari en aquests moments.";
+            }
+            $stmt_insert->close();
+        }
+        $stmt->close();
+    }
+    $conexion->close();
 }
 ?>
 
@@ -100,59 +136,37 @@ if(isset($_REQUEST['registre'])) {
                             <div class="contact-form">	
                                 <div class="formulari_reg_log">
                                     <form method="post" action="registrar">
-
                                         <?php
-
-                                        if(isset($_REQUEST['registre'])) {
-                                            $files_correu = mysqli_query($conexion,$sql_comprovar_correu);
-                                            $num_files_correu = mysqli_num_rows($files_correu);
-
-                                            $files_usuari = mysqli_query($conexion,$sql_comprovar_usuari);
-                                            $num_files_usuari = mysqli_num_rows($files_usuari);
-
-
-                                            if ((strlen($pass) < 8 || strlen($pass) > 50) || (!preg_match('/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\W_]).{8,50}$/u', $pass))) {
-                                                echo "<p class='adverts'>La contrasenya ha de contenir almenys una majúscula, una minúscula, un número i un caràcter especial. Ha de tenir entre 8 i 50 caràcters.</p>";
-                                            }
-                                            else {
-                                                $pass = hash('sha256', $pass, false);
-                                                $sql = "insert into USUARIS(usuari,correu,contrasenya) values('".$usuari."','".$correu."','".$pass."')";
-
-                                                if ($num_files_correu == 0) {
-                                                    if ($num_files_usuari == 0) {
-                                                        if (mysqli_query($conexion,$sql)) {
-                                                            echo "<p class='adverts'>Usuari creat correctament, esperi que l'administrador verifiqui el seu compte.</p>";
-                                                        }
-                                                        else {
-                                                            echo "<p class='adverts'>No hem pogut crear el seu usuari en aquests moments.</p>";
-                                                        }
-                                                    }
-                                                    else {
-                                                        echo "<p class='adverts'>Ja existeix un compte amb aquest correu o usuari.</p>";
-                                                    }
-                                                }
-                                                else {
-                                                    echo "<p class='adverts'>Ja existeix un compte amb aquest correu o usuari.</p>";
-                                                }
-
-                                            }
+                                        // Mostrar missatges d'error o èxit escapant la sortida
+                                        if (isset($error_contrasenya)) {
+                                            echo "<p class='adverts'>".htmlspecialchars($error_contrasenya, ENT_QUOTES, 'UTF-8')."</p>";
+                                        }
+                                        if (isset($error_existent)) {
+                                            echo "<p class='adverts'>".htmlspecialchars($error_existent, ENT_QUOTES, 'UTF-8')."</p>";
+                                        }
+                                        if (isset($error_registre)) {
+                                            echo "<p class='adverts'>".htmlspecialchars($error_registre, ENT_QUOTES, 'UTF-8')."</p>";
+                                        }
+                                        if (isset($missatge_exit)) {
+                                            echo "<p class='adverts'>".htmlspecialchars($missatge_exit, ENT_QUOTES, 'UTF-8')."</p>";
                                         }
                                         ?>
 
-                                        <input class="form-control" type="email" name="correu" placeholder="correu electrònic" required>
+                                        <input class="form-control" type="email" name="correu" placeholder="correu electrònic" 
+                                            value="<?php echo isset($correu) ? htmlspecialchars($correu, ENT_QUOTES, 'UTF-8') : ''; ?>" required>
 
-
-                                        <input class="form-control" type="text" name="usuari" placeholder="nom d'usuari" required>
-
+                                        <input class="form-control" type="text" name="usuari" placeholder="nom d'usuari" 
+                                            value="<?php echo isset($usuari) ? htmlspecialchars($usuari, ENT_QUOTES, 'UTF-8') : ''; ?>" required>
 
                                         <div class="password-container">
-
                                             <input class="form-control" type="password" name="contrasenya" placeholder="contrasenya" id="passwordField" required>
-
                                             <span class="toggle-password" onclick="togglePasswordVisibility()">
                                                 <i class="unicon uil-eye" id="toggleIcon"></i>
                                             </span>
                                         </div>
+                                        
+                                        <!-- Token CSRF -->
+                                        <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token'], ENT_QUOTES, 'UTF-8'); ?>">
                                         
                                         <input class="form-control submit-btn" type="submit" value="Registrar-se" name="registre">
                                     </form>
