@@ -116,13 +116,13 @@
 
             // Obté i valida el valor del nou nom
             $nom_nou = $_REQUEST['nom_input'];
-            if (!preg_match('/^[a-zA-ZÀ-ÿ \'-]{0,50}$/u', $nom_nou)) {
+            if (!preg_match('/^[a-zA-ZÀ-ÿ-]{0,50}$/u', $nom_nou)) {
                 die("Nom no vàlid.");
             }
 
             // Obté i valida el valor dels nous cognoms
             $cognoms_nou = $_REQUEST['cognoms_input'];
-            if (!preg_match('/^[a-zA-ZÀ-ÿ \'-]{0,100}$/u', $cognoms_nou)) {
+            if (!preg_match('/^[a-zA-ZÀ-ÿ-]{0,100}$/u', $cognoms_nou)) {
                 die("Cognoms no vàlids.");
             }
 
