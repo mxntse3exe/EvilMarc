@@ -113,8 +113,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['missatge_pujada'] = "";
             $diccionari_json = '{"nets":[],"infectats":[]}';
 
-            
-
             foreach ($_FILES['archivo']['name'] as $key => $name) {
                 $tmp_name = $_FILES['archivo']['tmp_name'][$key];
                 $error = $_FILES['archivo']['error'][$key];
@@ -125,22 +123,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $target_path = $current_dir . DIRECTORY_SEPARATOR . $nomUnic;
         
                     // Mou el fitxer pujat
-                    move_uploaded_file($tmp_name, $target_path);
+                    move_uploaded_file($tmp_name, $target_path.".tmp");
 
                     // move_uploaded_file($tmp_name, $target_path . '.tmp');
                     // encryptFile($target_path . '.tmp', $target_path, ENCRYPTION_KEY);
                     // unlink($target_path . '.tmp'); // Elimina el fitxer temporal no xifrat
 
 
-                    $command = "echo " . escapeshellarg($diccionari_json) . " | python3 /var/www/html/evilmarc_fitxers.py " . escapeshellarg($nomUnic) . " " . escapeshellarg($current_dir);
+                    $command = "echo " . escapeshellarg($diccionari_json) . " | python3 /var/www/html/evilmarc_fitxers.py " . escapeshellarg($nomUnic.".tmp") . " " . escapeshellarg($current_dir);
                     $output = shell_exec($command);
                     
                 }
                 $diccionari_json = $output;
-                // $_SESSION['missatge_pujada'] = $_SESSION['missatge_pujada']." ".$output;
+
+                
             }
 
             $diccionari = json_decode($diccionari_json, true);
+
+            foreach ($diccionari["nets"] as $fitxerNet) {
+                $sourcePath = $current_dir . DIRECTORY_SEPARATOR . $fitxerNet;
+                $destPath = str_replace(".tmp", "", $sourcePath); // Exemple: afegir extensió .enc per al fitxer xifrat
+                encryptFile($sourcePath, $destPath, ENCRYPTION_KEY);
+                unlink($sourcePath); // Elimina el fitxer original no xifrat
+            }
 
             $nets = count($diccionari["nets"]);
             $infectats = count($diccionari["infectats"]);
@@ -155,26 +161,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
             } elseif ($nets === 0 && $infectats > 0) {
                 if ($infectats === 1) {
-                    $_SESSION['missatge_pujada'] = "<i class='uil uil-exclamation-triangle'></i> L'arxiu <b>" . implode(", ", $diccionari["infectats"]) . "</b> no s'ha pogut pujar, està infectat.";
+                    $_SESSION['missatge_pujada'] = "<i class='uil uil-exclamation-triangle'></i> L'arxiu <b>" . implode(", ", str_replace(".tmp", "", $diccionari["infectats"])) . "</b> no s'ha pogut pujar, està infectat.";
                 }
                 else {
-                    $_SESSION['missatge_pujada'] = "<i class='uil uil-exclamation-triangle'></i> Els arxius <b>" . implode(", ", $diccionari["infectats"]) . "</b> no s'han pogut pujar, estan infectats.";
+                    $_SESSION['missatge_pujada'] = "<i class='uil uil-exclamation-triangle'></i> Els arxius <b>" . implode(", ", str_replace(".tmp", "", $diccionari["infectats"])) . "</b> no s'han pogut pujar, estan infectats.";
                 }
             } elseif ($nets > 0 && $infectats > 0) {
                 if ($nets === 1) {
                     if ($infectats === 1) {
-                        $_SESSION['missatge_pujada'] = "S'ha pujat correctament $nets arxiu. <br><i class='uil uil-exclamation-triangle'></i> L'arxiu <b>" . implode(", ", $diccionari["infectats"]) . "</b> no s'ha pogut pujar, està infectat.";
+                        $_SESSION['missatge_pujada'] = "S'ha pujat correctament $nets arxiu. <br><i class='uil uil-exclamation-triangle'></i> L'arxiu <b>" . implode(", ", str_replace(".tmp", "", $diccionari["infectats"])) . "</b> no s'ha pogut pujar, està infectat.";
                     }
                     else {
-                        $_SESSION['missatge_pujada'] = "S'ha pujat correctament $nets arxiu. <br><i class='uil uil-exclamation-triangle'></i> Els arxius <b>" . implode(", ", $diccionari["infectats"]) . "</b> no s'han pogut pujar, estan infectats.";
+                        $_SESSION['missatge_pujada'] = "S'ha pujat correctament $nets arxiu. <br><i class='uil uil-exclamation-triangle'></i> Els arxius <b>" . implode(", ", str_replace(".tmp", "", $diccionari["infectats"])) . "</b> no s'han pogut pujar, estan infectats.";
                     }
                 }
                 else {
                     if ($infectats === 1) {
-                        $_SESSION['missatge_pujada'] = "S'han pujat correctament $nets arxius. <br><i class='uil uil-exclamation-triangle'></i> L'arxiu <b>" . implode(", ", $diccionari["infectats"]) . "</b> no s'ha pogut pujar, està infectat.";
+                        $_SESSION['missatge_pujada'] = "S'han pujat correctament $nets arxius. <br><i class='uil uil-exclamation-triangle'></i> L'arxiu <b>" . implode(", ", str_replace(".tmp", "", $diccionari["infectats"])) . "</b> no s'ha pogut pujar, està infectat.";
                     }
                     else {
-                        $_SESSION['missatge_pujada'] = "S'han pujat correctament $nets arxius. <br><i class='uil uil-exclamation-triangle'></i> Els arxius <b>" . implode(", ", $diccionari["infectats"]) . "</b> no s'han pogut pujar, estan infectats.";
+                        $_SESSION['missatge_pujada'] = "S'han pujat correctament $nets arxius. <br><i class='uil uil-exclamation-triangle'></i> Els arxius <b>" . implode(", ", str_replace(".tmp", "", $diccionari["infectats"])) . "</b> no s'han pogut pujar, estan infectats.";
                     }
                 }
             
@@ -236,6 +242,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             $nets = count($diccionari["nets"]);
             $infectats = count($diccionari["infectats"]);
+
+            foreach ($diccionari["nets"] as $nomFitxerEnc) {
+                $sourcePath = $nomFitxerEnc;
+                $destPath = $sourcePath.".enc"; // Exemple: afegir extensió .enc per al fitxer xifrat
+                encryptFile($sourcePath, $destPath, ENCRYPTION_KEY);
+                unlink($sourcePath); // Elimina el fitxer original no xifrat
+            }
 
             //Construir el missatge segons els fitxers pujats: lògica singulars i plurals
             if ($nets > 0 && $infectats === 0) {
