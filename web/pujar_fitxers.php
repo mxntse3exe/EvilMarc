@@ -125,11 +125,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $target_path = $current_dir . DIRECTORY_SEPARATOR . $nomUnic;
         
                     // Mou el fitxer pujat
-                    // move_uploaded_file($tmp_name, $target_path);
+                    move_uploaded_file($tmp_name, $target_path);
 
-                    move_uploaded_file($tmp_name, $target_path . '.tmp');
-                    encryptFile($target_path . '.tmp', $target_path, ENCRYPTION_KEY);
-                    unlink($target_path . '.tmp'); // Elimina el fitxer temporal no xifrat
+                    // move_uploaded_file($tmp_name, $target_path . '.tmp');
+                    // encryptFile($target_path . '.tmp', $target_path, ENCRYPTION_KEY);
+                    // unlink($target_path . '.tmp'); // Elimina el fitxer temporal no xifrat
 
 
                     $command = "echo " . escapeshellarg($diccionari_json) . " | python3 /var/www/html/evilmarc_fitxers.py " . escapeshellarg($nomUnic) . " " . escapeshellarg($current_dir);
@@ -217,9 +217,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             mkdir($target_path, 0777, true);
                         }
                     } else {
-                        move_uploaded_file($tmp_name, $target_path . '.tmp');
-                        encryptFile($target_path . '.tmp', $target_path, ENCRYPTION_KEY);
-                        unlink($target_path . '.tmp'); // Elimina el fitxer temporal no xifrat
+                        move_uploaded_file($tmp_name, $target_path);
+
+                        // move_uploaded_file($tmp_name, $target_path . '.tmp');
+                        // encryptFile($target_path . '.tmp', $target_path, ENCRYPTION_KEY);
+                        // unlink($target_path . '.tmp'); // Elimina el fitxer temporal no xifrat
                     }
                 }
             }
