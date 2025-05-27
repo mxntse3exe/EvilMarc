@@ -245,9 +245,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             foreach ($diccionari["nets"] as $nomFitxerEnc) {
                 $sourcePath = $nomFitxerEnc;
-                $destPath = $sourcePath.".enc"; // Exemple: afegir extensió .enc per al fitxer xifrat
-                encryptFile($sourcePath, $destPath, ENCRYPTION_KEY);
-                unlink($sourcePath); // Elimina el fitxer original no xifrat
+                $tempPath = $sourcePath . '.tmp'; // Fitxer temporal per guardar el xifrat
+            
+                encryptFile($sourcePath, $tempPath, ENCRYPTION_KEY);
+            
+                unlink($sourcePath); // Esborra l'original sense xifrar
+                rename($tempPath, $sourcePath); // Canvia el nom del fitxer temporal pel definitiu (mateix nom original)
             }
 
             //Construir el missatge segons els fitxers pujats: lògica singulars i plurals
