@@ -7,6 +7,8 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
+    <base href="/">
+
     <title>EvilMarc</title>
 
     <link rel="stylesheet" href="css/bootstrap.min.css">
