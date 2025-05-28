@@ -45,7 +45,8 @@
     $filtre_data_fi = isset($_GET['data_fi']) ? $_GET['data_fi'] : null;
 
     // Crear filtre base per usuari
-    $filter = ['id_usuari' => $num_usu];
+    // $filter = ['id_usuari' => $num_usu];
+    $filter = [];
     
     // Afegir filtres de dates si s'han especificat
     if ($filtre_data_inici) {

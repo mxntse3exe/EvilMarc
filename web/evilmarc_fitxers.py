@@ -185,10 +185,12 @@ def registrar_fitxers_infectats(nom_arxiu, ruta_arxiu):
     # Data
     data_actual = datetime.datetime.now()
 
+    nom_arxiu_sense_extensio = nom_arxiu[:-4]
+
     # Creació log
     log = {
         "id_usuari" : id_usuari,
-        "nom_arxiu" : nom_arxiu,
+        "nom_arxiu" : nom_arxiu_sense_extensio,
         "infectat" : True,
         "ruta_arxiu" : ruta_arxiu,
         "data" : data_actual
@@ -209,10 +211,12 @@ def registrar_fitxers(nom_arxiu, ruta_arxiu):
     # Data
     data_actual = datetime.datetime.now()
 
+    nom_arxiu_sense_extensio = nom_arxiu[:-4]
+
     # Creació log
     log = {
         "id_usuari" : id_usuari,
-        "nom_arxiu" : nom_arxiu,
+        "nom_arxiu" : nom_arxiu_sense_extensio,
         "infectat" : False,
         "ruta_arxiu" : ruta_arxiu,
         "data" : data_actual
